@@ -72,18 +72,18 @@ void c_ClinicClient::run()
     if (logsWindow != nullptr)
         logsWindow->show();
 
-    if (!user->getIsLogged())
-    {
-        w_LoggingDialog * loggingWindow = w_LoggingDialog::Instance();
-        loggingWindow->setServerConnectionSettings( settCtrlr->getSettings( "server" ), true );
+//    if (!user->getIsLogged())
+//    {
+//        w_LoggingDialog * loggingWindow = w_LoggingDialog::Instance();
+//        loggingWindow->setServerConnectionSettings( settCtrlr->getSettings( "server" ), true );
 
-        connect(loggingWindow, SIGNAL(accepted()), this, SLOT(loggingDialogAccepted()) );
-        connect(loggingWindow, SIGNAL(finished(int)), this, SLOT(loggingDialogFinished(int)) );
-        connect(loggingWindow, SIGNAL(rejected()), this, SLOT(loggingDialogRejected()) );
-        connect(loggingWindow, SIGNAL(logIn(QString,QString)), this, SLOT(logIn(QString,QString)));
+//        connect(loggingWindow, SIGNAL(accepted()), this, SLOT(loggingDialogAccepted()) );
+//        connect(loggingWindow, SIGNAL(finished(int)), this, SLOT(loggingDialogFinished(int)) );
+//        connect(loggingWindow, SIGNAL(rejected()), this, SLOT(loggingDialogRejected()) );
+//        connect(loggingWindow, SIGNAL(logIn(QString,QString)), this, SLOT(logIn(QString,QString)));
 
-        //loggingWindow->open();
-    }
+//        //loggingWindow->open();
+//    }
 
 
     // utworzenie sesji
