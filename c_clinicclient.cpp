@@ -100,6 +100,18 @@ void c_ClinicClient::run()
             {
                 //brak lub błędne dane użytkownika
                 //logowanie
+
+                w_LoggingDialog::Instance()->disconnect(SIGNAL(accepted()), this);
+                w_LoggingDialog::Instance()->disconnect(SIGNAL(finished(int)), this);
+                w_LoggingDialog::Instance()->disconnect(SIGNAL(rejected()), this);
+                w_LoggingDialog::Instance()->disconnect(SIGNAL(logIn(QString,QString)), this);
+                w_LoggingDialog::Instance()->setServerConnectionSettings( settCtrlr->getSettings( "server" ), true);
+
+                connect(w_LoggingDialog::Instance(), SIGNAL(accepted()), this, SLOT(loggingDialogAccepted()));
+                connect(w_LoggingDialog::Instance(), SIGNAL(finished(int)), this, SLOT(loggingDialogFinished(int)));
+                connect(w_LoggingDialog::Instance(), SIGNAL(rejected()), this, SLOT(loggingDialogRejected()));
+                connect(w_LoggingDialog::Instance(), SIGNAL(logIn(QString, QString)), this, SLOT(logIn(QString, QString)));
+
                 w_LoggingDialog::Instance()->open();
                 break;
             }
