@@ -45,6 +45,7 @@ void c_connectionToServerController::runSocket()
 c_connectionToServerController::c_connectionToServerController(QObject *parent) : QObject(parent)
 {
     socket = new QTcpSocket( this );
+    myConnectionState = NOT_CONNECTED;
 
     connect(socket, SIGNAL( connected() ), this, SLOT( socketConnected() ) );
     connect(socket, SIGNAL( disconnected() ), this, SLOT( socketDisconnected() ) );
@@ -57,6 +58,11 @@ c_connectionToServerController::c_connectionToServerController(QObject *parent) 
 
     QString log = QString("Socket connections configured. \n");
     w_logsWindow::Instance()->addLog(log);
+}
+
+ThreadDestination c_connectionToServerController::getNameThreadDestination() const
+{
+    return nameThreadDestination;
 }
 
 QTcpSocket *c_connectionToServerController::getSocket() const

@@ -37,6 +37,8 @@ public:
     void setSocket(QTcpSocket *value);
 
 
+    ThreadDestination getNameThreadDestination() const;
+
 public slots:
     void closeConnection();
     void sendData(QByteArray data);
@@ -46,6 +48,8 @@ private:
     QTcpSocket * socket;
     QString host;
     quint16 port;
+    const ThreadDestination nameThreadDestination = CLINIC_CONNECTION_CONTROLLER;
+    ConnectionToServerState myConnectionState;
 
 
 private slots:

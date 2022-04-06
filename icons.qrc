@@ -21,5 +21,7 @@
         <file>icons/visit_256_256.png</file>
         <file>icons/exit_256_256.png</file>
         <file>icons/Clinic_Client.ico</file>
+        <file>icons/connected.png</file>
+        <file>icons/not_connected.png</file>
     </qresource>
 </RCC>
