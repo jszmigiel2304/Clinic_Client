@@ -13,6 +13,7 @@ w_userPanel::~w_userPanel()
 {
     loggedUserName->deleteLater();
     logStateButton->deleteLater();
+    connectionStateButton->deleteLater();
     controlButton->deleteLater();
     closeButton->deleteLater();
 
@@ -127,6 +128,11 @@ void w_userPanel::createLogStateButton()
     }
 
     logStateButton->loadButton();
+}
+
+void w_userPanel::createConnectionStateButton()
+{
+
 }
 
 void w_userPanel::createLoggedUserName()

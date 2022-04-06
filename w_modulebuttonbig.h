@@ -23,7 +23,7 @@ signals:
 
 protected:
     bool eventFilter(QObject* , QEvent* evt);
-    void enterEvent(QEvent *);
+    void enterEvent(QEnterEvent *);
     void leaveEvent(QEvent *);
     void mouseReleaseEvent(QMouseEvent *);
 

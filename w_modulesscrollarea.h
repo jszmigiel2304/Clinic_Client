@@ -14,6 +14,7 @@
 #include <QToolButton>
 #include <QGridLayout>
 #include <QEvent>
+#include <QEnterEvent>
 #include <QWheelEvent>
 #include <QScrollBar>
 #include <QList>
@@ -38,7 +39,7 @@ signals:
 
 protected:
     void wheelEvent(QWheelEvent* event);
-    void enterEvent(QEvent* evt);
+    void enterEvent(QEnterEvent* evt);
     void leaveEvent(QEvent* evt);
 
 

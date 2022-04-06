@@ -54,7 +54,7 @@ bool w_moduleButtonSmall::eventFilter(QObject *, QEvent *evt)
     return false;
 }
 
-void w_moduleButtonSmall::enterEvent(QEvent *)
+void w_moduleButtonSmall::enterEvent(QEnterEvent *)
 {
     this->setCursor(Qt::PointingHandCursor);
         toolButton->setStyleSheet("QPushButton {"

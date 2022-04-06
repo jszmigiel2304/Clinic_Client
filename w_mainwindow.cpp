@@ -38,7 +38,7 @@ void w_MainWindow::createModulesScrollArea()
 {
     this->modulesScrollArea = new w_modulesScrollArea();
     this->modulesScrollArea->setParent(this);
-    this->modulesScrollArea->setGeometry(5, 60, 1000, 480);
+    this->modulesScrollArea->setGeometry(5, 60, 1000, 480);    
     connect(modulesScrollArea, SIGNAL(ButtonPressed(QString)), this, SLOT(moduleButtonPressed(QString)));
 
     mCtr = ( dynamic_cast<c_modulesController *>(this->watchedObjectsList["modulesController"]) );

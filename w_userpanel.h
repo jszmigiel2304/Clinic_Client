@@ -45,11 +45,13 @@ private:
 
     w_moduleButton * controlButton;
     w_moduleButton * logStateButton;
+    w_moduleButton * connectionStateButton;
     w_moduleButton * loggedUserName;
     w_moduleButton * closeButton;
 
     void createControlButton();
     void createLogStateButton();
+    void createConnectionStateButton();
     void createLoggedUserName();
     void createCloseButton();
 

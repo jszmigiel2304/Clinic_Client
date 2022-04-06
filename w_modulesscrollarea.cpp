@@ -3,6 +3,7 @@
 w_modulesScrollArea::w_modulesScrollArea()
 {
     this->setScrollBars();
+    this->setEnabled(true);
 
 
     this->setMouseTracking(true);
@@ -69,28 +70,28 @@ void w_modulesScrollArea::moduleButtonPress(QString moduleAction)
 
 void w_modulesScrollArea::wheelEvent(QWheelEvent *event)
 {
-    int deg = event->pixelDelta().manhattanLength();
-
-    if (deg < 0)
+    if(!event->angleDelta().isNull())
     {
-        this->horizontalScrollBar()->setValue( this->horizontalScrollBar()->value() + 50 );
-    }
-    else if (deg > 0)
-    {
-        this->horizontalScrollBar()->setValue( this->horizontalScrollBar()->value() - 50 );
+        if(event->angleDelta().y() > 0)
+        {
+            this->horizontalScrollBar()->setValue( this->horizontalScrollBar()->value() - 50 );
+        } else if(event->angleDelta().y() < 0)
+        {
+            this->horizontalScrollBar()->setValue( this->horizontalScrollBar()->value() + 50 );
+        }
     }
 
     event->accept();
 }
 
-void w_modulesScrollArea::enterEvent(QEvent *)
+void w_modulesScrollArea::enterEvent(QEnterEvent *)
 {
-    this->horizontalScrollBar()->setVisible(true);
+    this->horizontalScrollBar()->show();
 }
 
 void w_modulesScrollArea::leaveEvent(QEvent *)
 {
-    this->horizontalScrollBar()->setVisible(false);
+    this->horizontalScrollBar()->hide();
 }
 
 void w_modulesScrollArea::createLayout()
@@ -133,7 +134,7 @@ void w_modulesScrollArea::setScrollBars()
                                                "background: #F0FFF0;"
                                                "border-radius: 8px;"
                                                "}"
-                                               "QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {"
+                                               "QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {"
                                                "border: none;"
                                                "color: none;"
                                                "background: none;"
