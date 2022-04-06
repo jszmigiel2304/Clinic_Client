@@ -23,5 +23,6 @@
         <file>icons/Clinic_Client.ico</file>
         <file>icons/connected.png</file>
         <file>icons/not_connected.png</file>
+        <file>icons/connecting.png</file>
     </qresource>
 </RCC>
