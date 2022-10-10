@@ -245,6 +245,7 @@ void c_ClinicClient::createConnections()
     connect(user->thread(), SIGNAL(unlockSession()), sessionCtrlr->thread(), SLOT(sessionUnlockConfirmationReceived()));
     connect( this, SIGNAL(unlockSessionSignal()), this->mainWindow, SLOT(unlockWindow()) );
     connect( this, SIGNAL(unlockSessionSignal()), this->getTrayIcon(), SLOT(appUnlocked()) );
+    connect( this, SIGNAL(logOutUserBeforeCloseApp(qint32, QString, QString)), user->thread(), SLOT(logOut(qint32, QString, QString)), Qt::DirectConnection );
 }
 
 w_logsWindow *c_ClinicClient::getLogsWindow() const
@@ -322,6 +323,28 @@ void c_ClinicClient::showUserPanelWindow()
 
 void c_ClinicClient::closeApplication()
 {
+    {
+        QTimer timer;
+        timer.setSingleShot(true);
+        QEventLoop loop;
+        connect( this->user->thread(), SIGNAL(userNotLogged()), &loop, SLOT(quit()) );
+        connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
+        timer.start(5000);
+        emit this->logOutUserBeforeCloseApp(this->user->getId(),
+                                            this->user->getName(),
+                                            this->user->getEncryptedPassword());
+        loop.exec();
+
+
+        if(timer.isActive()) {
+            emit newLog(QString("Wylogowano przed zamknięciem.\n"));
+        }
+        else{
+            emit newLog(QString("Błąd wylogowania.\n"));
+            emit user->forceLogOut();
+        }
+    }
+
     emit stopAllThreads();
     qApp->closeAllWindows();
 }
@@ -353,5 +376,6 @@ void c_ClinicClient::dataReceived(quint64 data_size, QByteArray data)
         emit passDataToThread(attchedData);
     }
 }
+
 
 

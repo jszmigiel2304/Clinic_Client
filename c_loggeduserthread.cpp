@@ -8,7 +8,8 @@ c_loggedUserThread::c_loggedUserThread(qint32 id, QString parentIdent, QString n
     connect(this, SIGNAL(logInToServer(qint32, QString, QString)), this, SLOT(logIn(qint32, QString, QString)), Qt::DirectConnection);
     connect(this, SIGNAL(started()), this, SLOT(threadStarted()));
 
-
+    loggingOutState = false;
+    loggingState = false;
 }
 
 void c_loggedUserThread::run()
@@ -113,8 +114,19 @@ void c_loggedUserThread::unlockOnIdle(QString userName, QString userPassword)
     emit sendToServer(packet);
 }
 
+bool c_loggedUserThread::getLoggingOutState() const
+{
+    return loggingOutState;
+}
+
+void c_loggedUserThread::setLoggingOutState(bool newLoggingOutState)
+{
+    loggingOutState = newLoggingOutState;
+}
+
 void c_loggedUserThread::logIn(qint32 id, QString name, QString password)
 {
+    loggingState = true;
     loggingTimer->stop();
 //    c_Parser parser;
 //    QByteArray packet = parser.prepareLogInPacket(id, name, password, getId());
@@ -135,6 +147,7 @@ void c_loggedUserThread::logIn(qint32 id, QString name, QString password)
 
 void c_loggedUserThread::logOut(qint32 id, QString name, QString password)
 {    
+    loggingOutState = true;
     emit aboutToLogOut();
 
     c_Parser parser;
@@ -167,6 +180,7 @@ void c_loggedUserThread::userIdReceivedFromServer(qint32 userID)
 {
     if(userID == -1) {
         loggingTimer->stop();
+        loggingState = false;
         emit logInError(QString("Błędne dane logowania."));
     } else {
         dynamic_cast<c_loggedUser *>(myParentConnector)->setId(userID);
@@ -177,6 +191,7 @@ void c_loggedUserThread::userIdReceivedFromServer(qint32 userID)
         } else {
             loggingTimer->stop();
             emit logInFinished();
+            loggingState = false;
         }
     }
 }
@@ -197,6 +212,8 @@ void c_loggedUserThread::logInConfirmationReceivedFromServer(logInConfirmation c
     emit userLogged(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(), dynamic_cast<c_loggedUser *>(myParentConnector)->getRole());
     emit logInFinished();
 
+
+    loggingState = false;
     emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Udane logowanie. \n"));
 }
 
@@ -206,6 +223,7 @@ void c_loggedUserThread::logOutConfirmationReceivedFromServer(logOutConfirmation
 
     dynamic_cast<c_loggedUser *>(myParentConnector)->clearProperties();
     emit userNotLogged();
+    loggingOutState = false;
 }
 
 void c_loggedUserThread::unlockConfirmationReceived(bool canUnlock)
@@ -221,8 +239,10 @@ void c_loggedUserThread::unlockConfirmationReceived(bool canUnlock)
 void c_loggedUserThread::loggingTimerTimeout()
 {
 //    loggingTimer->deleteLater();
-    if(!dynamic_cast<c_loggedUser *>(myParentConnector)->getIsLogged())
+    if(!dynamic_cast<c_loggedUser *>(myParentConnector)->getIsLogged()) {
         emit logInError("Upłynął czas oczekiwania na odpiewdź serwera.");
+        loggingState = false;
+    }
 }
 
 void c_loggedUserThread::loggingOutTimerTimeout()
@@ -230,6 +250,7 @@ void c_loggedUserThread::loggingOutTimerTimeout()
     if(dynamic_cast<c_loggedUser *>(myParentConnector)->getIsLogged())
     {
         emit logInError("Upłynął czas oczekiwania na odpiewdź serwera. Nastąpi wylogowanie bez komunikatu do serwera.");
+        loggingOutState = false;
     }
 
     loggingOutTimer->deleteLater();

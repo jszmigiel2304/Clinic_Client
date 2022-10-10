@@ -41,6 +41,7 @@
 #include <QPushButton>
 #include <QAbstractSocket>
 #include <QMetaType>
+#include <QEventLoop>
 
 class c_AppTrayIcon;
 
@@ -122,6 +123,7 @@ signals:
     void sessionConfigured();
     void idleSignalReceived();
     void unlockSessionSignal();
+    void logOutUserBeforeCloseApp(qint32 id, QString name, QString password);
 
 
 public slots:

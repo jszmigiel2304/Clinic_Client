@@ -20,6 +20,9 @@ public:
     bool getLoggingState() const;
     void setLoggingState(bool newLoggingState);
 
+    bool getLoggingOutState() const;
+    void setLoggingOutState(bool newLoggingOutState);
+
 public slots:
     void processData(threadData data) override;
     void sessionLocked();
@@ -29,6 +32,7 @@ public slots:
 
 private:
     bool loggingState;
+    bool loggingOutState;
     QTimer * loggingTimer;
     QTimer * loggingOutTimer;
 
