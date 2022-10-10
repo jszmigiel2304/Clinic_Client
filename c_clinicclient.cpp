@@ -329,7 +329,7 @@ void c_ClinicClient::closeApplication()
         QEventLoop loop;
         connect( this->user->thread(), SIGNAL(userNotLogged()), &loop, SLOT(quit()) );
         connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
-        timer.start(5000);
+        timer.start(3000);
         emit this->logOutUserBeforeCloseApp(this->user->getId(),
                                             this->user->getName(),
                                             this->user->getEncryptedPassword());
