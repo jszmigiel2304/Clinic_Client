@@ -247,6 +247,8 @@ void c_ClinicClient::createConnections()
     connect( this, SIGNAL(unlockSessionSignal()), this->mainWindow, SLOT(unlockWindow()) );
     connect( this, SIGNAL(unlockSessionSignal()), this->getTrayIcon(), SLOT(appUnlocked()) );
     connect( this, SIGNAL(logOutUserBeforeCloseApp(qint32, QString, QString)), user->thread(), SLOT(logOut(qint32, QString, QString)), Qt::DirectConnection );
+
+    connect( this->mainWindow, SIGNAL(userProfileButtonClicked()), this, SLOT(showUserPanelWindow()));
 }
 
 w_logsWindow *c_ClinicClient::getLogsWindow() const
@@ -319,7 +321,19 @@ void c_ClinicClient::showAuthorizationDialogOnIdle(QString username)
 
 void c_ClinicClient::showUserPanelWindow()
 {
+    w_UserProfileWindow * userProfileWindow = w_UserProfileWindow::Instance();
+
+    userProfileWindow->setUserProperties( this->user->getUserProperties() );
+    userProfileWindow->setEmployeeProperties( this->user->getEmployeeProperties() );
+
+    userProfileWindow->setAuthLogs(QStringList());
+    userProfileWindow->setClinicLogs(QStringList());
+
+    userProfileWindow->refresh();
+
+    userProfileWindow->show();
 }
+
 
 void c_ClinicClient::closeApplication()
 {

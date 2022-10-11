@@ -87,9 +87,9 @@ void c_actionExecutive::processResults(myTypes::JsonContent jsonContent, QList<Q
         confirmation.email = results[0]["email"].toString();
         confirmation.verified = results[0]["verified"].toBool();
         confirmation.blocked = results[0]["blocked"].toBool();
-        confirmation.create_date = QDateTime::fromString( results[0]["create_date"].toString() );
-        confirmation.verify_date = QDateTime::fromString( results[0]["verify_date"].toString() );
-        confirmation.block_date = QDateTime::fromString( results[0]["block_date"].toString() );
+        confirmation.create_date = QDateTime::fromString( results[0]["create_date"].toString(), Qt::ISODateWithMs );
+        confirmation.verify_date = QDateTime::fromString( results[0]["verify_date"].toString(), Qt::ISODateWithMs );
+        confirmation.block_date = QDateTime::fromString( results[0]["block_date"].toString(), Qt::ISODateWithMs );
         confirmation.photo = results[0]["photo"].toByteArray();
         confirmation.logInTime = QDateTime::fromString(results[0]["logInTime"].toString());
         confirmation.role = results[0]["role"].toString();

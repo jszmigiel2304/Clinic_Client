@@ -41,12 +41,14 @@ public:
     c_loggedUserThread*thread() const;
     void setThread(std::unique_ptr<c_loggedUserThread> newThread);
 
-public slots:
-    void forceLogOut();
     QMap<QString, QVariant> getUserProperties();
     QMap<QString, QVariant> getEmployeeProperties();
     QList<myStructures::myLog> getAuthLogs();
     QList<myStructures::myLog> getClinicLogs();
+
+public slots:
+    void forceLogOut();
+
 
 
 private:

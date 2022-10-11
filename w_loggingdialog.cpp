@@ -53,7 +53,8 @@ w_LoggingDialog *w_LoggingDialog::Instance()
     static w_LoggingDialog * instance = nullptr;
     if ( instance == nullptr ) {
         instance = new w_LoggingDialog();
-    }
+    }    
+    //instance->setAttribute(Qt::WA_DeleteOnClose, true);
     return instance;
 }
 

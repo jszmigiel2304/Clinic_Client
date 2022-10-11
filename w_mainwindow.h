@@ -92,6 +92,7 @@ signals:
     void settingsWindowModuleClicked();
     void loggingWindowModuleClicked();
     void closeApplicationButtonClicked();
+    void userProfileButtonClicked();
 };
 
 #endif // MAINWINDOW_H

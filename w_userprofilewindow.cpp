@@ -20,6 +20,7 @@ void w_UserProfileWindow::on_more_Clinic_logs_button_clicked()
 
 void w_UserProfileWindow::refreshUserInfo()
 {
+    ui->l_username->setText( userProperties["name"].toString() );
     ui->l_id->setText( QString("%1").arg(userProperties["id"].toInt()) );
     ui->l_name->setText( userProperties["name"].toString() );
     ui->l_role->setText( userProperties["role"].toString() );
@@ -64,6 +65,7 @@ w_UserProfileWindow *w_UserProfileWindow::Instance()
     if ( instance == nullptr ) {
         instance = new w_UserProfileWindow();
     }
+    instance->setAttribute(Qt::WA_DeleteOnClose, true);
     return instance;
 }
 
@@ -95,6 +97,16 @@ void w_UserProfileWindow::setEmployeeProperties(QMap<QString, QVariant> employee
 
     if(refresh)
         this->refresh();
+}
+
+void w_UserProfileWindow::setAuthLogs(QList<QString> list, bool refresh)
+{
+
+}
+
+void w_UserProfileWindow::setClinicLogs(QList<QString> list, bool refresh)
+{
+
 }
 
 

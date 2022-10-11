@@ -28,6 +28,9 @@ w_AuthorizationDialog::w_AuthorizationDialog(QWidget *parent) :
     ui->w_loggingMask->hide();
     ui->f_password->setEnabled(true);
     ui->f_userName->setEnabled(true);
+
+
+    setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 w_AuthorizationDialog::~w_AuthorizationDialog()

@@ -207,7 +207,8 @@ void w_MainWindow::moduleButtonPressedShow(QString target, QStringList params)
 
 void w_MainWindow::moduleButtonPressedProcess(QString target, QStringList params)
 {
-
+    if(target == "NULL") {return;}
+    if(target == "USER_PROFILE_CARD") { emit userProfileButtonClicked(); return;}
 }
 
 void w_MainWindow::Processing(QString processText)

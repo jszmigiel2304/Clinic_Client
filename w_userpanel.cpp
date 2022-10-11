@@ -101,6 +101,8 @@ void w_userPanel::userLogged(QString name, QString role)
 
 
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(QString("%1 [%2]").arg(name, role));
+    loggedUserName->setPressedAction("type=process,target=USER_PROFILE_CARD,params=CURRENT_USER");
+
 
     logStateButton->setName("log_out");
     logStateButton->setIcon(":/icons/log_out_128_128.png");
@@ -112,6 +114,7 @@ void w_userPanel::userLogged(QString name, QString role)
 void w_userPanel::userNotLogged()
 {
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(QString(""));
+    loggedUserName->setPressedAction("type=NULL,target=NULL,params=NULL");
 
     logStateButton->setName("log_in");
     logStateButton->setIcon(":/icons/log_in_128_128.png");
