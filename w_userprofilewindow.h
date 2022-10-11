@@ -38,6 +38,9 @@ private:
 private slots:
     void on_more_auth_logs_button_clicked();
     void on_more_Clinic_logs_button_clicked();
+    void refreshUserInfo();
+    void refreshEmployeeInfo();
+    void refreshLogs();
 };
 
 #endif // W_USERPROFILEWINDOW_H

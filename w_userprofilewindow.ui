@@ -641,7 +641,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_id_label_2">
+    <widget class="QLabel" name="l_role_label">
      <property name="geometry">
       <rect>
        <x>290</x>
@@ -669,7 +669,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_email_label_2">
+    <widget class="QLabel" name="l_is_blocked_label">
      <property name="geometry">
       <rect>
        <x>290</x>
@@ -697,7 +697,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_name_label_2">
+    <widget class="QLabel" name="l_create_date_label">
      <property name="geometry">
       <rect>
        <x>290</x>
@@ -725,7 +725,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_name_2">
+    <widget class="QLabel" name="l_create_date">
      <property name="geometry">
       <rect>
        <x>375</x>
@@ -753,7 +753,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_id_2">
+    <widget class="QLabel" name="l_role">
      <property name="geometry">
       <rect>
        <x>375</x>
@@ -781,7 +781,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_verified_date_label_2">
+    <widget class="QLabel" name="l_is_logged_label">
      <property name="geometry">
       <rect>
        <x>290</x>
@@ -809,7 +809,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_verified_date_2">
+    <widget class="QLabel" name="l_is_logged">
      <property name="geometry">
       <rect>
        <x>375</x>
@@ -837,7 +837,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_verified_2">
+    <widget class="QLabel" name="l_blocked_date">
      <property name="geometry">
       <rect>
        <x>375</x>
@@ -856,7 +856,7 @@ color: rgb(255, 255, 255);</string>
       <string notr="true">color: rgb(221, 221, 221);</string>
      </property>
      <property name="text">
-      <string>[USER_BLOCKED_TIME]</string>
+      <string>[USER_BLOCKED_DATE]</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -865,7 +865,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_verified_label_2">
+    <widget class="QLabel" name="l_blocked_date_label">
      <property name="geometry">
       <rect>
        <x>290</x>
@@ -893,7 +893,7 @@ color: rgb(255, 255, 255);</string>
       <number>3</number>
      </property>
     </widget>
-    <widget class="QLabel" name="l_email_2">
+    <widget class="QLabel" name="l_is_blocked">
      <property name="geometry">
       <rect>
        <x>375</x>

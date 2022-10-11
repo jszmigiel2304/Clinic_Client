@@ -18,6 +18,20 @@ void w_UserProfileWindow::on_more_Clinic_logs_button_clicked()
 
 }
 
+void w_UserProfileWindow::refreshUserInfo()
+{
+}
+
+void w_UserProfileWindow::refreshEmployeeInfo()
+{
+
+}
+
+void w_UserProfileWindow::refreshLogs()
+{
+
+}
+
 w_UserProfileWindow *w_UserProfileWindow::Instance()
 {
     static w_UserProfileWindow * instance = nullptr;
@@ -60,6 +74,9 @@ void w_UserProfileWindow::setEmployeeProperties(QMap<QString, QVariant> employee
 
 void w_UserProfileWindow::refresh()
 {
+    this->refreshUserInfo();
+    this->refreshEmployeeInfo();
+    this->refreshLogs();
 }
 
 void w_UserProfileWindow::closeEvent(QCloseEvent *event)
