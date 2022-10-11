@@ -5,7 +5,7 @@ c_SessionController::c_SessionController(QObject *parent) : QObject(parent)
     loggedUser = nullptr;
     identifier = QUuid("00000000-0000-0000-0000-000000000000");
     opened = false;
-    state = NOT_DEFINED;
+    state = myTypes::NOT_DEFINED;
     currentOpenTime = QDateTime::currentDateTime();
     filePath = QString("");
     fileName = QString("");
@@ -26,12 +26,12 @@ void c_SessionController::setOpened(bool newOpened)
     opened = newOpened;
 }
 
-SessionState c_SessionController::getState() const
+myTypes::SessionState c_SessionController::getState() const
 {
     return state;
 }
 
-void c_SessionController::setState(SessionState newState)
+void c_SessionController::setState(myTypes::SessionState newState)
 {
     state = newState;
 
@@ -105,16 +105,16 @@ void c_SessionController::setUpSession(QMap<QString, QVariant> settings)
 
 
     switch(settings["state"].toInt()) {
-    case 0x00: { state = NOT_DEFINED; break;}
-    case 0x01: { state = DEFINED_NOT_STARTED; break;}
-    case 0x10: { state = STARTED; break;}
-    case 0x11: { state = RESTORED; break;}
-    case 0x12: { state = RESTARTED; break;}
-    case 0x20: { state = PAUSED_NOT_SAVED; break;}
-    case 0x21: { state = PAUSED_SAVED; break;}
-    case 0x30: { state = CLOSED_NOT_SAVED; break;}
-    case 0x31: { state = CLOSED_SAVED; break;}
-    default: { state = ERROR; break;}
+    case 0x00: { state = myTypes::NOT_DEFINED; break;}
+    case 0x01: { state = myTypes::DEFINED_NOT_STARTED; break;}
+    case 0x10: { state = myTypes::STARTED; break;}
+    case 0x11: { state = myTypes::RESTORED; break;}
+    case 0x12: { state = myTypes::RESTARTED; break;}
+    case 0x20: { state = myTypes::PAUSED_NOT_SAVED; break;}
+    case 0x21: { state = myTypes::PAUSED_SAVED; break;}
+    case 0x30: { state = myTypes::CLOSED_NOT_SAVED; break;}
+    case 0x31: { state = myTypes::CLOSED_SAVED; break;}
+    default: { state = myTypes::ERROR; break;}
     }
 
     if(createSessionStateFile())
@@ -152,7 +152,7 @@ void c_SessionController::resetSession()
 {
     identifier = QUuid("00000000-0000-0000-0000-000000000000");
     opened = false;
-    state = NOT_DEFINED;
+    state = myTypes::NOT_DEFINED;
     currentOpenTime = QDateTime::currentDateTime();
     filePath = QString("");
     fileName = QString("");

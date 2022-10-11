@@ -14,9 +14,9 @@ c_module::~c_module()
 
 }
 
-moduleInfo c_module::getModuleInfo()
+myStructures::moduleInfo c_module::getModuleInfo()
 {
-    moduleInfo infos;
+    myStructures::moduleInfo infos;
 
     infos.description = getDescription();
     infos.name = getName();

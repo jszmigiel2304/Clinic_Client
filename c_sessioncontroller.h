@@ -59,8 +59,8 @@ public:
     w_logsWindow *getLogs() const;
     void setLogs(w_logsWindow *newLogs);
 
-    SessionState getState() const;
-    void setState(SessionState newState);    
+    myTypes::SessionState getState() const;
+    void setState(myTypes::SessionState newState);
 
     void setOpened(bool newOpened);
 
@@ -83,7 +83,7 @@ private:
 
     quint32 sessionExpireTime;
 
-    SessionState state;
+    myTypes::SessionState state;
 
     QFile sessionFile;
     QByteArray fileData;

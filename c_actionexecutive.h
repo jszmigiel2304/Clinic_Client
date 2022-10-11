@@ -28,7 +28,7 @@ public:
     w_logsWindow *getLogs() const;
     void setLogs(w_logsWindow *value);
 
-    void processData(threadData data);
+    void processData(myStructures::threadData data);
 
     c_LogsController *getLogsController() const;
     void setLogsController(c_LogsController *newLogsController);
@@ -42,23 +42,23 @@ private:
 
     w_logsWindow *logs;
 
-    void processMessage(threadData data, QMap<QString, QString> * processedDataErrors = nullptr);
-    void processGet(threadData data, QMap<QString, QString> * processedDataErrors = nullptr);
-    void processReply(threadData data, QMap<QString, QString> * processedDataErrors = nullptr);
+    void processMessage(myStructures::threadData data, QMap<QString, QString> * processedDataErrors = nullptr);
+    void processGet(myStructures::threadData data, QMap<QString, QString> * processedDataErrors = nullptr);
+    void processReply(myStructures::threadData data, QMap<QString, QString> * processedDataErrors = nullptr);
 
 
 private slots:
-    void processResults(JsonContent jsonContent, QList<QMap<QString, QVariant>> results);
+    void processResults(myTypes::JsonContent jsonContent, QList<QMap<QString, QVariant>> results);
     void processErrors(QMap<QString, QString> * receivedErrors);
 
 signals:
     void newLog(QString log);
     void newLogToFile(QString sender, QString notes, QByteArray data);
-    void errors(QMap<QString, threadData> errors);
-    void resultReady(JsonContent jsonContent, QList<QMap<QString, QVariant>> results);
+    void errors(QMap<QString, myStructures::threadData> errors);
+    void resultReady(myTypes::JsonContent jsonContent, QList<QMap<QString, QVariant>> results);
     void getUserIdResultReady(qint32 userID);
-    void logInConfirmationReady(logInConfirmation confirmation);
-    void logOutConfirmationReady(logOutConfirmation confirmation);
+    void logInConfirmationReady(myStructures::logInConfirmation confirmation);
+    void logOutConfirmationReady(myStructures::logOutConfirmation confirmation);
     void unlockConfirmationReceived(bool canUnlock);
     void errors(QMap<QString, QString> * receivedErrors);
 

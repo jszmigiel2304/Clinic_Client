@@ -4,3 +4,9 @@ c_employee::c_employee()
 {
 
 }
+
+c_employee::~c_employee()
+{
+
+}
+

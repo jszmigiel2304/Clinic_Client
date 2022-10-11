@@ -2,8 +2,8 @@
 #include "c_loggeduserthread.h"
 
 c_loggedUser::c_loggedUser()
-{
-
+{    
+    qRegisterMetaType<myStructures::myLog>("myLog");
 
     mThread.reset(new c_loggedUserThread);
     moveToThread(mThread.get());
@@ -13,11 +13,18 @@ c_loggedUser::c_loggedUser()
     mThread->setLoggingState(false);
 
     connect(this, SIGNAL(logOutUser()), this->thread(), SLOT(logOut()), Qt::DirectConnection);
+    connect(this, SIGNAL(getLogsSignal(qint32, QString, QString)), this->thread(), SLOT(getLogs(qint32, QString, QString)) );
+    connect(this->thread(), SIGNAL(logsReceivedFromServerSignal(QList<myStructures::myLog>, QList<myStructures::myLog>)), this, SLOT(logsReceivedFromServer(QList<myStructures::myLog>, QList<myStructures::myLog>)));
 }
 
 void c_loggedUser::cleanUpThread()
 {
     mThread->quit();
+}
+
+void c_loggedUser::logsReceivedFromServer(QList<myStructures::myLog> authLogs, QList<myStructures::myLog> clinicLogs)
+{
+
 }
 
 
@@ -64,6 +71,55 @@ void c_loggedUser::forceLogOut()
 {
     if(getIsLogged())
         emit logOutUser();
+}
+
+QMap<QString, QVariant> c_loggedUser::getUserProperties()
+{
+    QMap<QString, QVariant> map;
+
+    //QMetaEnum metaEnum = QMetaEnum::fromType<m_loggedUser::UserRole>();
+
+    map["id"] = this->getId();
+    map["name"] = this->getName();    
+    map["role"] = this->getRoleString();
+    //map["role"] = metaEnum.valueToKey( this->getRole() );
+    map["create_date"] = this->getCreate_date().toString();
+    map["email"] = this->getEmail();
+    map["is_blocked"] = this->getBlocked();
+    map["is_verified"] = this->getVerified();
+    map["blocked_date"] = this->getBlock_date().toString();
+    map["verified_date"] = this->getVerify_date().toString();
+    map["is_logged"] = this->getIsLogged();
+
+
+    return map;
+}
+
+QMap<QString, QVariant> c_loggedUser::getEmployeeProperties()
+{
+    QMap<QString, QVariant> map;
+
+    return map;
+}
+
+QList<myStructures::myLog> c_loggedUser::getAuthLogs()
+{
+    if(this->authLogs.isEmpty())
+        emit getLogsSignal(this->getId(),
+                           this->getName(),
+                           this->getEncryptedPassword());
+
+    return this->authLogs;
+}
+
+QList<myStructures::myLog> c_loggedUser::getClinicLogs()
+{
+    if(this->authLogs.isEmpty())
+        emit getLogsSignal(this->getId(),
+                           this->getName(),
+                           this->getEncryptedPassword());
+
+    return this->ClinicLogs;
 }
 
 w_logsWindow *c_loggedUser::getLogs() const

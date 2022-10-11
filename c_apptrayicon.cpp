@@ -176,15 +176,15 @@ void c_AppTrayIcon::mainWindowStateChanged(Qt::WindowStates states, bool appIsCl
 
 }
 
-void c_AppTrayIcon::userLogged(QString name, UserRole role)
+void c_AppTrayIcon::userLogged(QString name, QString role)
 {
-    QString roleText = QString("");
-    if(role == SUPER) roleText += QString("SUPER");
-    else if(role == ADMIN) roleText += QString("ADMIN");
-    else if(role == MODERATOR) roleText += QString("MODERATOR");
-    else if(role == USER) roleText += QString("UŻYTKOWNIK");
-    else if(role == GUEST) roleText += QString("GOŚĆ");
-    else if(role == NO_ROLE) roleText += QString("");
+//    QString roleText = QString("");
+//    if(role == myTypes::SUPER) roleText += QString("SUPER");
+//    else if(role == myTypes::ADMIN) roleText += QString("ADMIN");
+//    else if(role == myTypes::MODERATOR) roleText += QString("MODERATOR");
+//    else if(role == myTypes::USER) roleText += QString("UŻYTKOWNIK");
+//    else if(role == myTypes::GUEST) roleText += QString("GOŚĆ");
+//    else if(role == myTypes::NO_ROLE) roleText += QString("");
 
     logInAction->setEnabled(false);
     logInAction->setVisible(false);
@@ -194,7 +194,7 @@ void c_AppTrayIcon::userLogged(QString name, UserRole role)
 
     userPanelAction->setEnabled(true);
     userPanelAction->setVisible(true);
-    userPanelAction->setText(QString("%1 [%2]").arg(name, roleText));
+    userPanelAction->setText(QString("%1 [%2]").arg(name, role));
 
     unlockSessionAction->setEnabled(false);
     unlockSessionAction->setVisible(false);

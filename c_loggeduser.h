@@ -22,11 +22,11 @@
 #include <QTimer>
 #include <QDateTime>
 #include <QMetaMethod>
+#include <QMetaEnum>
 
 class c_loggedUser : public m_loggedUser /*, public cv_ProcessData */
 {
     Q_OBJECT
-
 public:
     c_loggedUser();
     ~c_loggedUser();
@@ -43,41 +43,31 @@ public:
 
 public slots:
     void forceLogOut();
-//    void getUserId(QString userName, QString userPassword);
-//    void logIn(qint32 id, QString name, QString password);
-//    void logOut(qint32 id = -1, QString name = QString(""), QString password = QString(""));
-//    void userIdReceivedFromServer(qint32 userID);
-//    void logInConfirmationReceivedFromServer(logInConfirmation confirmation);
-//    void logOutConfirmationReceivedFromServer(logOutConfirmation confirmation);
-//    void processData(threadData data) override;
-//    void loggingTimerTimeout();
-//    void loggingOutTimerTimeout();
+    QMap<QString, QVariant> getUserProperties();
+    QMap<QString, QVariant> getEmployeeProperties();
+    QList<myStructures::myLog> getAuthLogs();
+    QList<myStructures::myLog> getClinicLogs();
+
 
 private:
     std::unique_ptr<c_loggedUserThread> mThread;
 
-//    bool loggingState;
-//    QTimer * loggingTimer;
-//    QTimer * loggingOutTimer;
-
     w_logsWindow *logs;
+
+    QList<myStructures::myLog> authLogs;
+    QList<myStructures::myLog> ClinicLogs;
 
 private slots:
     void cleanUpThread();
+    void logsReceivedFromServer(QList<myStructures::myLog> authLogs, QList<myStructures::myLog> clinicLogs);
 
 signals:
     void newLog(QString log);
     void threadAssigned(MyThread * thread);
     void logOutUser();
     void aboutToLogOut();
-//    void sendToServer(QByteArray packet);
-//    void getUserIdFromServer(QByteArray logInPacket);
-//    void logInError(QString error);
-//    void logInProcessing(QString text);
-//    void logInFinished();
-//    void userLogged(QString name, UserRole role);
-//    void userNotLogged();
-//    void logInToServer(qint32 id, QString name, QString password);
+    void getLogsSignal(qint32 id, QString name, QString password);
+
 };
 
 #endif // C_LOGGEDUSER_H

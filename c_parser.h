@@ -41,8 +41,8 @@ public:
 public slots:
     QPair<QByteArray, QByteArray> parseData(quint64 data_size, QByteArray data);
 //    void parseJson(QJsonDocument * json, JsonContent * content, QList<QMap<QString, QVariant> > * data);
-    void parseJson(QByteArray * json, threadData * data);
-    void parseForMd5(threadData * data, QByteArray * md5);
+    void parseJson(QByteArray * json, myStructures::threadData * data);
+    void parseForMd5(myStructures::threadData * data, QByteArray * md5);
     void parseErrors(QList<QMap<QString, QVariant>> * jsonData, QMap<QString, QString> * processedDataErrors);
 //    void parseErrorJson(QJsonDocument * json, JsonContent * content, QMap<QString, threadData> *errors);
 

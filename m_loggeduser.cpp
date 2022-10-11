@@ -111,9 +111,15 @@ void m_loggedUser::setBlocked(bool newBlocked)
     blocked = newBlocked;
 }
 
-UserRole m_loggedUser::getRole() const
+m_loggedUser::UserRole m_loggedUser::getRole() const
 {
     return role;
+}
+
+QString m_loggedUser::getRoleString() const
+{
+    QMetaEnum metaEnum = QMetaEnum::fromType<m_loggedUser::UserRole>();
+    return metaEnum.valueToKey( this->getRole() );
 }
 
 void m_loggedUser::setRole(UserRole newRole)
@@ -135,9 +141,9 @@ void m_loggedUser::clearProperties()
     role = NO_ROLE;
 }
 
-authenticator m_loggedUser::getAuthorizationData()
+myStructures::authenticator m_loggedUser::getAuthorizationData()
 {
-    authenticator data;
+    myStructures::authenticator data;
     data.id = getId();
     data.name = getName();
     data.password = getPassword();
@@ -152,4 +158,44 @@ c_employee *m_loggedUser::getEmployee() const
 void m_loggedUser::setEmployee(c_employee *newEmployee)
 {
     employee = newEmployee;
+}
+
+const QDateTime &m_loggedUser::getCreate_date() const
+{
+    return create_date;
+}
+
+void m_loggedUser::setCreate_date(const QDateTime &newCreate_date)
+{
+    create_date = newCreate_date;
+}
+
+const QDateTime &m_loggedUser::getVerify_date() const
+{
+    return verify_date;
+}
+
+void m_loggedUser::setVerify_date(const QDateTime &newVerify_date)
+{
+    verify_date = newVerify_date;
+}
+
+const QDateTime &m_loggedUser::getBlock_date() const
+{
+    return block_date;
+}
+
+void m_loggedUser::setBlock_date(const QDateTime &newBlock_date)
+{
+    block_date = newBlock_date;
+}
+
+const QByteArray &m_loggedUser::getPhoto() const
+{
+    return photo;
+}
+
+void m_loggedUser::setPhoto(const QByteArray &newPhoto)
+{
+    photo = newPhoto;
 }

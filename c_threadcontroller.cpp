@@ -25,10 +25,10 @@ qint32 c_ThreadController::generateThreadId()
 void c_ThreadController::newThread(MyThread *thread)
 {
     threadsList.push_front(thread);
-    connect(thread, SIGNAL(newData(threadData)), thread, SLOT(dataReceived(threadData)));
+    connect(thread, SIGNAL(newData(myStructures::threadData)), thread, SLOT(dataReceived(myStructures::threadData)));
 }
 
-void c_ThreadController::dataReceived(threadData data)
+void c_ThreadController::dataReceived(myStructures::threadData data)
 {
     for(int i = 0; i < threadsList.length(); i++)
     {

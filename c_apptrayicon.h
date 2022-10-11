@@ -41,7 +41,7 @@ public slots:
     void mainWindowStateChanged(Qt::WindowStates states, bool appIsClosing);
 
 
-    void userLogged(QString name, UserRole role);
+    void userLogged(QString name, QString role);
     void userNotLogged();
     void appLocked(QString name);
     void appUnlocked();

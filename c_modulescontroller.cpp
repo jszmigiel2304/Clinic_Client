@@ -48,9 +48,9 @@ QStringList c_modulesController::getModulesNames()
     return modulesNames;
 }
 
-QList<moduleInfo> c_modulesController::getModulesProperties()
+QList<myStructures::moduleInfo> c_modulesController::getModulesProperties()
 {
-    QList<moduleInfo> list;
+    QList<myStructures::moduleInfo> list;
     foreach (c_module * module, this->moduleList) {
         list.push_back( module->getModuleInfo() );
     }

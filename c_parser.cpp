@@ -12,11 +12,11 @@ QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(QString name, QString
     QList<QMap<QString, QVariant>> packetData;
 
     QMap<QString, QVariant> packetInfo;
-    packetInfo["thread_dest"] = static_cast<qint8>(SERVER);
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
     packetInfo["thread_id"] = threadID;
-    packetInfo["req_type"] = static_cast<qint8>(REQUEST);
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
     packetInfo["type_flag"] = 0x00000000;
-    packetInfo["content"] = static_cast<qint32>(LOGGING_DATA);
+    packetInfo["content"] = static_cast<qint32>(myTypes::LOGGING_DATA);
 
     QMap<QString, QVariant> userInfo;
     userInfo["name"] = name;
@@ -43,11 +43,11 @@ QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(qint32 id, QString na
     QList<QMap<QString, QVariant>> packetData;
 
     QMap<QString, QVariant> packetInfo;
-    packetInfo["thread_dest"] = static_cast<qint8>(SERVER);
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
     packetInfo["thread_id"] = threadID;
-    packetInfo["req_type"] = static_cast<qint8>(REQUEST);
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
     packetInfo["type_flag"] = 0x00000000;
-    packetInfo["content"] = static_cast<qint32>(LOGGING_DATA);
+    packetInfo["content"] = static_cast<qint32>(myTypes::LOGGING_DATA);
 
     QMap<QString, QVariant> userInfo;
     userInfo["id"] = id;
@@ -75,11 +75,11 @@ QPair<QByteArray, QByteArray> c_Parser::prepareLogOutPacket(qint32 id, QString n
     QList<QMap<QString, QVariant>> packetData;
 
     QMap<QString, QVariant> packetInfo;
-    packetInfo["thread_dest"] = static_cast<qint8>(SERVER);
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
     packetInfo["thread_id"] = threadID;
-    packetInfo["req_type"] = static_cast<qint8>(REQUEST);
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
     packetInfo["type_flag"] = 0x00000001;
-    packetInfo["content"] = static_cast<qint32>(LOGGING_DATA);
+    packetInfo["content"] = static_cast<qint32>(myTypes::LOGGING_DATA);
 
     QMap<QString, QVariant> userInfo;
     userInfo["id"] = id;
@@ -105,11 +105,11 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetUserIdPacket(QString name, QSt
     QList<QMap<QString, QVariant>> packetData;
 
     QMap<QString, QVariant> packetInfo;
-    packetInfo["thread_dest"] = static_cast<qint8>(SERVER);
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
     packetInfo["thread_id"] = threadID;
-    packetInfo["req_type"] = static_cast<qint8>(GET);
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
     packetInfo["type_flag"] = 0x00000000;
-    packetInfo["content"] = static_cast<qint32>(USER_ID_REQUEST);
+    packetInfo["content"] = static_cast<qint32>(myTypes::USER_ID_REQUEST);
 
     QMap<QString, QVariant> userInfo;
     userInfo["name"] = name;
@@ -135,11 +135,11 @@ QPair<QByteArray, QByteArray> c_Parser::unlockOnIdle(QString name, QString encry
     QList<QMap<QString, QVariant>> packetData;
 
     QMap<QString, QVariant> packetInfo;
-    packetInfo["thread_dest"] = static_cast<qint8>(SERVER);
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
     packetInfo["thread_id"] = threadID;
-    packetInfo["req_type"] = static_cast<qint8>(REQUEST);
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
     packetInfo["type_flag"] = 0x00000002;
-    packetInfo["content"] = static_cast<qint32>(UNLOCK_ON_IDLE_REQUEST);
+    packetInfo["content"] = static_cast<qint32>(myTypes::UNLOCK_ON_IDLE_REQUEST);
 
     QMap<QString, QVariant> userInfo;
     userInfo["name"] = name;
@@ -165,11 +165,11 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetSessionSettingsPacket(qint32 i
     QList<QMap<QString, QVariant>> packetData;
 
     QMap<QString, QVariant> packetInfo;
-    packetInfo["thread_dest"] = static_cast<qint8>(SERVER);
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
     packetInfo["thread_id"] = threadID;
-    packetInfo["req_type"] = static_cast<qint8>(GET);
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
     packetInfo["type_flag"] = 0x00000100;
-    packetInfo["content"] = static_cast<qint32>(NEW_SESSION_SETTINGS);
+    packetInfo["content"] = static_cast<qint32>(myTypes::NEW_SESSION_SETTINGS);
 
     QMap<QString, QVariant> data;
     data["id"] = id;
@@ -198,11 +198,11 @@ QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionFileToServerPacket(QUu
     QList<QMap<QString, QVariant>> packetData;
 
     QMap<QString, QVariant> packetInfo;
-    packetInfo["thread_dest"] = static_cast<qint8>(SERVER);
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
     packetInfo["thread_id"] = threadID;
-    packetInfo["req_type"] = static_cast<qint8>(UPDATE);
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::UPDATE);
     packetInfo["type_flag"] = 0x01000001;
-    packetInfo["content"] = static_cast<qint32>(SESSION_FILE);
+    packetInfo["content"] = static_cast<qint32>(myTypes::SESSION_FILE);
 
     QMap<QString, QVariant> data;
     data["id"] = id;
@@ -231,11 +231,11 @@ QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionStateToServerPacket(QU
     QList<QMap<QString, QVariant>> packetData;
 
     QMap<QString, QVariant> packetInfo;
-    packetInfo["thread_dest"] = static_cast<qint8>(SERVER);
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
     packetInfo["thread_id"] = threadID;
-    packetInfo["req_type"] = static_cast<qint8>(UPDATE);
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::UPDATE);
     packetInfo["type_flag"] = 0x01000002;
-    packetInfo["content"] = static_cast<qint32>(SESSION_STATE);
+    packetInfo["content"] = static_cast<qint32>(myTypes::SESSION_STATE);
 
     QMap<QString, QVariant> data;
     data["id"] = id;
@@ -264,11 +264,11 @@ QPair<QByteArray, QByteArray> c_Parser::prepareUpdateSessionCloseTimeToServerPac
     QList<QMap<QString, QVariant>> packetData;
 
     QMap<QString, QVariant> packetInfo;
-    packetInfo["thread_dest"] = static_cast<qint8>(SERVER);
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
     packetInfo["thread_id"] = threadID;
-    packetInfo["req_type"] = static_cast<qint8>(UPDATE);
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::UPDATE);
     packetInfo["type_flag"] = 0x01000003;
-    packetInfo["content"] = static_cast<qint32>(SESSION_CLOSE_TIME);
+    packetInfo["content"] = static_cast<qint32>(myTypes::SESSION_CLOSE_TIME);
 
     QMap<QString, QVariant> data;
     data["id"] = id;
@@ -332,13 +332,13 @@ QPair<QByteArray, QByteArray>  c_Parser::parseData(quint64 data_size, QByteArray
     return pair;
 }
 
-void c_Parser::parseJson(QByteArray * json, threadData * data)
+void c_Parser::parseJson(QByteArray * json, myStructures::threadData * data)
 {
     QJsonParseError error;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(*json, &error);
 
     if (error.error != QJsonParseError::NoError) {
-        (*data).content = ERRORS;
+        (*data).content = myTypes::ERRORS;
         QList<QMap<QString, QVariant>> attData;
         QMap<QString, QVariant> error;
         error["error_0"] = QString("JSON reading error.");
@@ -349,11 +349,11 @@ void c_Parser::parseJson(QByteArray * json, threadData * data)
 
     QJsonObject mainObject = jsonDoc.object();
 
-    (*data).thread_dest = static_cast<ThreadDestination>( mainObject["thread_dest"].toInteger() );
+    (*data).thread_dest = static_cast<myTypes::ThreadDestination>( mainObject["thread_dest"].toInteger() );
     (*data).thread_id = mainObject["thread_id"].toInteger();
-    (*data).req_type = static_cast<RequestType>( mainObject["req_type"].toInteger() );
+    (*data).req_type = static_cast<myTypes::RequestType>( mainObject["req_type"].toInteger() );
     (*data).type_flag = mainObject["type_flag"].toInteger();
-    (*data).content = static_cast<JsonContent>( mainObject["content"].toInteger() );
+    (*data).content = static_cast<myTypes::JsonContent>( mainObject["content"].toInteger() );
     (*data).ref_md5 = QByteArray::fromHex( (mainObject["ref_md5"].toVariant()).toByteArray() ).toHex();
 
 
@@ -371,7 +371,7 @@ void c_Parser::parseJson(QByteArray * json, threadData * data)
     }
 }
 
-void c_Parser::parseForMd5(threadData *data, QByteArray *md5)
+void c_Parser::parseForMd5(myStructures::threadData *data, QByteArray *md5)
 {
     *md5 = data->data[0]["md5"].toByteArray();
 }

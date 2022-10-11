@@ -41,7 +41,7 @@ public slots:
     void moduleButtonPress(QString moduleAction);
     void sessionTimeChanged(QTime time);
     void connectionToServerStatusChanged(QAbstractSocket::SocketState state);
-    void userLogged(QString name, UserRole role);
+    void userLogged(QString name, QString role);
     void userNotLogged();
 
 private:

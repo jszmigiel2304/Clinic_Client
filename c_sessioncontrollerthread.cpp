@@ -34,7 +34,7 @@ void c_SessionControllerThread::getSessionSettingsFromServer()
                                                                                 dynamic_cast<c_SessionController *>(myParentConnector)->getIdentifier(),
                                                                                 getId());
 
-    packet packet;
+    myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
@@ -57,9 +57,9 @@ void c_SessionControllerThread::setSessionExpireSeconds(quint32 newSessionExpire
 }
 
 
-void c_SessionControllerThread::processData(threadData data)
+void c_SessionControllerThread::processData(myStructures::threadData data)
 {
-    if( this->getId() == data.thread_id && (data.thread_dest == CLINIC_SESSION_CONTROLLER  || data.thread_dest == CLINIC_ERROR_CONTROLLER) )
+    if( this->getId() == data.thread_id && (data.thread_dest == myTypes::CLINIC_SESSION_CONTROLLER  || data.thread_dest == myTypes::CLINIC_ERROR_CONTROLLER) )
     {
         c_actionExecutive *executive = new c_actionExecutive();
         //executive->moveToThread(mThread.get());
@@ -86,7 +86,7 @@ void c_SessionControllerThread::sessionRun()
 {    
     emit sessionTimeSet(sessionExpireSeconds);
 
-    dynamic_cast<c_SessionController *>(myParentConnector)->setState(STARTED);
+    dynamic_cast<c_SessionController *>(myParentConnector)->setState(myTypes::STARTED);
     dynamic_cast<c_SessionController *>(myParentConnector)->setOpened(true);
 
     emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Zakończono konfigurowanie sesji.\n Sesja rozpoczęta.\n"));
@@ -110,7 +110,7 @@ void c_SessionControllerThread::sendSessionFileToServer(QUuid id_session, QByteA
                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(),
                                                                                      getId());
 
-    packet packet;
+    myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
@@ -131,7 +131,7 @@ void c_SessionControllerThread::sendSessionStateToServer(QUuid id_session, qint3
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(),
                                                                                       getId());
 
-    packet packet;
+    myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
@@ -146,10 +146,10 @@ void c_SessionControllerThread::sendSessionStateToServer(QUuid id_session, qint3
 void c_SessionControllerThread::appIDLEdetected()
 {
 
-    dynamic_cast<c_SessionController *>(myParentConnector)->setState(PAUSED_NOT_SAVED);
+    dynamic_cast<c_SessionController *>(myParentConnector)->setState(myTypes::PAUSED_NOT_SAVED);
     //zapisac do pliku
     sendSessionFileToServer(dynamic_cast<c_SessionController *>(myParentConnector)->getIdentifier(), dynamic_cast<c_SessionController *>(myParentConnector)->readEntireSessionFile());
-    dynamic_cast<c_SessionController *>(myParentConnector)->setState(PAUSED_SAVED);
+    dynamic_cast<c_SessionController *>(myParentConnector)->setState(myTypes::PAUSED_SAVED);
 
     emit idleDetected();
     // komunikat połącz ponownie
@@ -158,7 +158,7 @@ void c_SessionControllerThread::appIDLEdetected()
 void c_SessionControllerThread::sessionClose()
 {
     waitForSessionSavedBeforeClose = true;
-    dynamic_cast<c_SessionController *>(myParentConnector)->setState(CLOSED_NOT_SAVED);
+    dynamic_cast<c_SessionController *>(myParentConnector)->setState(myTypes::CLOSED_NOT_SAVED);
     //zapisac do pliku
     sendSessionFileToServer(dynamic_cast<c_SessionController *>(myParentConnector)->getIdentifier(), dynamic_cast<c_SessionController *>(myParentConnector)->readEntireSessionFile());
 
@@ -172,7 +172,7 @@ void c_SessionControllerThread::sessionClose()
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(),
                                                                                       getId());
 
-    packet packet;
+    myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
@@ -181,7 +181,7 @@ void c_SessionControllerThread::sessionClose()
 
     emit sendToServer(packet);
 
-    dynamic_cast<c_SessionController *>(myParentConnector)->setState(CLOSED_SAVED);
+    dynamic_cast<c_SessionController *>(myParentConnector)->setState(myTypes::CLOSED_SAVED);
     dynamic_cast<c_SessionController *>(myParentConnector)->setOpened(false);
 
     emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Sesja zamkniętaa.\n"));
@@ -234,7 +234,7 @@ void c_SessionControllerThread::sessionFileUpdateConfirmationReceivedFromServer(
 
 void c_SessionControllerThread::sessionUnlockConfirmationReceived()
 {
-    dynamic_cast<c_SessionController *>(myParentConnector)->setState(RESTARTED);
+    dynamic_cast<c_SessionController *>(myParentConnector)->setState(myTypes::RESTARTED);
     emit sessionTimeSet(sessionExpireSeconds);
 
     //emit sessionUnlocked();
@@ -242,10 +242,10 @@ void c_SessionControllerThread::sessionUnlockConfirmationReceived()
 
 }
 
-void c_SessionControllerThread::configureSession(QString username, UserRole role)
+void c_SessionControllerThread::configureSession(QString username, QString role)
 {
         emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Rozpoczynam konfigurowanie sesji.\n"));
-        emit processingStarted(QString("Konfigurowanie sesji..."));
+        emit processingStarted(QString("Konfigurowanie sesji dla %1 [%2]...").arg(username, role));
         dynamic_cast<c_SessionController *>(myParentConnector)->setIdentifier();
         if(!dynamic_cast<c_SessionController *>(myParentConnector)->isValid()) getsessionSettingsTimer->start(10);
 }

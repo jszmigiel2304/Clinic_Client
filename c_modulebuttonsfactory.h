@@ -17,7 +17,7 @@ public:
     c_moduleButtonsFactory();
     ~c_moduleButtonsFactory();
 
-    w_moduleButton *getButton(buttonType buttonType);
+    w_moduleButton *getButton(myTypes::buttonType buttonType);
 
 private:
 };

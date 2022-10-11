@@ -24,9 +24,9 @@ w_modulesScrollArea::~w_modulesScrollArea()
     delete areaContent;
 }
 
-void w_modulesScrollArea::loadModules(QList<moduleInfo> modulesProperties)
+void w_modulesScrollArea::loadModules(QList<myStructures::moduleInfo> modulesProperties)
 {
-    QListIterator<moduleInfo> iterator(modulesProperties);
+    QListIterator<myStructures::moduleInfo> iterator(modulesProperties);
 
     while(iterator.hasNext())
     {
@@ -107,7 +107,7 @@ void w_modulesScrollArea::createLayout()
     {
         w_moduleButton * moduleButton;
 
-        if( ( moduleButton = buttonFactory->getButton(BIG_BUTTON) ) != nullptr)
+        if( ( moduleButton = buttonFactory->getButton(myTypes::BIG_BUTTON) ) != nullptr)
         {
                 moduleButton->setName(modules[i].name);
                 moduleButton->setDisplayedName(modules[i].displayedName);

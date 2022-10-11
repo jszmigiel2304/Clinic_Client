@@ -24,7 +24,7 @@ public:
     void LoadModules(QStringList modulesNames);
 
     QStringList getModulesNames();
-    QList<moduleInfo> getModulesProperties();
+    QList<myStructures::moduleInfo> getModulesProperties();
 
     QStringList parseModuleActionString(QString action);
 

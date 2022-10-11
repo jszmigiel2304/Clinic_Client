@@ -25,7 +25,7 @@ class w_modulesScrollArea : public QScrollArea
 public:
     w_modulesScrollArea();
     ~w_modulesScrollArea();
-    void loadModules(QList<moduleInfo> modulesProperties);
+    void loadModules(QList<myStructures::moduleInfo> modulesProperties);
     void refresh();
 
     bool eventFilter(QObject* obj, QEvent* evt);
@@ -50,7 +50,7 @@ private:
     QGridLayout * contentLayout;
 
     QList<w_moduleButton *> moduleButtons;
-    QList<moduleInfo> modules;
+    QList<myStructures::moduleInfo> modules;
 
     void setScrollBars();
 };

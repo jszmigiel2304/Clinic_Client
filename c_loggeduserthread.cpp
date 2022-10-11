@@ -27,17 +27,17 @@ void c_loggedUserThread::setLoggingState(bool newLoggingState)
     loggingState = newLoggingState;
 }
 
-void c_loggedUserThread::processData(threadData data)
+void c_loggedUserThread::processData(myStructures::threadData data)
 {
-    if( this->getId() == data.thread_id && (data.thread_dest == CLINIC_LOGGED_USER_CONTROLLER  || data.thread_dest == CLINIC_ERROR_CONTROLLER) )
+    if( this->getId() == data.thread_id && (data.thread_dest == myTypes::CLINIC_LOGGED_USER_CONTROLLER  || data.thread_dest == myTypes::CLINIC_ERROR_CONTROLLER) )
     {
         c_actionExecutive *executive = new c_actionExecutive();
         //executive->moveToThread(mThread.get());
         connect( executive, SIGNAL(newLog(QString)), dynamic_cast<c_loggedUser *>(myParentConnector)->getLogs(), SLOT(addLog(QString)) );
 
         connect( executive, SIGNAL(getUserIdResultReady(qint32)), this, SLOT(userIdReceivedFromServer(qint32)) );
-        connect( executive, SIGNAL(logInConfirmationReady(logInConfirmation)),this, SLOT(logInConfirmationReceivedFromServer(logInConfirmation)) );
-        connect( executive, SIGNAL(logOutConfirmationReady(logOutConfirmation)), this, SLOT(logOutConfirmationReceivedFromServer(logOutConfirmation)) );
+        connect( executive, SIGNAL(logInConfirmationReady(myStructures::logInConfirmation)),this, SLOT(logInConfirmationReceivedFromServer(myStructures::logInConfirmation)) );
+        connect( executive, SIGNAL(logOutConfirmationReady(myStructures::logOutConfirmation)), this, SLOT(logOutConfirmationReceivedFromServer(myStructures::logOutConfirmation)) );
         connect( executive, SIGNAL(unlockConfirmationReceived(bool)), this, SLOT(unlockConfirmationReceived(bool)) );
 
         executive->processData(data);
@@ -70,7 +70,7 @@ void c_loggedUserThread::getUserId(QString userName, QString userPassword)
                                                                        dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword(),
                                                                        getId());
 
-    packet packet;
+    myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
@@ -86,6 +86,11 @@ void c_loggedUserThread::getUserId(QString userName, QString userPassword)
 //    connect(loggingTimer, SIGNAL(timeout()), this, SLOT(loggingTimerTimeout()));
 
     loggingTimer->start(5000);
+}
+
+void c_loggedUserThread::getLogs(qint32 id, QString name, QString password)
+{
+
 }
 
 void c_loggedUserThread::unlockOnIdle(QString userName, QString userPassword)
@@ -105,7 +110,7 @@ void c_loggedUserThread::unlockOnIdle(QString userName, QString userPassword)
 
     QPair<QByteArray, QByteArray> pair = parser.unlockOnIdle(userName, encryptedPassword.toHex(), getId());
 
-    packet packet;
+    myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
@@ -134,7 +139,7 @@ void c_loggedUserThread::logIn(qint32 id, QString name, QString password)
     c_Parser parser;
     QPair<QByteArray, QByteArray> pair = parser.prepareLogInPacket(id, name, password, getId());
 
-    packet packet;
+    myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
@@ -160,7 +165,7 @@ void c_loggedUserThread::logOut(qint32 id, QString name, QString password)
 
     QPair<QByteArray, QByteArray> pair = parser.prepareLogOutPacket(idc, namec, passwordc, getId());
 
-    packet packet;
+    myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
@@ -196,7 +201,7 @@ void c_loggedUserThread::userIdReceivedFromServer(qint32 userID)
     }
 }
 
-void c_loggedUserThread::logInConfirmationReceivedFromServer(logInConfirmation confirmation)
+void c_loggedUserThread::logInConfirmationReceivedFromServer(myStructures::logInConfirmation confirmation)
 {
     loggingTimer->stop();
 
@@ -206,10 +211,17 @@ void c_loggedUserThread::logInConfirmationReceivedFromServer(logInConfirmation c
     dynamic_cast<c_loggedUser *>(myParentConnector)->setEmail(confirmation.email);
     dynamic_cast<c_loggedUser *>(myParentConnector)->setVerified(confirmation.verified);
     dynamic_cast<c_loggedUser *>(myParentConnector)->setBlocked(confirmation.blocked);
-    dynamic_cast<c_loggedUser *>(myParentConnector)->setRole(confirmation.role);
+    dynamic_cast<c_loggedUser *>(myParentConnector)->setCreate_date(confirmation.create_date);
+    dynamic_cast<c_loggedUser *>(myParentConnector)->setVerify_date(confirmation.verify_date);
+    dynamic_cast<c_loggedUser *>(myParentConnector)->setBlock_date(confirmation.block_date);
+    dynamic_cast<c_loggedUser *>(myParentConnector)->setPhoto(confirmation.photo);
+
+    QMetaEnum metaEnum = QMetaEnum::fromType<m_loggedUser::UserRole>();
+
+    dynamic_cast<c_loggedUser *>(myParentConnector)->setRole( static_cast<m_loggedUser::UserRole>( metaEnum.keyToValue(confirmation.role.toStdString().c_str() ) ) );
     dynamic_cast<c_loggedUser *>(myParentConnector)->setIsLogged(true);
 
-    emit userLogged(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(), dynamic_cast<c_loggedUser *>(myParentConnector)->getRole());
+    emit userLogged(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(), dynamic_cast<c_loggedUser *>(myParentConnector)->getRoleString());
     emit logInFinished();
 
 
@@ -217,7 +229,7 @@ void c_loggedUserThread::logInConfirmationReceivedFromServer(logInConfirmation c
     emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Udane logowanie. \n"));
 }
 
-void c_loggedUserThread::logOutConfirmationReceivedFromServer(logOutConfirmation confirmation)
+void c_loggedUserThread::logOutConfirmationReceivedFromServer(myStructures::logOutConfirmation confirmation)
 {
     emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Udane wylogowanie. \n"));
 

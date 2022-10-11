@@ -51,7 +51,7 @@ void w_MainWindow::createModulesScrollArea()
 
     connect(this, SIGNAL(modulePressed(QString)), mCtr, SLOT(modulePressed(QString)));
 
-    QList<moduleInfo> modulesProperties = ( dynamic_cast<c_modulesController *>(this->watchedObjectsList["modulesController"]) )->getModulesProperties();
+    QList<myStructures::moduleInfo> modulesProperties = ( dynamic_cast<c_modulesController *>(this->watchedObjectsList["modulesController"]) )->getModulesProperties();
     this->modulesScrollArea->loadModules(modulesProperties);
     this->modulesScrollArea->setVisible(true);
     this->modulesScrollArea->refresh();    

@@ -12,7 +12,7 @@ void MyThread::run()
     exec();
 }
 
-void MyThread::processData(threadData data)
+void MyThread::processData(myStructures::threadData data)
 {
 
 }
@@ -47,7 +47,7 @@ void MyThread::setNote(const QString &newNote)
     note = newNote;
 }
 
-void MyThread::dataReceived(threadData data)
+void MyThread::dataReceived(myStructures::threadData data)
 {
     //przetworzenie otrzymanych danych z ThreadController
 

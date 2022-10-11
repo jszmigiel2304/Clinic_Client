@@ -21,7 +21,7 @@ void c_connectionToServerController::start()
     reconnectTimer->start(100);
 }
 
-void c_connectionToServerController::processData(threadData data)
+void c_connectionToServerController::processData(myStructures::threadData data)
 {
 
 }
@@ -96,7 +96,7 @@ void c_connectionToServerController::setLogs(w_logsWindow *newLogs)
     logs = newLogs;
 }
 
-ThreadDestination c_connectionToServerController::getNameThreadDestination() const
+myTypes::ThreadDestination c_connectionToServerController::getNameThreadDestination() const
 {
     return nameThreadDestination;
 }
@@ -248,7 +248,7 @@ void c_connectionToServerController::closeConnection()
 }
 
 
-void c_connectionToServerController::sendData(packet packet)
+void c_connectionToServerController::sendData(myStructures::packet packet)
 {
 //    if(getSocket()->state() == QAbstractSocket::ConnectedState && getSocket()->isWritable() ) {
 //        QDataStream socketStream(socket);
@@ -278,7 +278,7 @@ void c_connectionToServerController::sendData(packet packet)
     /*----------------------SEND 2--------------------------*/
 }
 
-void c_connectionToServerController::passDataToBuffer(packet packet)
+void c_connectionToServerController::passDataToBuffer(myStructures::packet packet)
 {
     if( !isWaitingForReceiveConfirmation(packet) && !isWaitingForReply(packet) ) {
         //waitingForReceiveConfirmation.append(packet);
@@ -303,7 +303,7 @@ void c_connectionToServerController::sendPackets()
 //        sendAgainPackets->start(10000);
 }
 
-void c_connectionToServerController::receiveConfirmationReceived(threadData data)
+void c_connectionToServerController::receiveConfirmationReceived(myStructures::threadData data)
 {
     QString log = QString("Potwierdzenie otrzymania pakietu przez serwer.\n").arg(packetsToSend.size());
     emit newLog(log);
@@ -343,7 +343,7 @@ void c_connectionToServerController::replyReceivedRemoveFromList(QByteArray ref_
     }
 }
 
-bool c_connectionToServerController::isWaitingForReply(packet packet)
+bool c_connectionToServerController::isWaitingForReply(myStructures::packet packet)
 {
     bool answer = false;
 
@@ -357,7 +357,7 @@ bool c_connectionToServerController::isWaitingForReply(packet packet)
     return answer;
 }
 
-bool c_connectionToServerController::isWaitingForReceiveConfirmation(packet packet)
+bool c_connectionToServerController::isWaitingForReceiveConfirmation(myStructures::packet packet)
 {
     bool answer = false;
 

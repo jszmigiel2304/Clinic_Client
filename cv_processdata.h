@@ -9,7 +9,7 @@ class cv_ProcessData
 public:
     cv_ProcessData();
 
-    virtual void processData(threadData data);
+    virtual void processData(myStructures::threadData data);
 };
 
 #endif // CV_PROCESSDATA_H

@@ -116,10 +116,10 @@ signals:
     void newLog(QString log);
     void setUpConnection(QMap<QString, QVariant> settings);
     void runSession();
-    void passDataToThread(threadData data);
-    void packetReceiveConfirmationReceived(threadData data);
+    void passDataToThread(myStructures::threadData data);
+    void packetReceiveConfirmationReceived(myStructures::threadData data);
     void replyReceived(QByteArray ref_md5);
-    void sendToServer(packet packet);
+    void sendToServer(myStructures::packet packet);
     void stopAllThreads();
     void sessionConfigured();
     void idleSignalReceived();

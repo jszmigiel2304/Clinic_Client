@@ -89,18 +89,18 @@ void w_userPanel::connectionToServerStatusChanged(QAbstractSocket::SocketState s
     }
 }
 
-void w_userPanel::userLogged(QString name, UserRole role)
+void w_userPanel::userLogged(QString name, QString role)
 {
-    QString text = name;
-    if(role == SUPER) text += QString(" [SUPER]");
-    else if(role == ADMIN) text += QString(" [ADMIN]");
-    else if(role == MODERATOR) text += QString(" [MODERATOR]");
-    else if(role == USER) text += QString(" [UŻYTKOWNIK]");
-    else if(role == GUEST) text += QString(" [GOŚĆ]");
-    else if(role == NO_ROLE) text += QString(" []");
+//    QString text = name;
+//    if(role == SUPER) text += QString(" [SUPER]");
+//    else if(role == ADMIN) text += QString(" [ADMIN]");
+//    else if(role == MODERATOR) text += QString(" [MODERATOR]");
+//    else if(role == USER) text += QString(" [UŻYTKOWNIK]");
+//    else if(role == GUEST) text += QString(" [GOŚĆ]");
+//    else if(role == NO_ROLE) text += QString(" []");
 
 
-    dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(text);
+    dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(QString("%1 [%2]").arg(name, role));
 
     logStateButton->setName("log_out");
     logStateButton->setIcon(":/icons/log_out_128_128.png");
@@ -134,12 +134,12 @@ void w_userPanel::createLayout()
     c_moduleButtonsFactory * factory = new c_moduleButtonsFactory();
 
 
-    closeButton = factory->getButton(SMALL_BUTTON);
-    controlButton = factory->getButton(SMALL_BUTTON);
-    logStateButton = factory->getButton(SMALL_BUTTON);
-    loggedUserName = factory->getButton(LABEL_BUTTON);
-    sessionTimeOutLabel = factory->getButton(LABEL_BUTTON);
-    connectionStateButton = factory->getButton(LABEL_BUTTON);
+    closeButton = factory->getButton(myTypes::SMALL_BUTTON);
+    controlButton = factory->getButton(myTypes::SMALL_BUTTON);
+    logStateButton = factory->getButton(myTypes::SMALL_BUTTON);
+    loggedUserName = factory->getButton(myTypes::LABEL_BUTTON);
+    sessionTimeOutLabel = factory->getButton(myTypes::LABEL_BUTTON);
+    connectionStateButton = factory->getButton(myTypes::LABEL_BUTTON);
 
     createCloseButton();
     createControlButton();

@@ -5,7 +5,7 @@ cv_ProcessData::cv_ProcessData()
 
 }
 
-void cv_ProcessData::processData(threadData data)
+void cv_ProcessData::processData(myStructures::threadData data)
 {
 
 }

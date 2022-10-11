@@ -16,7 +16,7 @@ public:
     c_module(QMap<QString, QVariant> settings);
     ~c_module();
 
-    moduleInfo getModuleInfo();
+    myStructures::moduleInfo getModuleInfo();
 
 public slots:
     void runModule();

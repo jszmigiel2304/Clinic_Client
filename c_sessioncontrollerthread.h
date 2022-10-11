@@ -3,6 +3,7 @@
 
 #include "mythread.h"
 #include "c_parser.h"
+#include "c_loggeduser.h"
 
 
 #include <QObject>
@@ -34,7 +35,7 @@ public:
 //    void setSessionExpireTime(const QTime &newSessionExpireTime);
 
 public slots:
-    void processData(threadData data) override;
+    void processData(myStructures::threadData data) override;
     void sessionRun();
     void unlockSession();
 //    void resetIDLEtimer();
@@ -43,7 +44,7 @@ public slots:
     void appIDLEdetected();
     void sessionClose();
     void sessionUnlockConfirmationReceived();
-    void configureSession(QString username, UserRole role);
+    void configureSession(QString username, QString role);
 
 private:
 //    QTimer * idleTimer;

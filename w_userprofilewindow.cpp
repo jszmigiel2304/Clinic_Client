@@ -20,7 +20,7 @@ void w_UserProfileWindow::on_more_Clinic_logs_button_clicked()
 
 void w_UserProfileWindow::refreshUserInfo()
 {
-    ui->l_id->setText( userProperties["id"].toString() );
+    ui->l_id->setText( QString("%1").arg(userProperties["id"].toInt()) );
     ui->l_name->setText( userProperties["name"].toString() );
     ui->l_role->setText( userProperties["role"].toString() );
     ui->l_create_date->setText( userProperties["create_date"].toString() );

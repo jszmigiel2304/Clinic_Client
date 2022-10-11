@@ -30,7 +30,7 @@ public:
 
 public slots:
     void newThread(MyThread * thread);
-    void dataReceived(threadData data);
+    void dataReceived(myStructures::threadData data);
     void cleanUpThread();
     void stopAllThreads();
 
@@ -46,7 +46,7 @@ private slots:
 
 signals:
     void newLog(QString log);
-    void passDataToThread(threadData data);
+    void passDataToThread(myStructures::threadData data);
     void forceLogOutUser();
 
 

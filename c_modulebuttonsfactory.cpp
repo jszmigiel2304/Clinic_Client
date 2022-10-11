@@ -10,14 +10,14 @@ c_moduleButtonsFactory::~c_moduleButtonsFactory()
 
 }
 
-w_moduleButton *c_moduleButtonsFactory::getButton(buttonType buttonType)
+w_moduleButton *c_moduleButtonsFactory::getButton(myTypes::buttonType buttonType)
 {
     switch ( static_cast<int>(buttonType) ) {
-    case BIG_BUTTON:
+    case myTypes::BIG_BUTTON:
         return new w_moduleButtonBig();
-    case SMALL_BUTTON:
+    case myTypes::SMALL_BUTTON:
         return  new w_moduleButtonSmall();
-    case LABEL_BUTTON:
+    case myTypes::LABEL_BUTTON:
         return new w_moduleButtonLabel();
     default:
         return nullptr;

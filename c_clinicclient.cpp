@@ -1,12 +1,13 @@
 #include "c_clinicclient.h"
+#include "m_loggeduser.h"
 
 c_ClinicClient::c_ClinicClient(QObject *parent)
 {
     setParent(parent);
     connect(qApp, SIGNAL(aboutToQuit()), SLOT(deleteLater()));    
 
-    qRegisterMetaType<packet>("packet");
-    qRegisterMetaType<threadData>("threadData");
+    qRegisterMetaType<myStructures::packet>("packet");
+    qRegisterMetaType<myStructures::threadData>("threadData");
 
     //----------------------------------------//
     settCtrlr = new c_SettingsController();
@@ -197,7 +198,7 @@ void c_ClinicClient::createConnections()
     connect(sessionCtrlr->thread(), SIGNAL(sendToServer(packet)), connectionCtrlr, SLOT(passDataToBuffer(packet)), Qt::QueuedConnection);
     connect(sessionCtrlr, SIGNAL( threadAssigned(MyThread *) ), threadCtrlr, SLOT( newThread(MyThread *) ) );
 
-    connect(user->thread(), SIGNAL(userLogged(QString, UserRole)), mainWindow->getUserPanel(), SLOT(userLogged(QString, UserRole)));
+    connect(user->thread(), SIGNAL(userLogged(QString, QString)), mainWindow->getUserPanel(), SLOT(userLogged(QString, QString)));
     connect(user->thread(), SIGNAL(userNotLogged()), mainWindow->getUserPanel(), SLOT(userNotLogged()));
     connect(user->thread(), SIGNAL(userAuthorizationDataNeeded()), this, SLOT(showLoggingDialog()), Qt::UniqueConnection);
     connect(user->thread(), SIGNAL(userAuthorizationDataNeededToUnlock(QString)), this->mainWindow, SLOT(IdleDetected(QString)), Qt::QueuedConnection);
@@ -233,8 +234,8 @@ void c_ClinicClient::createConnections()
     connect( this->getTrayIcon(), SIGNAL(userPanelActionSignal()), this, SLOT(showUserPanelWindow()) );
     connect( this->getTrayIcon(), SIGNAL(unlockSessionActionSignal(QString)), this, SLOT(showAuthorizationDialogOnIdle(QString)) );
 
-    connect(user->thread(), SIGNAL(userLogged(QString, UserRole)), this->getTrayIcon(), SLOT(userLogged(QString, UserRole)));
-    connect(user->thread(), SIGNAL(userLogged(QString, UserRole)), sessionCtrlr->thread(), SLOT(configureSession(QString, UserRole)));
+    connect(user->thread(), SIGNAL(userLogged(QString, QString)), this->getTrayIcon(), SLOT(userLogged(QString, QString)));
+    connect(user->thread(), SIGNAL(userLogged(QString, QString)), sessionCtrlr->thread(), SLOT(configureSession(QString, QString)));
     connect(user->thread(), SIGNAL(userNotLogged()), this->getTrayIcon(), SLOT(userNotLogged()));
     connect(user->thread(), SIGNAL(userAuthorizationDataNeededToUnlock(QString)), this->getTrayIcon(), SLOT(appLocked(QString)));
 
@@ -322,6 +323,7 @@ void c_ClinicClient::showUserPanelWindow()
 
 void c_ClinicClient::closeApplication()
 {
+    if(user->getIsLogged())
     {
         QTimer timer;
         timer.setSingleShot(true);
@@ -365,10 +367,10 @@ void c_ClinicClient::dataReceived(quint64 data_size, QByteArray data)
 {
     c_Parser parser;
     QPair<QByteArray, QByteArray> receivedDataFromServer = parser.parseData(data_size, data);
-    threadData attchedData;
+    myStructures::threadData attchedData;
     parser.parseJson( &receivedDataFromServer.second, &attchedData );
 
-    if(attchedData.content == PACKET_RECEIVE_CONFIRMATION)
+    if(attchedData.content == myTypes::PACKET_RECEIVE_CONFIRMATION)
         emit packetReceiveConfirmationReceived(attchedData);
     else {
         emit replyReceived( attchedData.ref_md5 );

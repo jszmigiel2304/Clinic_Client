@@ -31,7 +31,7 @@ public:
 
     void start();
 
-    void processData(threadData data) override;
+    void processData(myStructures::threadData data) override;
 
 
     QString getHost() const;
@@ -44,7 +44,7 @@ public:
     void setSocket(QTcpSocket *value);
 
 
-    ThreadDestination getNameThreadDestination() const;
+    myTypes::ThreadDestination getNameThreadDestination() const;
 
     w_logsWindow *getLogs() const;
     void setLogs(w_logsWindow *newLogs);
@@ -56,22 +56,22 @@ public:
 public slots:
     void setConnection(QMap<QString, QVariant> settings);
     void closeConnection();
-    void sendData(packet packet);
-    void passDataToBuffer(packet packet);
+    void sendData(myStructures::packet packet);
+    void passDataToBuffer(myStructures::packet packet);
     void sendPackets();
-    void receiveConfirmationReceived(threadData data);
+    void receiveConfirmationReceived(myStructures::threadData data);
     void replyReceivedRemoveFromList(QByteArray ref_md5);
 
 private:
     QTcpSocket * socket;
     QString host;
     quint16 port;
-    const ThreadDestination nameThreadDestination = CLINIC_CONNECTION_CONTROLLER;
+    const myTypes::ThreadDestination nameThreadDestination = myTypes::CLINIC_CONNECTION_CONTROLLER;
     bool tryReconnect;
 
-    QList<packet> packetsToSend;
-    QList<packet> waitingForReplyPackets;
-    QList<packet> waitingForReceiveConfirmation;
+    QList<myStructures::packet> packetsToSend;
+    QList<myStructures::packet> waitingForReplyPackets;
+    QList<myStructures::packet> waitingForReceiveConfirmation;
 
     QTimer * reconnectTimer;
     QTimer * sendAgainPackets;
@@ -79,8 +79,8 @@ private:
     w_logsWindow *logs;
     c_LogsController *logsController;
 
-    bool isWaitingForReply(packet packet);
-    bool isWaitingForReceiveConfirmation(packet packet);
+    bool isWaitingForReply(myStructures::packet packet);
+    bool isWaitingForReceiveConfirmation(myStructures::packet packet);
 
 private slots:
     void runSocket();
