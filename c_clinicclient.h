@@ -20,6 +20,7 @@
 #include "w_userpanel.h"
 #include "w_threadslistwindow.h"
 #include "w_authorizationdialog.h"
+#include "w_userprofilewindow.h"
 
 #include <QApplication>
 #include <QObject>

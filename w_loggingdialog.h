@@ -9,6 +9,8 @@
 #include <QAuthenticator>
 #include <QRegularExpression>
 #include <QTimer>
+#include <QEvent>
+#include <QCloseEvent>
 
 namespace Ui {
 class w_LoggingDialog;

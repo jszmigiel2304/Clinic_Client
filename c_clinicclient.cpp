@@ -318,7 +318,6 @@ void c_ClinicClient::showAuthorizationDialogOnIdle(QString username)
 
 void c_ClinicClient::showUserPanelWindow()
 {
-
 }
 
 void c_ClinicClient::closeApplication()
