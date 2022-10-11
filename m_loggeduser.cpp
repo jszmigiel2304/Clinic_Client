@@ -143,3 +143,13 @@ authenticator m_loggedUser::getAuthorizationData()
     data.password = getPassword();
     return data;
 }
+
+c_employee *m_loggedUser::getEmployee() const
+{
+    return employee;
+}
+
+void m_loggedUser::setEmployee(c_employee *newEmployee)
+{
+    employee = newEmployee;
+}

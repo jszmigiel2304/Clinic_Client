@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     c_actionexecutive.cpp \
     c_connectiontoservercontroller.cpp \
+    c_employee.cpp \
     c_loggeduser.cpp \
     c_loggeduserthread.cpp \
     c_logscontroller.cpp \
@@ -74,6 +75,7 @@ SOURCES += \
 HEADERS += \
     c_actionexecutive.h \
     c_connectiontoservercontroller.h \
+    c_employee.h \
     c_loggeduser.h \
     c_loggeduserthread.h \
     c_logscontroller.h \

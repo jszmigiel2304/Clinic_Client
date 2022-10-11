@@ -2,6 +2,7 @@
 #define M_LOGGEDUSER_H
 
 #include "c_mystructures.h"
+#include "c_employee.h"
 
 #include <QObject>
 #include <QPixmap>
@@ -50,6 +51,9 @@ public:
     void clearProperties();
     authenticator getAuthorizationData();
 
+    c_employee *getEmployee() const;
+    void setEmployee(c_employee *newEmployee);
+
 signals:
 
 public slots:
@@ -65,6 +69,8 @@ private:
     bool verified;
     bool blocked;
     UserRole role;
+
+    c_employee * employee;
 };
 
 

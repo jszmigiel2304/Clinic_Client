@@ -26,6 +26,7 @@
 class c_loggedUser : public m_loggedUser /*, public cv_ProcessData */
 {
     Q_OBJECT
+
 public:
     c_loggedUser();
     ~c_loggedUser();
