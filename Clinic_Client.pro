@@ -68,7 +68,8 @@ SOURCES += \
     w_threadinfogroupbox.cpp \
     w_threadslistwindow.cpp \
     w_toppanel.cpp \
-    w_userpanel.cpp
+    w_userpanel.cpp \
+    w_userprofilewindow.cpp
 
 HEADERS += \
     c_actionexecutive.h \
@@ -116,7 +117,8 @@ HEADERS += \
     w_threadinfogroupbox.h \
     w_threadslistwindow.h \
     w_toppanel.h \
-    w_userpanel.h
+    w_userpanel.h \
+    w_userprofilewindow.h
 
 FORMS += \
     w_authorizationdialog.ui \
@@ -128,7 +130,8 @@ FORMS += \
     w_sessionlistwindow.ui \
     w_settingswindow.ui \
     w_threadinfogroupbox.ui \
-    w_threadslistwindow.ui
+    w_threadslistwindow.ui \
+    w_userprofilewindow.ui
 
 DISTFILES += \
     config.ini
