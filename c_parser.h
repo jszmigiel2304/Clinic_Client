@@ -21,8 +21,11 @@ public:
     QPair<QByteArray, QByteArray> prepareLogInPacket(QString name, QString encryptedPassword, quint32 threadID = 0);
     QPair<QByteArray, QByteArray> prepareLogInPacket(qint32 id, QString name, QString encryptedPassword, quint32 threadID = 0);
     QPair<QByteArray, QByteArray> prepareLogOutPacket(qint32 id, QString name, QString encryptedPassword, quint32 threadID = 0);
-//    QByteArray prepareTextMessagePacket(QString message);
     QPair<QByteArray, QByteArray> prepareGetUserIdPacket(QString name, QString encryptedPassword, quint32 threadID = 0);
+    QPair<QByteArray, QByteArray> prepareGetUserPropertiesPacket(QString name, QString encryptedPassword, quint32 threadID = 0);
+    QPair<QByteArray, QByteArray> prepareGetEmployeePropertiesPacket(QString name, QString encryptedPassword, quint32 threadID = 0);
+    QPair<QByteArray, QByteArray> prepareGetLogsPacket(QString name, QString encryptedPassword, quint32 threadID = 0);
+
     QPair<QByteArray, QByteArray> unlockOnIdle(QString name, QString encryptedPassword, quint32 threadID = 0);
     QPair<QByteArray, QByteArray> prepareGetSessionSettingsPacket(qint32 id, QString name, QString encryptedPassword, QUuid identifier, quint32 threadID = 0);
     QPair<QByteArray, QByteArray> prepareSendSessionFileToServerPacket(QUuid identifier, QByteArray fileData, qint32 id, QString name, QString encryptedPassword, quint32 threadID = 0);

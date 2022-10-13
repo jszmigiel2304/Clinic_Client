@@ -19,8 +19,7 @@ public:
     void setProperties(QMap<QString, QVariant> userProperties, QMap<QString, QVariant> employeeProperties, bool refresh = 0);
     void setUserProperties(QMap<QString, QVariant> userProperties, bool refresh = 0);
     void setEmployeeProperties(QMap<QString, QVariant> employeeProperties, bool refresh = 0);
-    void setAuthLogs(QList<QString> list, bool refresh = 0);
-    void setClinicLogs(QList<QString> list, bool refresh = 0);
+    void setLogs(QList<QString> list, bool refresh = 0);
 
 public slots:
     void refresh();
@@ -30,8 +29,7 @@ private:
     explicit w_UserProfileWindow(QWidget *parent = nullptr);
     Ui::w_UserProfileWindow *ui;
 
-    QList<QString> authLogs;
-    QList<QString> clinicLogs;
+    QList<QString> Logs;
     QMap<QString, QVariant> userProperties;
     QMap<QString, QVariant> employeeProperties;
 

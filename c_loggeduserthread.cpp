@@ -75,22 +75,11 @@ void c_loggedUserThread::getUserId(QString userName, QString userPassword)
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
 
-//    QByteArray packet = parser.prepareGetUserIdPacket(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
-//                                                      dynamic_cast<c_loggedUser *>(myParentConnector)->getPassword(),
-//                                                      getId());
 
     emit logInProcessing(QString("Pobieranie danych użytkownika z serwera..."));
     emit sendToServer(packet);
 
-//    loggingTimer = new QTimer();
-//    connect(loggingTimer, SIGNAL(timeout()), this, SLOT(loggingTimerTimeout()));
-
     loggingTimer->start(5000);
-}
-
-void c_loggedUserThread::getLogs(qint32 id, QString name, QString password)
-{
-
 }
 
 void c_loggedUserThread::unlockOnIdle(QString userName, QString userPassword)
@@ -119,6 +108,120 @@ void c_loggedUserThread::unlockOnIdle(QString userName, QString userPassword)
     emit sendToServer(packet);
 }
 
+void c_loggedUserThread::getProperties(QMap<QString, QVariant> *userProperties, QMap<QString, QVariant> *employeeProperties, QStringList *Logs)
+{
+    if(dynamic_cast<c_loggedUser *>(myParentConnector)->getUserProperties().isEmpty()) {
+        QTimer timer;
+        timer.setSingleShot(true);
+        QEventLoop loop;
+        connect( dynamic_cast<c_loggedUser *>(myParentConnector), SIGNAL(propertiesSaved()), &loop, SLOT(quit()) );
+        connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
+        timer.start(4000);
+
+        this->getUserPropertiesFromServer(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
+                                          dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword());
+
+        loop.exec();
+
+
+        if(timer.isActive()) {
+            emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("User properties received from server.\n"));
+        }
+        else{
+            emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("User properties not received from server.\n"));
+        }
+    } else
+    (*userProperties) = dynamic_cast<c_loggedUser *>(myParentConnector)->getUserProperties();
+
+    if(dynamic_cast<c_loggedUser *>(myParentConnector)->getEmployee()->getProperties().isEmpty()) {
+        QTimer timer;
+        timer.setSingleShot(true);
+        QEventLoop loop;
+        connect( dynamic_cast<c_loggedUser *>(myParentConnector)->getEmployee(), SIGNAL(propertiesSaved()), &loop, SLOT(quit()) );
+        connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
+        timer.start(4000);
+
+        this->getEmployeePropertiesFromServer(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
+                                          dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword());
+
+        loop.exec();
+
+
+        if(timer.isActive()) {
+            emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Employee properties received from server.\n"));
+        }
+        else{
+            emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Employee properties not received from server.\n"));
+        }
+    }
+    (*employeeProperties) = dynamic_cast<c_loggedUser *>(myParentConnector)->getEmployee()->getProperties(true, true);
+
+    if(dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs().isEmpty()) {
+        QTimer timer;
+        timer.setSingleShot(true);
+        QEventLoop loop;
+        connect( dynamic_cast<c_loggedUser *>(myParentConnector), SIGNAL(logsDbSaved()), &loop, SLOT(quit()) );
+        connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
+        timer.start(4000);
+
+        this->getLogsFromServer(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
+                                          dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword());
+
+        loop.exec();
+
+
+        if(timer.isActive()) {
+            emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Logs received from server.\n"));
+        }
+        else{
+            emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Logs not received from server.\n"));
+        }
+    }
+    (*Logs) = dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs();
+
+     emit propertiesSaved();
+}
+
+void c_loggedUserThread::getUserPropertiesFromServer(QString name, QString password)
+{
+    c_Parser parser;
+    QPair<QByteArray, QByteArray> pair = parser.prepareGetUserPropertiesPacket(name, password, getId());
+
+    myStructures::packet packet;
+    packet.md5_hash = pair.first;
+    packet.packet_to_send = pair.second;
+    packet.wait_for_reply = false;
+
+    emit sendToServer(packet);
+}
+
+void c_loggedUserThread::getEmployeePropertiesFromServer(QString name, QString password)
+{
+    c_Parser parser;
+    QPair<QByteArray, QByteArray> pair = parser.prepareGetEmployeePropertiesPacket(name, password, getId());
+
+    myStructures::packet packet;
+    packet.md5_hash = pair.first;
+    packet.packet_to_send = pair.second;
+    packet.wait_for_reply = false;
+
+    emit sendToServer(packet);
+}
+
+void c_loggedUserThread::getLogsFromServer(QString name, QString password)
+{
+    c_Parser parser;
+    QPair<QByteArray, QByteArray> pair = parser.prepareGetLogsPacket(name, password, getId());
+
+    myStructures::packet packet;
+    packet.md5_hash = pair.first;
+    packet.packet_to_send = pair.second;
+    packet.wait_for_reply = false;
+
+    emit sendToServer(packet);
+}
+
+
 bool c_loggedUserThread::getLoggingOutState() const
 {
     return loggingOutState;
@@ -133,8 +236,6 @@ void c_loggedUserThread::logIn(qint32 id, QString name, QString password)
 {
     loggingState = true;
     loggingTimer->stop();
-//    c_Parser parser;
-//    QByteArray packet = parser.prepareLogInPacket(id, name, password, getId());
 
     c_Parser parser;
     QPair<QByteArray, QByteArray> pair = parser.prepareLogInPacket(id, name, password, getId());

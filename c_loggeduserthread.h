@@ -4,6 +4,7 @@
 #include "mythread.h"
 #include "c_parser.h"
 #include "m_loggeduser.h"
+#include "m_employee.h"
 
 #include <QObject>
 #include <QTime>
@@ -30,8 +31,11 @@ public slots:
     void sessionLocked();
     void logOut(qint32 id = -1, QString name = QString(""), QString password = QString(""));
     void getUserId(QString userName, QString userPassword);
-    void getLogs(qint32 id, QString name, QString password);
     void unlockOnIdle(QString userName, QString userPassword);
+    void getProperties(QMap<QString, QVariant> *userProperties, QMap<QString, QVariant> *employeeProperties, QStringList *Logs);
+    void getUserPropertiesFromServer(QString name = QString(""), QString password = QString(""));
+    void getEmployeePropertiesFromServer(QString name = QString(""), QString password = QString(""));
+    void getLogsFromServer(QString name = QString(""), QString password = QString(""));
 
 private:
     bool loggingState;
@@ -72,6 +76,7 @@ signals:
     void userAuthorizationDataNeededToUnlock(QString username);
     void aboutToLogOut();\
     void logsReceivedFromServerSignal(QList<myStructures::myLog> authLogs, QList<myStructures::myLog> clinicLogs);
+    void propertiesSaved();
 
 };
 

@@ -18,13 +18,16 @@ public:
     c_employee *getSupervisor() const;
     void setSupervisor(c_employee *newSupervisor);
 
-    QMap<QString, QVariant> getProperties(bool combinedAddress = false);
+    QMap<QString, QVariant> getProperties(bool combinedAddress = false, bool combinedPhones = false);
 
 public slots:
 
 
 private:
     c_employee * supervisor;
+
+signals:
+    void propertiesSaved();
 };
 
 #endif // C_EMPLOYEE_H

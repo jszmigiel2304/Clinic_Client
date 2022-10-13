@@ -323,11 +323,34 @@ void c_ClinicClient::showUserPanelWindow()
 {
     w_UserProfileWindow * userProfileWindow = w_UserProfileWindow::Instance();
 
-    userProfileWindow->setUserProperties( this->user->getUserProperties() );
-    userProfileWindow->setEmployeeProperties( this->user->getEmployeeProperties() );
+    QMap<QString, QVariant> userProperties;
+    QMap<QString, QVariant> employeeProperties;
+    QStringList logs;
 
-    userProfileWindow->setAuthLogs(QStringList());
-    userProfileWindow->setClinicLogs(QStringList());
+    connect( this, SIGNAL(getUserPanelProperties(QMap<QString, QVariant> *, QMap<QString, QVariant> *, QStringList *)),
+             user->thread(), SLOT(getProperties(QMap<QString, QVariant> *, QMap<QString, QVariant> *, QStringList *)) );
+
+    QTimer timer;
+    timer.setSingleShot(true);
+    QEventLoop loop;
+    connect( this->user->thread(), SIGNAL(propertiesSaved()), &loop, SLOT(quit()) );
+    connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
+    timer.start(10000);
+    emit this->getUserPanelProperties(&userProperties, &employeeProperties, &logs);
+    loop.exec();
+
+
+    if(timer.isActive()) {
+        emit newLog(QString("Properties received.\n"));
+    }
+    else{
+        emit newLog(QString("Properties not received.\n"));
+    }
+
+    userProfileWindow->setUserProperties( userProperties );
+    userProfileWindow->setEmployeeProperties( employeeProperties );
+
+    userProfileWindow->setLogs(logs);
 
     userProfileWindow->refresh();
 

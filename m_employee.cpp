@@ -91,16 +91,6 @@ void m_employee::setSalary_bonus(double newSalary_bonus)
     salary_bonus = newSalary_bonus;
 }
 
-m_employee *m_employee::getSupervisor() const
-{
-    return supervisor;
-}
-
-void m_employee::setSupervisor(m_employee *newSupervisor)
-{
-    supervisor = newSupervisor;
-}
-
 const QString &m_employee::getPhone_number() const
 {
     return phone_number;
@@ -109,16 +99,6 @@ const QString &m_employee::getPhone_number() const
 void m_employee::setPhone_number(const QString &newPhone_number)
 {
     phone_number = newPhone_number;
-}
-
-const QString &m_employee::getPgone_number_2() const
-{
-    return pgone_number_2;
-}
-
-void m_employee::setPgone_number_2(const QString &newPgone_number_2)
-{
-    pgone_number_2 = newPgone_number_2;
 }
 
 const QString &m_employee::getAddress_living() const
@@ -239,4 +219,14 @@ const QByteArray &m_employee::getPhoto() const
 void m_employee::setPhoto(const QByteArray &newPhoto)
 {
     photo = newPhoto;
+}
+
+const QString &m_employee::getPhone_number_2() const
+{
+    return phone_number_2;
+}
+
+void m_employee::setPhone_number_2(const QString &newPhone_number_2)
+{
+    phone_number_2 = newPhone_number_2;
 }

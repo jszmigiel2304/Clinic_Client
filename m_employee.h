@@ -41,7 +41,7 @@ public:
     m_employee::Position getPosition() const;
     void setPosition(m_employee::Position newPosition);
 
-    const QString &getPositionStringForm() const;
+    QString &getPositionStringForm() const;
     void setPositionStringForm(const QString &newPositionStringForm);
 
     double getSalary_base() const;
@@ -91,6 +91,9 @@ public:
     const QByteArray &getPhoto() const;
     void setPhoto(const QByteArray &newPhoto);
 
+    const QString &getPhone_number_2() const;
+    void setPhone_number_2(const QString &newPhone_number_2);
+
 private:
     quint32 id;
     QString name;
@@ -101,7 +104,7 @@ private:
     double salary_base;
     double salary_bonus;
     QString phone_number;
-    QString pgone_number_2;
+    QString phone_number_2;
     QString address_living;
     QString postal_code_living;
     QString city_living;

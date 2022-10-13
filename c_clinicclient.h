@@ -125,6 +125,7 @@ signals:
     void idleSignalReceived();
     void unlockSessionSignal();
     void logOutUserBeforeCloseApp(qint32 id, QString name, QString password);
+    void getUserPanelProperties(QMap<QString, QVariant> * userProperties, QMap<QString, QVariant> * employeeProperties, QStringList * Logs);
 
 
 public slots:

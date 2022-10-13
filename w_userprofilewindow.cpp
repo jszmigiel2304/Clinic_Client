@@ -99,16 +99,10 @@ void w_UserProfileWindow::setEmployeeProperties(QMap<QString, QVariant> employee
         this->refresh();
 }
 
-void w_UserProfileWindow::setAuthLogs(QList<QString> list, bool refresh)
+void w_UserProfileWindow::setLogs(QList<QString> list, bool refresh)
 {
 
 }
-
-void w_UserProfileWindow::setClinicLogs(QList<QString> list, bool refresh)
-{
-
-}
-
 
 void w_UserProfileWindow::refresh()
 {

@@ -128,6 +128,96 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetUserIdPacket(QString name, QSt
     return pair;
 }
 
+QPair<QByteArray, QByteArray> c_Parser::prepareGetUserPropertiesPacket(QString name, QString encryptedPassword, quint32 threadID)
+{
+    QByteArray packet;
+
+    QList<QMap<QString, QVariant>> packetData;
+
+    QMap<QString, QVariant> packetInfo;
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_id"] = threadID;
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
+    packetInfo["type_flag"] = 0x00000001;
+    packetInfo["content"] = static_cast<qint32>(myTypes::USER_PROPERTIES_REQUEST);
+
+    QMap<QString, QVariant> userInfo;
+    userInfo["name"] = name;
+    userInfo["encryptedPassword"] = encryptedPassword;
+    packetData.append(userInfo);
+
+    QJsonDocument jsonPacket = prepareJson(packetInfo, packetData);
+    QByteArray JsonMD5 = getJsonMD5Hash(jsonPacket);
+
+    QDataStream ds2(&packet, QIODevice::ReadWrite);
+    ds2.setVersion(QDataStream::Qt_6_0);
+
+    ds2 << JsonMD5.toHex() << jsonPacket.toJson();
+
+    QPair<QByteArray, QByteArray> pair(JsonMD5.toHex(), packet);
+    return pair;
+}
+
+QPair<QByteArray, QByteArray> c_Parser::prepareGetEmployeePropertiesPacket(QString name, QString encryptedPassword, quint32 threadID)
+{
+    QByteArray packet;
+
+    QList<QMap<QString, QVariant>> packetData;
+
+    QMap<QString, QVariant> packetInfo;
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_id"] = threadID;
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
+    packetInfo["type_flag"] = 0x00000002;
+    packetInfo["content"] = static_cast<qint32>(myTypes::EMPLOYEE_PROPERTIES_REQUEST);
+
+    QMap<QString, QVariant> userInfo;
+    userInfo["name"] = name;
+    userInfo["encryptedPassword"] = encryptedPassword;
+    packetData.append(userInfo);
+
+    QJsonDocument jsonPacket = prepareJson(packetInfo, packetData);
+    QByteArray JsonMD5 = getJsonMD5Hash(jsonPacket);
+
+    QDataStream ds2(&packet, QIODevice::ReadWrite);
+    ds2.setVersion(QDataStream::Qt_6_0);
+
+    ds2 << JsonMD5.toHex() << jsonPacket.toJson();
+
+    QPair<QByteArray, QByteArray> pair(JsonMD5.toHex(), packet);
+    return pair;
+}
+
+QPair<QByteArray, QByteArray> c_Parser::prepareGetLogsPacket(QString name, QString encryptedPassword, quint32 threadID)
+{
+    QByteArray packet;
+
+    QList<QMap<QString, QVariant>> packetData;
+
+    QMap<QString, QVariant> packetInfo;
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_id"] = threadID;
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
+    packetInfo["type_flag"] = 0x00000005;
+    packetInfo["content"] = static_cast<qint32>(myTypes::USER_EMPLOYEE_LOGS_REQUEST);
+
+    QMap<QString, QVariant> userInfo;
+    userInfo["name"] = name;
+    userInfo["encryptedPassword"] = encryptedPassword;
+    packetData.append(userInfo);
+
+    QJsonDocument jsonPacket = prepareJson(packetInfo, packetData);
+    QByteArray JsonMD5 = getJsonMD5Hash(jsonPacket);
+
+    QDataStream ds2(&packet, QIODevice::ReadWrite);
+    ds2.setVersion(QDataStream::Qt_6_0);
+
+    ds2 << JsonMD5.toHex() << jsonPacket.toJson();
+
+    QPair<QByteArray, QByteArray> pair(JsonMD5.toHex(), packet);
+    return pair;
+}
+
 QPair<QByteArray, QByteArray> c_Parser::unlockOnIdle(QString name, QString encryptedPassword, quint32 threadID)
 {
     QByteArray packet;

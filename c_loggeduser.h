@@ -43,8 +43,9 @@ public:
 
     QMap<QString, QVariant> getUserProperties();
     QMap<QString, QVariant> getEmployeeProperties();
-    QList<myStructures::myLog> getAuthLogs();
-    QList<myStructures::myLog> getClinicLogs();
+    QStringList getDbLogs();
+
+    void setDbLogs(const QList<myStructures::myLog> &newDbLogs);
 
 public slots:
     void forceLogOut();
@@ -56,12 +57,11 @@ private:
 
     w_logsWindow *logs;
 
-    QList<myStructures::myLog> authLogs;
-    QList<myStructures::myLog> ClinicLogs;
+    QList<myStructures::myLog> dbLogs;
 
 private slots:
     void cleanUpThread();
-    void logsReceivedFromServer(QList<myStructures::myLog> authLogs, QList<myStructures::myLog> clinicLogs);
+    void logsReceivedFromServer(QList<myStructures::myLog> dbLogs);
 
 signals:
     void newLog(QString log);
@@ -69,6 +69,8 @@ signals:
     void logOutUser();
     void aboutToLogOut();
     void getLogsSignal(qint32 id, QString name, QString password);
+    void propertiesSaved();
+    void logsDbSaved();
 
 };
 

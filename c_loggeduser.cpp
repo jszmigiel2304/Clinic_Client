@@ -22,7 +22,7 @@ void c_loggedUser::cleanUpThread()
     mThread->quit();
 }
 
-void c_loggedUser::logsReceivedFromServer(QList<myStructures::myLog> authLogs, QList<myStructures::myLog> clinicLogs)
+void c_loggedUser::logsReceivedFromServer(QList<myStructures::myLog> dbLogs)
 {
 
 }
@@ -73,6 +73,11 @@ void c_loggedUser::forceLogOut()
         emit logOutUser();
 }
 
+void c_loggedUser::setDbLogs(const QList<myStructures::myLog> &newDbLogs)
+{
+    dbLogs = newDbLogs;
+}
+
 QMap<QString, QVariant> c_loggedUser::getUserProperties()
 {
     QMap<QString, QVariant> map;
@@ -90,6 +95,7 @@ QMap<QString, QVariant> c_loggedUser::getUserProperties()
     map["blocked_date"] = this->getBlock_date().toString();
     map["verified_date"] = this->getVerify_date().toString();
     map["is_logged"] = this->getIsLogged();
+    map["photo"] = this->getPhoto();
 
 
     return map;
@@ -97,30 +103,14 @@ QMap<QString, QVariant> c_loggedUser::getUserProperties()
 
 QMap<QString, QVariant> c_loggedUser::getEmployeeProperties()
 {
-    QMap<QString, QVariant> map;
-
-    return map;
+    return this->getEmployee()->getProperties(true, true);
 }
 
-QList<myStructures::myLog> c_loggedUser::getAuthLogs()
+QStringList c_loggedUser::getDbLogs()
 {
-    if(this->authLogs.isEmpty())
-        emit getLogsSignal(this->getId(),
-                           this->getName(),
-                           this->getEncryptedPassword());
 
-    return this->authLogs;
 }
 
-QList<myStructures::myLog> c_loggedUser::getClinicLogs()
-{
-    if(this->authLogs.isEmpty())
-        emit getLogsSignal(this->getId(),
-                           this->getName(),
-                           this->getEncryptedPassword());
-
-    return this->ClinicLogs;
-}
 
 w_logsWindow *c_loggedUser::getLogs() const
 {
