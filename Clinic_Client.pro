@@ -37,6 +37,7 @@ SOURCES += \
     c_sessioncontrollerthread.cpp \
     c_threadcontroller.cpp \
     cv_processdata.cpp \
+    m_employee.cpp \
     m_loggeduser.cpp \
     m_module.cpp \
         main.cpp \
@@ -86,6 +87,7 @@ HEADERS += \
     c_sessioncontrollerthread.h \
     c_threadcontroller.h \
     cv_processdata.h \
+    m_employee.h \
     m_loggeduser.h \
     m_module.h \
     myapplication.h \
