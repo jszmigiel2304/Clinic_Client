@@ -40,23 +40,23 @@ void w_UserProfileWindow::refreshEmployeeInfo()
 
 void w_UserProfileWindow::refreshLogs()
 {
-    for(int i = 0; i < 5; i++) {
-        if(i < clinicLogs.size()) {
-            QLabel log_label(ui->w_clinic_db_logs_container);
-            log_label.setGeometry(0, (25*(i+1)), 355, 25);
-            log_label.setStyleSheet(QString("background-color: rgb(66, 66, 66);\ncolor: rgb(221, 221, 221);"));
-            log_label.setText( clinicLogs[i] );
-        }
-    }
+//    for(int i = 0; i < 5; i++) {
+//        if(i < clinicLogs.size()) {
+//            QLabel log_label(ui->w_clinic_db_logs_container);
+//            log_label.setGeometry(0, (25*(i+1)), 355, 25);
+//            log_label.setStyleSheet(QString("background-color: rgb(66, 66, 66);\ncolor: rgb(221, 221, 221);"));
+//            log_label.setText( clinicLogs[i] );
+//        }
+//    }
 
-    for(int i = 0; i < 3; i++) {
-        if(i < authLogs.size()) {
-            QLabel log_label(ui->w_auth_db_logs_container);
-            log_label.setGeometry(0,(25*(i+1)), 355, 25);
-            log_label.setStyleSheet(QString("background-color: rgb(66, 66, 66);\ncolor: rgb(221, 221, 221);"));
-            log_label.setText( authLogs[i] );
-        }
-    }
+//    for(int i = 0; i < 3; i++) {
+//        if(i < authLogs.size()) {
+//            QLabel log_label(ui->w_auth_db_logs_container);
+//            log_label.setGeometry(0,(25*(i+1)), 355, 25);
+//            log_label.setStyleSheet(QString("background-color: rgb(66, 66, 66);\ncolor: rgb(221, 221, 221);"));
+//            log_label.setText( authLogs[i] );
+//        }
+//    }
 }
 
 w_UserProfileWindow *w_UserProfileWindow::Instance()

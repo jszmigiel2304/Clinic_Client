@@ -41,7 +41,7 @@ public:
     m_employee::Position getPosition() const;
     void setPosition(m_employee::Position newPosition);
 
-    QString &getPositionStringForm() const;
+    QString &getPositionStringForm();
     void setPositionStringForm(const QString &newPositionStringForm);
 
     double getSalary_base() const;

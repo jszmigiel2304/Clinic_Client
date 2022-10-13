@@ -61,7 +61,7 @@ void m_employee::setPosition(m_employee::Position newPosition)
     position = newPosition;
 }
 
-const QString &m_employee::getPositionStringForm() const
+QString &m_employee::getPositionStringForm()
 {
     return positionStringForm;
 }
