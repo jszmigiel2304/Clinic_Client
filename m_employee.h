@@ -50,9 +50,6 @@ public:
     double getSalary_bonus() const;
     void setSalary_bonus(double newSalary_bonus);
 
-    m_employee *getSupervisor() const;
-    void setSupervisor(m_employee *newSupervisor);
-
     const QString &getPhone_number() const;
     void setPhone_number(const QString &newPhone_number);
 
@@ -103,7 +100,6 @@ private:
     QString positionStringForm;
     double salary_base;
     double salary_bonus;
-    m_employee * supervisor;
     QString phone_number;
     QString pgone_number_2;
     QString address_living;
