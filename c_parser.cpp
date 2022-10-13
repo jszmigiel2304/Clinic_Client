@@ -188,7 +188,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetEmployeePropertiesPacket(QStri
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareGetLogsPacket(QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareGetLogsPacket(qint32 id, QString name, QString encryptedPassword, quint32 threadID)
 {
     QByteArray packet;
 
@@ -202,6 +202,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetLogsPacket(QString name, QStri
     packetInfo["content"] = static_cast<qint32>(myTypes::USER_EMPLOYEE_LOGS_REQUEST);
 
     QMap<QString, QVariant> userInfo;
+    userInfo["id"] = id;
     userInfo["name"] = name;
     userInfo["encryptedPassword"] = encryptedPassword;
     packetData.append(userInfo);

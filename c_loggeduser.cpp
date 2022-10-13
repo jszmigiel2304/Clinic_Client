@@ -12,6 +12,8 @@ c_loggedUser::c_loggedUser()
     setIsLogged(false);
     mThread->setLoggingState(false);
 
+    this->setEmployee(new c_employee(true));
+
     connect(this, SIGNAL(logOutUser()), this->thread(), SLOT(logOut()), Qt::DirectConnection);
     connect(this, SIGNAL(getLogsSignal(qint32, QString, QString)), this->thread(), SLOT(getLogs(qint32, QString, QString)) );
     connect(this->thread(), SIGNAL(logsReceivedFromServerSignal(QList<myStructures::myLog>, QList<myStructures::myLog>)), this, SLOT(logsReceivedFromServer(QList<myStructures::myLog>, QList<myStructures::myLog>)));
@@ -108,7 +110,8 @@ QMap<QString, QVariant> c_loggedUser::getEmployeeProperties()
 
 QStringList c_loggedUser::getDbLogs()
 {
-
+    QStringList list;
+    return list;
 }
 
 

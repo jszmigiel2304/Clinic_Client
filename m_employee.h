@@ -23,7 +23,7 @@ public:
                   };
     Q_ENUM(Position)
 
-    explicit m_employee(QObject *parent = nullptr);
+    m_employee(QObject *parent = nullptr);
     m_employee(quint32 id, QString name, QString last_name, QObject *parent = nullptr);
 
     quint32 getId() const;

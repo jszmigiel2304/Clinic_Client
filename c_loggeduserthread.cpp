@@ -110,7 +110,7 @@ void c_loggedUserThread::unlockOnIdle(QString userName, QString userPassword)
 
 void c_loggedUserThread::getProperties(QMap<QString, QVariant> *userProperties, QMap<QString, QVariant> *employeeProperties, QStringList *Logs)
 {
-    if(dynamic_cast<c_loggedUser *>(myParentConnector)->getUserProperties().isEmpty()) {
+    if(dynamic_cast<c_loggedUser *>(myParentConnector)->getId() == 0 || dynamic_cast<c_loggedUser *>(myParentConnector)->getName().isEmpty() || dynamic_cast<c_loggedUser *>(myParentConnector)->getPassword().isEmpty()) {
         QTimer timer;
         timer.setSingleShot(true);
         QEventLoop loop;
@@ -133,7 +133,7 @@ void c_loggedUserThread::getProperties(QMap<QString, QVariant> *userProperties, 
     } else
     (*userProperties) = dynamic_cast<c_loggedUser *>(myParentConnector)->getUserProperties();
 
-    if(dynamic_cast<c_loggedUser *>(myParentConnector)->getEmployee()->getProperties().isEmpty()) {
+    if(dynamic_cast<c_loggedUser *>(myParentConnector)->getEmployee()->getId() == 0 || dynamic_cast<c_loggedUser *>(myParentConnector)->getEmployee()->getName().isEmpty()) {
         QTimer timer;
         timer.setSingleShot(true);
         QEventLoop loop;
@@ -164,8 +164,9 @@ void c_loggedUserThread::getProperties(QMap<QString, QVariant> *userProperties, 
         connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
         timer.start(4000);
 
-        this->getLogsFromServer(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
-                                          dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword());
+        this->getLogsFromServer(dynamic_cast<c_loggedUser *>(myParentConnector)->getId(),
+                                dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
+                                dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword());
 
         loop.exec();
 
@@ -208,10 +209,10 @@ void c_loggedUserThread::getEmployeePropertiesFromServer(QString name, QString p
     emit sendToServer(packet);
 }
 
-void c_loggedUserThread::getLogsFromServer(QString name, QString password)
+void c_loggedUserThread::getLogsFromServer(qint32 id, QString name, QString password)
 {
     c_Parser parser;
-    QPair<QByteArray, QByteArray> pair = parser.prepareGetLogsPacket(name, password, getId());
+    QPair<QByteArray, QByteArray> pair = parser.prepareGetLogsPacket(id, name, password, getId());
 
     myStructures::packet packet;
     packet.md5_hash = pair.first;

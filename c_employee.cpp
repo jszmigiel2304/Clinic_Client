@@ -1,8 +1,9 @@
 #include "c_employee.h"
 
-c_employee::c_employee(QObject *parent) : m_employee(parent)
+c_employee::c_employee(bool allocSupervisor, QObject *parent) : m_employee(parent)
 {
-    setSupervisor( new c_employee() );
+    if(allocSupervisor)
+        setSupervisor( new c_employee() );
 }
 
 c_employee::~c_employee()

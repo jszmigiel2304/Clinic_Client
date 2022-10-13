@@ -35,7 +35,7 @@ public slots:
     void getProperties(QMap<QString, QVariant> *userProperties, QMap<QString, QVariant> *employeeProperties, QStringList *Logs);
     void getUserPropertiesFromServer(QString name = QString(""), QString password = QString(""));
     void getEmployeePropertiesFromServer(QString name = QString(""), QString password = QString(""));
-    void getLogsFromServer(QString name = QString(""), QString password = QString(""));
+    void getLogsFromServer(qint32 id, QString name = QString(""), QString password = QString(""));
 
 private:
     bool loggingState;

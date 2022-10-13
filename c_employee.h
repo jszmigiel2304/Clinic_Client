@@ -11,7 +11,7 @@ class c_employee : public m_employee
 {
     Q_OBJECT
 public:
-    c_employee(QObject *parent = nullptr);
+    c_employee(bool allocSupervisor = false, QObject *parent = nullptr);
     ~c_employee();
 
 
