@@ -67,7 +67,7 @@ void c_loggedUserThread::getUserId(QString userName, QString userPassword)
 
     c_Parser parser;
     QPair<QByteArray, QByteArray> pair = parser.prepareGetUserIdPacket(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
-                                                                       dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword(),
+                                                                       dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword(false, true),
                                                                        getId());
 
     myStructures::packet packet;
@@ -91,7 +91,7 @@ void c_loggedUserThread::unlockOnIdle(QString userName, QString userPassword)
     QByteArray encryptionSeed;
     QDataStream encryptionStream(&encryptionSeed, QIODevice::ReadWrite);
     encryptionStream.setVersion(QDataStream::Qt_6_0);
-    encryptionStream << QString("test") << userPassword;
+    encryptionStream << userPassword;
 
     QCryptographicHash hasher(QCryptographicHash::Md5);
     hasher.addData(encryptionSeed);
@@ -119,7 +119,7 @@ void c_loggedUserThread::getProperties(QMap<QString, QVariant> *userProperties, 
         timer.start(4000);
 
         this->getUserPropertiesFromServer(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
-                                          dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword());
+                                          dynamic_cast<c_loggedUser *>(myParentConnector)->getPassword());
 
         loop.exec();
 
@@ -142,7 +142,7 @@ void c_loggedUserThread::getProperties(QMap<QString, QVariant> *userProperties, 
         timer.start(4000);
 
         this->getEmployeePropertiesFromServer(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
-                                          dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword());
+                                          dynamic_cast<c_loggedUser *>(myParentConnector)->getPassword());
 
         loop.exec();
 
@@ -154,7 +154,7 @@ void c_loggedUserThread::getProperties(QMap<QString, QVariant> *userProperties, 
             emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Employee properties not received from server.\n"));
         }
     }
-    (*employeeProperties) = dynamic_cast<c_loggedUser *>(myParentConnector)->getEmployee()->getProperties(true, true);
+    (*employeeProperties) = dynamic_cast<c_loggedUser *>(myParentConnector)->getEmployee()->getProperties();
 
     if(dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs().isEmpty()) {
         QTimer timer;
@@ -166,7 +166,7 @@ void c_loggedUserThread::getProperties(QMap<QString, QVariant> *userProperties, 
 
         this->getLogsFromServer(dynamic_cast<c_loggedUser *>(myParentConnector)->getId(),
                                 dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
-                                dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword());
+                                dynamic_cast<c_loggedUser *>(myParentConnector)->getPassword());
 
         loop.exec();
 
@@ -191,7 +191,7 @@ void c_loggedUserThread::getUserPropertiesFromServer(QString name, QString passw
     myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
-    packet.wait_for_reply = false;
+    packet.wait_for_reply = true;
 
     emit sendToServer(packet);
 }
@@ -204,7 +204,7 @@ void c_loggedUserThread::getEmployeePropertiesFromServer(QString name, QString p
     myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
-    packet.wait_for_reply = false;
+    packet.wait_for_reply = true;
 
     emit sendToServer(packet);
 }
@@ -217,7 +217,7 @@ void c_loggedUserThread::getLogsFromServer(qint32 id, QString name, QString pass
     myStructures::packet packet;
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
-    packet.wait_for_reply = false;
+    packet.wait_for_reply = true;
 
     emit sendToServer(packet);
 }
@@ -262,7 +262,7 @@ void c_loggedUserThread::logOut(qint32 id, QString name, QString password)
     QString namec, passwordc;
     if(id <= 0) idc = dynamic_cast<c_loggedUser *>(myParentConnector)->getId(); else idc = id;
     if(namec.isEmpty()) namec = dynamic_cast<c_loggedUser *>(myParentConnector)->getName(); else namec = name;
-    if(password.isEmpty()) passwordc = dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword(); else passwordc = password;
+    if(password.isEmpty()) passwordc = dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword(false, true); else passwordc = password;
 
 
     QPair<QByteArray, QByteArray> pair = parser.prepareLogOutPacket(idc, namec, passwordc, getId());
@@ -294,7 +294,7 @@ void c_loggedUserThread::userIdReceivedFromServer(qint32 userID)
         if(!dynamic_cast<c_loggedUser *>(myParentConnector)->getIsLogged()) {
             emit logInToServer(dynamic_cast<c_loggedUser *>(myParentConnector)->getId(),
                                dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
-                               dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword());
+                               dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword(false, true));
         } else {
             loggingTimer->stop();
             emit logInFinished();

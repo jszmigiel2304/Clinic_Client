@@ -370,7 +370,7 @@ void c_ClinicClient::closeApplication()
         timer.start(3000);
         emit this->logOutUserBeforeCloseApp(this->user->getId(),
                                             this->user->getName(),
-                                            this->user->getEncryptedPassword());
+                                            this->user->getEncryptedPassword(false, true));
         loop.exec();
 
 

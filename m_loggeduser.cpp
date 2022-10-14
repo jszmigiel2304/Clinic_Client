@@ -42,9 +42,27 @@ QString m_loggedUser::getEncryptedPassword(bool toHex)
     QByteArray encryptionSeed;
     QDataStream encryptionStream(&encryptionSeed, QIODevice::ReadWrite);
     encryptionStream.setVersion(QDataStream::Qt_6_0);
-    encryptionStream << QString("test") << getPassword();
+    encryptionStream << getPassword();
 
-    QCryptographicHash hasher(QCryptographicHash::Md5);
+    QCryptographicHash hasher(QCryptographicHash::Sha256);
+    hasher.addData(encryptionSeed);
+    encryptedPassword = hasher.result();
+
+    return (toHex ? encryptedPassword.toHex() : encryptedPassword);
+}
+
+QString m_loggedUser::getEncryptedPassword(bool hashName, bool toHex)
+{
+    QByteArray encryptedPassword;
+
+    QByteArray encryptionSeed;
+    QDataStream encryptionStream(&encryptionSeed, QIODevice::ReadWrite);
+    encryptionStream.setVersion(QDataStream::Qt_6_0);
+    encryptionStream << getPassword();
+    if(hashName)
+        encryptionStream << getName();
+
+    QCryptographicHash hasher(QCryptographicHash::Sha256);
     hasher.addData(encryptionSeed);
     encryptedPassword = hasher.result();
 

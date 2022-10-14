@@ -34,8 +34,7 @@ private:
     QMap<QString, QVariant> employeeProperties;
 
 private slots:
-    void on_more_auth_logs_button_clicked();
-    void on_more_Clinic_logs_button_clicked();
+    void on_more_logs_button_clicked();
     void refreshUserInfo();
     void refreshEmployeeInfo();
     void refreshLogs();

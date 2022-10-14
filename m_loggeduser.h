@@ -32,6 +32,7 @@ public:
     void setPassword(const QString &value);
 
     QString getEncryptedPassword(bool toHex = true);
+    QString getEncryptedPassword(bool hashName = false, bool toHex = true);
 
     QString getSessionId() const;
     void setSessionId(const QString &value);

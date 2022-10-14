@@ -61,7 +61,6 @@ private:
 
 private slots:
     void cleanUpThread();
-    void logsReceivedFromServer(QList<myStructures::myLog> dbLogs);
 
 signals:
     void newLog(QString log);

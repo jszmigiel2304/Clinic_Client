@@ -30,7 +30,7 @@ void c_SessionControllerThread::getSessionSettingsFromServer()
 
     QPair<QByteArray, QByteArray> pair = parser.prepareGetSessionSettingsPacket(dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getId(),
                                                                                 dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getName(),
-                                                                                dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(),
+                                                                                dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(false, true),
                                                                                 dynamic_cast<c_SessionController *>(myParentConnector)->getIdentifier(),
                                                                                 getId());
 
@@ -107,7 +107,7 @@ void c_SessionControllerThread::sendSessionFileToServer(QUuid id_session, QByteA
                                                                                      fileData,
                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getId(),
                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getName(),
-                                                                                     dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(),
+                                                                                     dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(false, true),
                                                                                      getId());
 
     myStructures::packet packet;
@@ -128,7 +128,7 @@ void c_SessionControllerThread::sendSessionStateToServer(QUuid id_session, qint3
                                                                                       state,
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getId(),
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getName(),
-                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(),
+                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(false, true),
                                                                                       getId());
 
     myStructures::packet packet;
@@ -169,7 +169,7 @@ void c_SessionControllerThread::sessionClose()
                                                                                       QDateTime::currentDateTime(),
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getId(),
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getName(),
-                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(),
+                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(false, true),
                                                                                       getId());
 
     myStructures::packet packet;

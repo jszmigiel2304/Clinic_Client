@@ -6,14 +6,10 @@ w_UserProfileWindow::w_UserProfileWindow(QWidget *parent) :
     ui(new Ui::w_UserProfileWindow)
 {
     ui->setupUi(this);
+    connect(this->ui->b_more_logs_button, SIGNAL(clicked()), this, SLOT(on_more_logs_button_clicked()));
 }
 
-void w_UserProfileWindow::on_more_auth_logs_button_clicked()
-{
-
-}
-
-void w_UserProfileWindow::on_more_Clinic_logs_button_clicked()
+void w_UserProfileWindow::on_more_logs_button_clicked()
 {
 
 }
