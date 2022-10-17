@@ -43,14 +43,14 @@ public:
 
     QMap<QString, QVariant> getUserProperties();
     QMap<QString, QVariant> getEmployeeProperties();
-    QStringList getDbLogs();
 
-    void setDbLogs(const QList<myStructures::myLog> &newDbLogs);
+    QList<myStructures::myLog> *getDbLogs();
+    void setDbLogs(QList<myStructures::myLog> &newDbLogs);
+    void setDbLogs(QList<QMap<QString, QVariant>> logs);
 
 public slots:
     void forceLogOut();
-
-
+    void setProperties(QMap<QString, QVariant> userInfo);
 
 private:
     std::unique_ptr<c_loggedUserThread> mThread;
@@ -69,7 +69,9 @@ signals:
     void aboutToLogOut();
     void getLogsSignal(qint32 id, QString name, QString password);
     void propertiesSaved();
-    void logsDbSaved();
+    void passProperties(QMap<QString, QVariant> userInfo);
+    void logsSaved();
+    void passLogs(QList<myStructures::myLog> logs);
 
 };
 

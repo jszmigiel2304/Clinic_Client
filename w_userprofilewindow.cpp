@@ -6,10 +6,12 @@ w_UserProfileWindow::w_UserProfileWindow(QWidget *parent) :
     ui(new Ui::w_UserProfileWindow)
 {
     ui->setupUi(this);
-    connect(this->ui->b_more_logs_button, SIGNAL(clicked()), this, SLOT(on_more_logs_button_clicked()));
+    connect(this->ui->b_more_logs_button, SIGNAL(clicked(bool)), this, SLOT(on_more_logs_button_clicked(bool)));
+
+    waitingLoop = new c_waitingLoop::c_waitingLoop();
 }
 
-void w_UserProfileWindow::on_more_logs_button_clicked()
+void w_UserProfileWindow::on_more_logs_button_clicked(bool checked)
 {
 
 }
@@ -30,29 +32,71 @@ void w_UserProfileWindow::refreshUserInfo()
 }
 
 void w_UserProfileWindow::refreshEmployeeInfo()
-{
+{   
+    ui->l_names->setText( QString("%1 %2").arg(employeeProperties["name"].toString(), employeeProperties["second_name"].toString()) );
+    ui->l_last_name->setText( employeeProperties["last_name"].toString() );
+    ui->l_pesel->setText( employeeProperties["pesel"].toString() );
+
+    switch( employeeProperties["gender"].toChar().toLatin1()){
+    case 'K': { ui->l_gender->setText( QString("Kobieta") ); break;}
+    case 'k': { ui->l_gender->setText( QString("Kobieta") ); break;}
+    case 'M': { ui->l_gender->setText( QString("Mężczyzna") ); break;}
+    case 'm': { ui->l_gender->setText( QString("Mężczyzna") ); break;}
+    case '0': { ui->l_gender->setText( QString("Nie określono") ); break;}
+    default : { ui->l_gender->setText( QString("Brak") ); break;}
+    }
+
+    ui->l_phone_numbers->setText( QString("%1, %2").arg(employeeProperties["phone_number"].toString(), employeeProperties["phone_number_2"].toString())  );
+    ui->l_address_living->setText( QString("%1\n%2, %3").arg(
+                                                    employeeProperties["address_living"].toString(),
+                                                    employeeProperties["postal_code_living"].toString(),
+                                                    employeeProperties["city_living"].toString()
+                                                        ) );
+    ui->l_address_contact->setText( QString("%1\n%2, %3").arg(
+                                                    employeeProperties["address_contact"].toString(),
+                                                    employeeProperties["postal_code_contact"].toString(),
+                                                    employeeProperties["city_contact"].toString()
+                                                        ) );
+    ui->l_position->setText( employeeProperties["position"].toString() );
+    ui->l_supervisor->setText( QString("%1 %2").arg(employeeProperties["supervisor_name"].toString(), employeeProperties["supervisor_last_name"].toString()) );
+    ui->l_salary_base->setText( QString("%1").arg( employeeProperties["salary_base"].toDouble() ));
+    ui->l_salary_bonus->setText( QString("%1").arg( employeeProperties["salary_bonus"].toDouble()) );
 
 }
 
 void w_UserProfileWindow::refreshLogs()
 {
-//    for(int i = 0; i < 5; i++) {
-//        if(i < clinicLogs.size()) {
-//            QLabel log_label(ui->w_clinic_db_logs_container);
-//            log_label.setGeometry(0, (25*(i+1)), 355, 25);
-//            log_label.setStyleSheet(QString("background-color: rgb(66, 66, 66);\ncolor: rgb(221, 221, 221);"));
-//            log_label.setText( clinicLogs[i] );
-//        }
-//    }
+    for( int i = 0; i < 11 && i < Logs.size(); i++) {
+        QLabel * l_log = new QLabel(ui->w_logs_container);
+        l_log->setStyleSheet( QString("color: rgb(221, 221, 221);") );
+        l_log->setGeometry( 0, 25 * (i + 1), 255, 25 );
+        l_log->setText( Logs[i].log_text );
+    }
+}
 
-//    for(int i = 0; i < 3; i++) {
-//        if(i < authLogs.size()) {
-//            QLabel log_label(ui->w_auth_db_logs_container);
-//            log_label.setGeometry(0,(25*(i+1)), 355, 25);
-//            log_label.setStyleSheet(QString("background-color: rgb(66, 66, 66);\ncolor: rgb(221, 221, 221);"));
-//            log_label.setText( authLogs[i] );
-//        }
-//    }
+void w_UserProfileWindow::processing(QString text)
+{
+    ui->l_processingText->setText(text);
+    this->setEnabled(false);
+    ui->w_mask->setEnabled(true);
+    ui->w_mask->show();
+}
+
+void w_UserProfileWindow::processingFinished(int code)
+{
+    this->setEnabled(true);
+    ui->w_mask->setEnabled(false);
+    ui->w_mask->hide();
+
+    this->refresh();
+}
+
+void w_UserProfileWindow::processingFault(QString text)
+{
+    ui->l_processingText->setText(text);
+    this->setEnabled(true);
+    ui->w_mask->setEnabled(false);
+    ui->w_mask->hide();
 }
 
 w_UserProfileWindow *w_UserProfileWindow::Instance()
@@ -61,7 +105,6 @@ w_UserProfileWindow *w_UserProfileWindow::Instance()
     if ( instance == nullptr ) {
         instance = new w_UserProfileWindow();
     }
-    instance->setAttribute(Qt::WA_DeleteOnClose, true);
     return instance;
 }
 
@@ -79,25 +122,34 @@ void w_UserProfileWindow::setProperties(QMap<QString, QVariant> userProperties, 
         this->refresh();
 }
 
-void w_UserProfileWindow::setUserProperties(QMap<QString, QVariant> userProperties, bool refresh)
+void w_UserProfileWindow::setUpLoop()
+{
+    waitingLoop->setExpireTime(100000);
+}
+
+c_waitingLoop::c_waitingLoop *w_UserProfileWindow::getWaitingLoop() const
+{
+    return waitingLoop;
+}
+
+void w_UserProfileWindow::setWaitingLoop(c_waitingLoop::c_waitingLoop *newWaitingLoop)
+{
+    waitingLoop = newWaitingLoop;
+}
+
+void w_UserProfileWindow::setUserProperties(QMap<QString, QVariant> userProperties)
 {
     this->userProperties = userProperties;
-
-    if(refresh)
-        this->refresh();
 }
 
-void w_UserProfileWindow::setEmployeeProperties(QMap<QString, QVariant> employeeProperties, bool refresh)
+void w_UserProfileWindow::setEmployeeProperties(QMap<QString, QVariant> employeeProperties)
 {
-    this->employeeProperties =employeeProperties;
-
-    if(refresh)
-        this->refresh();
+    this->employeeProperties = employeeProperties;
 }
 
-void w_UserProfileWindow::setLogs(QList<QString> list, bool refresh)
+void w_UserProfileWindow::setLogs(QList<myStructures::myLog> list)
 {
-
+    this->Logs = list;
 }
 
 void w_UserProfileWindow::refresh()
@@ -105,6 +157,13 @@ void w_UserProfileWindow::refresh()
     this->refreshUserInfo();
     this->refreshEmployeeInfo();
     this->refreshLogs();
+}
+
+void w_UserProfileWindow::refreshProperties()
+{
+    //emit getUserPanelProperties();
+    emit getUserPanelProperties(&userProperties, &employeeProperties, &Logs);
+    waitingLoop->startExec();
 }
 
 void w_UserProfileWindow::closeEvent(QCloseEvent *event)

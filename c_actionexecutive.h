@@ -67,6 +67,12 @@ signals:
     void updateSessionStatusConfirmationReceived();
     void updateSessionCloseTimeConfirmationReceived();
     void sessionUnlockConfirmationReceived();
+
+    void userLogsReceivedFromServerResultReady(QList<QMap<QString, QVariant>> logs);
+    void userEmployeeLogsReceivedFromServerResultReady(QList<QMap<QString, QVariant>> logs);
+    void employeeLogsReceivedFromServerResultReady(QList<QMap<QString, QVariant>> logs);
+    void employeePropertiesReceivedFromServerResultReady(QMap<QString, QVariant> properties);
+    void userPropertiesReceivedFromServerResultReady(QMap<QString, QVariant> properties);
 };
 
 #endif // C_ACTIONEXECUTIVE_H

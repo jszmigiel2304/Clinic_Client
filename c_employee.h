@@ -20,14 +20,15 @@ public:
 
     QMap<QString, QVariant> getProperties(bool combinedAddress = false, bool combinedPhones = false);
 
-public slots:
-
+public slots:    
+    void setProperties(QMap<QString, QVariant> employeeInfo);
 
 private:
     c_employee * supervisor;
 
 signals:
     void propertiesSaved();
+    void passProperties(QMap<QString, QVariant> employeeInfo);
 };
 
 #endif // C_EMPLOYEE_H

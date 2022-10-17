@@ -32,7 +32,7 @@ public slots:
     void logOut(qint32 id = -1, QString name = QString(""), QString password = QString(""));
     void getUserId(QString userName, QString userPassword);
     void unlockOnIdle(QString userName, QString userPassword);
-    void getProperties(QMap<QString, QVariant> *userProperties, QMap<QString, QVariant> *employeeProperties, QStringList *Logs);
+    void getProperties(QMap<QString, QVariant> *userProperties, QMap<QString, QVariant> *employeeProperties, QList<myStructures::myLog> * Logs);
     void getUserPropertiesFromServer(QString name = QString(""), QString password = QString(""));
     void getEmployeePropertiesFromServer(QString name = QString(""), QString password = QString(""));
     void getLogsFromServer(qint32 id, QString name = QString(""), QString password = QString(""));
@@ -49,6 +49,11 @@ private slots:
     void userIdReceivedFromServer(qint32 userID);
     void logInConfirmationReceivedFromServer(myStructures::logInConfirmation confirmation);
     void logOutConfirmationReceivedFromServer(myStructures::logOutConfirmation confirmation);
+    void userPropertiesReceivedFromServer(QMap<QString, QVariant> properties);
+    void employeePropertiesReceivedFromServer(QMap<QString, QVariant> properties);
+    void userLogsReceivedFromServer(QList<QMap<QString, QVariant>> logs);
+    void userEmployeeLogsReceivedFromServer(QList<QMap<QString, QVariant>> logs);
+    void emlpoyeeLogsReceivedFromServer(QList<QMap<QString, QVariant>> logs);
     void unlockConfirmationReceived(bool canUnlock);
 
     void loggingTimerTimeout();
@@ -74,9 +79,10 @@ signals:
     void unlockSession();
     void userAuthorizationDataNeeded();
     void userAuthorizationDataNeededToUnlock(QString username);
-    void aboutToLogOut();\
-    void logsReceivedFromServerSignal(QList<myStructures::myLog> authLogs, QList<myStructures::myLog> clinicLogs);
+    void aboutToLogOut();
+
     void propertiesSaved();
+    void logsDbSaved();
 
 };
 

@@ -94,13 +94,6 @@ void c_actionExecutive::processResults(myTypes::JsonContent jsonContent, QList<Q
         confirmation.logInTime = QDateTime::fromString(results[0]["logInTime"].toString());
         confirmation.role = results[0]["role"].toString();
 
-//        if(results[0]["role"].toString() == "SUPER") confirmation.role = c_loggedUser::SUPER;
-//        else if(results[0]["role"].toString() == "ADMIN") confirmation.role = c_loggedUser::ADMIN;
-//        else if(results[0]["role"].toString() == "MODERATOR") confirmation.role = c_loggedUser::MODERATOR;
-//        else if(results[0]["role"].toString() == "USER") confirmation.role = c_loggedUser::USER;
-//        else if(results[0]["role"].toString() == "GUEST") confirmation.role = c_loggedUser::GUEST;
-//        else if(results[0]["role"].toString() == "") confirmation.role = c_loggedUser::NO_ROLE;
-
         emit logInConfirmationReady(confirmation);
         break;
     }
@@ -141,6 +134,26 @@ void c_actionExecutive::processResults(myTypes::JsonContent jsonContent, QList<Q
     }
     case myTypes::SESSION_UNLOCK_CONFIRMATION: {
         emit unlockConfirmationReceived(true);
+        break;
+    }
+    case myTypes::USER_PROPERTIES_ANSWER: {
+        emit userPropertiesReceivedFromServerResultReady( results[0] );
+        break;
+    }
+    case myTypes::EMPLOYEE_PROPERTIES_ANSWER: {
+        emit employeePropertiesReceivedFromServerResultReady( results[0] );
+        break;
+    }
+    case myTypes::USER_LOGS_ANSWER: {
+        emit userLogsReceivedFromServerResultReady(results);
+        break;
+    }
+    case myTypes::USER_EMPLOYEE_LOGS_ANSWER: {
+        emit userEmployeeLogsReceivedFromServerResultReady(results);
+        break;
+    }
+    case myTypes::EMPLOYEE_LOGS_ANSWER: {
+        emit employeeLogsReceivedFromServerResultReady(results);
         break;
     }
     case myTypes::ERRORS: {

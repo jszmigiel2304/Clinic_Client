@@ -36,6 +36,7 @@ SOURCES += \
     c_sessioncontroller.cpp \
     c_sessioncontrollerthread.cpp \
     c_threadcontroller.cpp \
+    c_waitingloop.cpp \
     cv_processdata.cpp \
     m_employee.cpp \
     m_loggeduser.cpp \
@@ -86,6 +87,7 @@ HEADERS += \
     c_sessioncontroller.h \
     c_sessioncontrollerthread.h \
     c_threadcontroller.h \
+    c_waitingloop.h \
     cv_processdata.h \
     m_employee.h \
     m_loggeduser.h \

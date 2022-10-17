@@ -322,39 +322,66 @@ void c_ClinicClient::showAuthorizationDialogOnIdle(QString username)
 void c_ClinicClient::showUserPanelWindow()
 {
     w_UserProfileWindow * userProfileWindow = w_UserProfileWindow::Instance();
+    userProfileWindow->show();
 
-    QMap<QString, QVariant> userProperties;
-    QMap<QString, QVariant> employeeProperties;
-    QStringList logs;
+//    QMap<QString, QVariant> userProperties;
+//    QMap<QString, QVariant> employeeProperties;
+//    QList<myStructures::myLog> logs;
 
-    connect( this, SIGNAL(getUserPanelProperties(QMap<QString, QVariant> *, QMap<QString, QVariant> *, QStringList *)),
-             user->thread(), SLOT(getProperties(QMap<QString, QVariant> *, QMap<QString, QVariant> *, QStringList *)) );
+    connect( userProfileWindow, SIGNAL(getUserPanelProperties(QMap<QString, QVariant> *, QMap<QString, QVariant> *, QList<myStructures::myLog> * )),
+             user->thread(), SLOT(getProperties(QMap<QString, QVariant> *, QMap<QString, QVariant> *, QList<myStructures::myLog> * )), Qt::DirectConnection );
 
-    QTimer timer;
-    timer.setSingleShot(true);
-    QEventLoop loop;
-    connect( this->user->thread(), SIGNAL(propertiesSaved()), &loop, SLOT(quit()) );
-    connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
-    timer.start(10000);
-    emit this->getUserPanelProperties(&userProperties, &employeeProperties, &logs);
-    loop.exec();
+//    connect( userProfileWindow, SIGNAL(getUserPanelProperties()),
+//             user->thread(), SLOT(getProperties()), Qt::DirectConnection );
 
+//    c_waitingLoop::c_waitingLoop loop;
+//    loop.setExpireTime(100000);
 
-    if(timer.isActive()) {
-        emit newLog(QString("Properties received.\n"));
+    userProfileWindow->setUpLoop();
+
+    connect(userProfileWindow->getWaitingLoop(), SIGNAL(loopStarted(QString)), userProfileWindow, SLOT(processing(QString)));
+    connect(userProfileWindow->getWaitingLoop(), SIGNAL(exitLoop(int)), userProfileWindow, SLOT(processingFinished(int)));
+
+    if(this->user->getId() == 0 || this->user->getName().isEmpty() || this->user->getPassword().isEmpty()) {
+        connect( this->user, SIGNAL(propertiesSaved()), userProfileWindow->getWaitingLoop()->newCondition(), SLOT(conditionFulfilled()) );
+        connect(this->user, SIGNAL(passProperties(QMap<QString, QVariant>)), userProfileWindow, SLOT(setUserProperties(QMap<QString, QVariant>)));
     }
-    else{
-        emit newLog(QString("Properties not received.\n"));
+    if(this->user->getEmployee()->getId() == 0 || this->user->getEmployee()->getName().isEmpty()) {
+        connect( this->user->getEmployee(), SIGNAL(propertiesSaved()), userProfileWindow->getWaitingLoop()->newCondition(), SLOT(conditionFulfilled()) );
+        connect(this->user->getEmployee(), SIGNAL(passProperties(QMap<QString, QVariant>)), userProfileWindow, SLOT(setEmployeeProperties(QMap<QString, QVariant>)));
+    }
+    if(this->user->getDbLogs()->isEmpty()) {
+        connect( this->user, SIGNAL(logsSaved()), userProfileWindow->getWaitingLoop()->newCondition(), SLOT(conditionFulfilled()) );
+        connect(this->user, SIGNAL(passLogs(QList<myStructures::myLog>)), userProfileWindow, SLOT(setLogs(QList<myStructures::myLog>)));
     }
 
-    userProfileWindow->setUserProperties( userProperties );
-    userProfileWindow->setEmployeeProperties( employeeProperties );
 
-    userProfileWindow->setLogs(logs);
+    userProfileWindow->refreshProperties();
+
+    //loop.startExec();
+
+//    QTimer timer;
+//    timer.setSingleShot(true);
+//    QEventLoop loop;
+//    connect( this->user->thread(), SIGNAL(propertiesSaved()), &loop, SLOT(quit()) );
+//    connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
+//    timer.start(10000);
+//    loop.exec();
+
+
+//    if(timer.isActive()) {
+//        emit newLog(QString("Properties received.\n"));
+//    }
+//    else{
+//        emit newLog(QString("Properties not received.\n"));
+//    }
+
+//    userProfileWindow->setUserProperties( userProperties );
+//    userProfileWindow->setEmployeeProperties( employeeProperties );
+
+//    userProfileWindow->setLogs(logs);
 
     userProfileWindow->refresh();
-
-    userProfileWindow->show();
 }
 
 

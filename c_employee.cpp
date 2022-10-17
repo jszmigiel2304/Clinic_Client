@@ -63,5 +63,43 @@ QMap<QString, QVariant> c_employee::getProperties(bool combinedAddress, bool com
     return map;
 }
 
+void c_employee::setProperties(QMap<QString, QVariant> employeeInfo)
+{
+    setId( employeeInfo["id"].toUInt() );
+    setName( employeeInfo["name"].toString() );
+    setSecond_name( employeeInfo["second_name"].toString() );
+    setLast_name( employeeInfo["last_name"].toString() );
+
+    QMetaEnum metaEnum = QMetaEnum::fromType<m_employee::Position>();
+    setPosition( static_cast<m_employee::Position>( metaEnum.keyToValue(employeeInfo["position"].toString().toStdString().c_str() ) ));
+    setPositionStringForm( employeeInfo["role_text"].toString() );
+
+    setSalary_base( employeeInfo["salary_base"].toDouble() );
+    setSalary_bonus( employeeInfo["salary_bonus"].toDouble() );
+
+    c_employee supervisor(false);
+    supervisor.setId(  employeeInfo["supervisor_id"].toUInt() );
+    supervisor.setName( employeeInfo["supervisor_name"].toString() );
+    supervisor.setLast_name( employeeInfo["supervisor_last_name"].toString() );
+    setSupervisor(&supervisor);
+
+    setPhone_number( employeeInfo["phone_number"].toString() );
+    setPhone_number_2( employeeInfo["phone_number_2"].toString() );
+    setAddress_living( employeeInfo["address_living"].toString() );
+    setPostal_code_living( employeeInfo["postal_code_living"].toString() );
+    setCity_living( employeeInfo["city_living"].toString() );
+    setAddress_contact( employeeInfo["address_contact"].toString() );
+    setPostal_code_contact( employeeInfo["postal_code_contact"].toString() );
+    setCity_contact( employeeInfo["city_contact"].toString() );
+    setPesel( employeeInfo["pesel"].toString() );
+    setUser_name( employeeInfo["user_name"].toString() );
+    setEmployment_date( QDate::fromString( employeeInfo["employment_date"].toString() ) );
+    setGender( employeeInfo["gender"].toChar() );
+    setPhoto(  QByteArray(employeeInfo["photo"].toByteArray()) );
+
+    emit propertiesSaved();
+    emit passProperties(QMap<QString, QVariant>(employeeInfo));
+}
+
 
 

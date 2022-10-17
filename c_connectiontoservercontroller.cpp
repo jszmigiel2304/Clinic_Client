@@ -305,7 +305,7 @@ void c_connectionToServerController::sendPackets()
 
 void c_connectionToServerController::receiveConfirmationReceived(myStructures::threadData data)
 {
-    QString log = QString("Potwierdzenie otrzymania pakietu przez serwer.\n").arg(packetsToSend.size());
+    QString log = QString("Potwierdzenie otrzymania pakietu przez serwer. %1\n").arg(data.ref_md5);
     emit newLog(log);
 
     c_Parser parser;
@@ -316,13 +316,13 @@ void c_connectionToServerController::receiveConfirmationReceived(myStructures::t
         if( waitingForReceiveConfirmation[i].md5_hash == md5Confirmation ) {
             if( waitingForReceiveConfirmation[i].wait_for_reply ) {
                 waitingForReplyPackets.append( waitingForReceiveConfirmation.takeAt(i) );
-                QString log = QString("Usunięto z listy: Oczekuje na potweirdzenie otrzymania przez serwer\n").arg(packetsToSend.size());
+                QString log = QString("Usunięto z listy: Oczekuje na potweirdzenie otrzymania przez serwer. %1\n").arg(data.ref_md5);
                 emit newLog(log);
-                log = QString("Dodano do listy: Oczekuje na odpowiedz z serwera\n").arg(packetsToSend.size());
+                log = QString("Dodano do listy: Oczekuje na odpowiedz z serwera. %1\n").arg(data.ref_md5);
                 emit newLog(log);
             } else {
                 waitingForReceiveConfirmation.removeAt(i);
-                QString log = QString("Usunięto z listy: Oczekuje na potweirdzenie otrzymania przez serwer\n").arg(packetsToSend.size());
+                QString log = QString("Usunięto z listy: Oczekuje na potweirdzenie otrzymania przez serwer. %1\n").arg(data.ref_md5);
                 emit newLog(log);
             }
             break;
@@ -335,7 +335,7 @@ void c_connectionToServerController::replyReceivedRemoveFromList(QByteArray ref_
     for(int i = 0; i < waitingForReplyPackets.length(); i++) {
         if( waitingForReplyPackets[i].md5_hash == ref_md5 ) {
             waitingForReplyPackets.removeAt(i);
-            QString log = QString("Usunięto z listy: Oczekuje na odpowiedz z serwera\n").arg(packetsToSend.size());
+            QString log = QString("Usunięto z listy: Oczekuje na odpowiedz z serwera. %1\n").arg(ref_md5);
             emit newLog(log);
 
             break;

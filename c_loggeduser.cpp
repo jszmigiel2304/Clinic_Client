@@ -70,9 +70,42 @@ void c_loggedUser::forceLogOut()
         emit logOutUser();
 }
 
-void c_loggedUser::setDbLogs(const QList<myStructures::myLog> &newDbLogs)
+void c_loggedUser::setProperties(QMap<QString, QVariant> userInfo)
+{
+       setId( userInfo["id"].toUInt() );
+       setName( userInfo["name"].toString() );
+       setEmail( userInfo["email"].toString() );
+       setVerified( userInfo["verified"].toBool() );
+       setBlocked( userInfo["blocked"].toBool() );
+       setCreate_date( QDateTime::fromString( userInfo["create_date"].toString() ) );
+       setVerify_date( QDateTime::fromString( userInfo["verify_date"].toString() ) );
+       setBlock_date( QDateTime::fromString( userInfo["blocked_date"].toString() ) );
+       setPhoto( QByteArray( userInfo["photo"].toByteArray() ) );
+        QMetaEnum metaEnum = QMetaEnum::fromType<m_loggedUser::UserRole>();
+       setRole( static_cast<m_loggedUser::UserRole>( metaEnum.keyToValue(userInfo["role"].toString().toStdString().c_str() ) ) );
+       setIsLogged( userInfo["logged"].toBool() );
+
+       emit propertiesSaved();
+       emit passProperties(userInfo);
+}
+
+void c_loggedUser::setDbLogs(QList<myStructures::myLog> &newDbLogs)
 {
     dbLogs = newDbLogs;
+}
+
+void c_loggedUser::setDbLogs(QList<QMap<QString, QVariant> > logs)
+{
+    for(int i = 0; i< logs.size(); i++) {
+        myStructures::myLog log;
+        log.ip_address = QHostAddress(logs[i]["ip_address"].toString());
+        log.time = QDateTime::fromString(logs[i]["log_time"].toString());
+        log.log_text = logs[i]["log"].toString();
+        this->dbLogs.append(log);
+    }
+
+    emit logsSaved();
+    emit passLogs(QList<myStructures::myLog>(this->dbLogs));
 }
 
 QMap<QString, QVariant> c_loggedUser::getUserProperties()
@@ -103,10 +136,9 @@ QMap<QString, QVariant> c_loggedUser::getEmployeeProperties()
     return this->getEmployee()->getProperties(true, true);
 }
 
-QStringList c_loggedUser::getDbLogs()
+QList<myStructures::myLog> * c_loggedUser::getDbLogs()
 {
-    QStringList list;
-    return list;
+    return &dbLogs;
 }
 
 
