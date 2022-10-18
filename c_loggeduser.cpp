@@ -99,7 +99,7 @@ void c_loggedUser::setDbLogs(QList<QMap<QString, QVariant> > logs)
     for(int i = 0; i< logs.size(); i++) {
         myStructures::myLog log;
         log.ip_address = QHostAddress(logs[i]["ip_address"].toString());
-        log.time = QDateTime::fromString(logs[i]["log_time"].toString());
+        log.time = QDateTime::fromString(logs[i]["log_time"].toString(), Qt::ISODateWithMs);
         log.log_text = logs[i]["log"].toString();
         this->dbLogs.append(log);
     }

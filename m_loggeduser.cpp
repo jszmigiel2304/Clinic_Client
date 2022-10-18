@@ -159,6 +159,11 @@ void m_loggedUser::clearProperties()
     setVerified(false);
     setBlocked(false);
     role = NO_ROLE;
+
+    if(employee != nullptr)
+        employee->deleteLater();
+
+    employee = new c_employee(true);
 }
 
 myStructures::authenticator m_loggedUser::getAuthorizationData()

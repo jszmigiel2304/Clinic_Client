@@ -63,6 +63,7 @@ void w_UserProfileWindow::refreshEmployeeInfo()
                                                     employeeProperties["city_contact"].toString()
                                                         ) );
     ui->l_position->setText( employeeProperties["position"].toString() );
+    ui->l_employment_date->setText(employeeProperties["employment_date"].toString());
     ui->l_supervisor->setText( QString("%1 %2").arg(employeeProperties["supervisor_name"].toString(), employeeProperties["supervisor_last_name"].toString()) );
     ui->l_salary_base->setText( QString("%1").arg( employeeProperties["salary_base"].toDouble() ));
     ui->l_salary_bonus->setText( QString("%1").arg( employeeProperties["salary_bonus"].toDouble()) );
@@ -75,7 +76,9 @@ void w_UserProfileWindow::refreshLogs()
         QLabel * l_log = new QLabel(ui->w_logs_container);
         l_log->setStyleSheet( QString("color: rgb(221, 221, 221);") );
         l_log->setGeometry( 0, 25 * (i + 1), 255, 25 );
-        l_log->setText( Logs[i].log_text );
+        l_log->setIndent(5);
+        l_log->setText( QString("%1\t\t(%2)").arg(Logs[i].log_text, Logs[i].time.toString()) );
+        l_log->show();
     }
 }
 
@@ -123,7 +126,7 @@ void w_UserProfileWindow::setProperties(QMap<QString, QVariant> userProperties, 
 
 void w_UserProfileWindow::setUpLoop()
 {
-    waitingLoop->setExpireTime(100000);
+    waitingLoop->setExpireTime(15000);
 }
 
 c_waitingLoop::c_waitingLoop *w_UserProfileWindow::getWaitingLoop() const

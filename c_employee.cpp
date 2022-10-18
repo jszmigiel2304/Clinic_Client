@@ -74,10 +74,14 @@ void c_employee::setProperties(QMap<QString, QVariant> employeeInfo)
     setName( employeeInfo["name"].toString() );
     setSecond_name( employeeInfo["second_name"].toString() );
     setLast_name( employeeInfo["last_name"].toString() );
+    setGender( employeeInfo["gender"].toChar() );
 
     QMetaEnum metaEnum = QMetaEnum::fromType<m_employee::Position>();
-    setPosition( static_cast<m_employee::Position>( metaEnum.keyToValue(employeeInfo["position"].toString().toStdString().c_str() ) ));
-    setPositionStringForm( employeeInfo["role_text"].toString() );
+    setPosition( static_cast<m_employee::Position>( metaEnum.keyToValue(employeeInfo["position_name"].toString().toStdString().c_str() ) ));
+    if(!employeeInfo["position_female_form"].toString().isEmpty() && (getGender() == 'k' || getGender() == 'K'))
+        setPositionStringForm( employeeInfo["position_female_form"].toString() );
+    else
+        setPositionStringForm( employeeInfo["position_male_form"].toString() );
 
     setSalary_base( employeeInfo["salary_base"].toDouble() );
     setSalary_bonus( employeeInfo["salary_bonus"].toDouble() );
@@ -98,7 +102,8 @@ void c_employee::setProperties(QMap<QString, QVariant> employeeInfo)
     setCity_contact( employeeInfo["city_contact"].toString() );
     setPesel( employeeInfo["pesel"].toString() );
     setUser_name( employeeInfo["user_name"].toString() );
-    setEmployment_date( QDate::fromString( employeeInfo["employment_date"].toString() ) );
+    QDate dat = QDate::fromString(employeeInfo["employment_date"].toString(), Qt::ISODate);
+    setEmployment_date( QDate::fromString( employeeInfo["employment_date"].toString(), Qt::ISODate ) );
     setGender( employeeInfo["gender"].toChar() );
     setPhoto(  QByteArray(employeeInfo["photo"].toByteArray()) );
 

@@ -59,8 +59,10 @@ void c_waitingLoop::c_waitingLoop::removeCondition(int id)
     waitingConditions.removeAt(i);
 
 
-    if(waitingConditions.size() == 0)
+    if(waitingConditions.size() == 0) {
+        exitLoopTimer.stop();
         emit exitLoop(0);
+    }
 }
 
 void c_waitingLoop::c_waitingLoop::startExec()
@@ -72,6 +74,7 @@ void c_waitingLoop::c_waitingLoop::startExec()
 
 void c_waitingLoop::c_waitingLoop::stopLoop()
 {
+    exitLoopTimer.stop();
     emit exitLoop( waitingConditions.size() );
 }
 

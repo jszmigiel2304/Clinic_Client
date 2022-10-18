@@ -137,23 +137,38 @@ void c_actionExecutive::processResults(myTypes::JsonContent jsonContent, QList<Q
         break;
     }
     case myTypes::USER_PROPERTIES_ANSWER: {
-        emit userPropertiesReceivedFromServerResultReady( results[0] );
+        if(results.isEmpty())
+            emit userPropertiesReceivedFromServerResultReady( QMap<QString, QVariant>() );
+        else
+            emit userPropertiesReceivedFromServerResultReady( results[0] );
         break;
     }
     case myTypes::EMPLOYEE_PROPERTIES_ANSWER: {
-        emit employeePropertiesReceivedFromServerResultReady( results[0] );
+        if(results.isEmpty())
+            emit employeePropertiesReceivedFromServerResultReady( QMap<QString, QVariant>() );
+        else
+            emit employeePropertiesReceivedFromServerResultReady( results[0] );
         break;
     }
     case myTypes::USER_LOGS_ANSWER: {
-        emit userLogsReceivedFromServerResultReady(results);
+        if(results.isEmpty())
+            emit userLogsReceivedFromServerResultReady( QList<QMap<QString, QVariant>>() );
+        else
+            emit userLogsReceivedFromServerResultReady(results);
         break;
     }
     case myTypes::USER_EMPLOYEE_LOGS_ANSWER: {
-        emit userEmployeeLogsReceivedFromServerResultReady(results);
+        if(results.isEmpty())
+            emit userEmployeeLogsReceivedFromServerResultReady( QList<QMap<QString, QVariant>>() );
+        else
+            emit userEmployeeLogsReceivedFromServerResultReady(results);
         break;
     }
     case myTypes::EMPLOYEE_LOGS_ANSWER: {
-        emit employeeLogsReceivedFromServerResultReady(results);
+        if(results.isEmpty())
+            emit employeeLogsReceivedFromServerResultReady( QList<QMap<QString, QVariant>>() );
+        else
+            emit employeeLogsReceivedFromServerResultReady(results);
         break;
     }
     case myTypes::ERRORS: {
