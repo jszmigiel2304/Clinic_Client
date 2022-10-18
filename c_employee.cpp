@@ -8,7 +8,8 @@ c_employee::c_employee(bool allocSupervisor, QObject *parent) : m_employee(paren
 
 c_employee::~c_employee()
 {
-    getSupervisor()->deleteLater();
+    if(supervisor != nullptr)
+        delete supervisor;
 }
 
 c_employee *c_employee::getSupervisor() const
@@ -60,6 +61,10 @@ QMap<QString, QVariant> c_employee::getProperties(bool combinedAddress, bool com
     map["gender"] = this->getGender();
     map["photo"] = this->getPhoto();
 
+    map["supervisor_id"] = this->getSupervisor()->getId();
+    map["supervisor_name"] = this->getSupervisor()->getName();
+    map["supervisor_last_name"] = this->getSupervisor()->getLast_name();
+
     return map;
 }
 
@@ -77,11 +82,11 @@ void c_employee::setProperties(QMap<QString, QVariant> employeeInfo)
     setSalary_base( employeeInfo["salary_base"].toDouble() );
     setSalary_bonus( employeeInfo["salary_bonus"].toDouble() );
 
-    c_employee supervisor(false);
-    supervisor.setId(  employeeInfo["supervisor_id"].toUInt() );
-    supervisor.setName( employeeInfo["supervisor_name"].toString() );
-    supervisor.setLast_name( employeeInfo["supervisor_last_name"].toString() );
-    setSupervisor(&supervisor);
+    c_employee * supervisor = new c_employee(false);
+    supervisor->setId(  employeeInfo["supervisor_id"].toUInt() );
+    supervisor->setName( employeeInfo["supervisor_name"].toString() );
+    supervisor->setLast_name( employeeInfo["supervisor_last_name"].toString() );
+    setSupervisor(supervisor);
 
     setPhone_number( employeeInfo["phone_number"].toString() );
     setPhone_number_2( employeeInfo["phone_number_2"].toString() );
@@ -98,7 +103,8 @@ void c_employee::setProperties(QMap<QString, QVariant> employeeInfo)
     setPhoto(  QByteArray(employeeInfo["photo"].toByteArray()) );
 
     emit propertiesSaved();
-    emit passProperties(QMap<QString, QVariant>(employeeInfo));
+    QMap<QString, QVariant> map = this->getProperties();
+    emit passProperties(map);
 }
 
 

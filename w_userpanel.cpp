@@ -91,14 +91,7 @@ void w_userPanel::connectionToServerStatusChanged(QAbstractSocket::SocketState s
 
 void w_userPanel::userLogged(QString name, QString role)
 {
-//    QString text = name;
-//    if(role == SUPER) text += QString(" [SUPER]");
-//    else if(role == ADMIN) text += QString(" [ADMIN]");
-//    else if(role == MODERATOR) text += QString(" [MODERATOR]");
-//    else if(role == USER) text += QString(" [UŻYTKOWNIK]");
-//    else if(role == GUEST) text += QString(" [GOŚĆ]");
-//    else if(role == NO_ROLE) text += QString(" []");
-
+    dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->show();
 
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(QString("%1 [%2]").arg(name, role));
     loggedUserName->setPressedAction("type=process,target=USER_PROFILE_CARD,params=CURRENT_USER");
@@ -113,6 +106,8 @@ void w_userPanel::userLogged(QString name, QString role)
 
 void w_userPanel::userNotLogged()
 {
+    dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->hide();
+
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(QString(""));
     loggedUserName->setPressedAction("type=NULL,target=NULL,params=NULL");
 
@@ -162,6 +157,7 @@ void w_userPanel::createLayout()
 
     loggedUserName->setMinimumSize(140,40);
     loggedUserName->setMaximumSize(140,40);
+    dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->hide();
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setMinimumSize(140,40);
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setMaximumSize(140,40);
 

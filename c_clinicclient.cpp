@@ -321,21 +321,12 @@ void c_ClinicClient::showAuthorizationDialogOnIdle(QString username)
 
 void c_ClinicClient::showUserPanelWindow()
 {
-    w_UserProfileWindow * userProfileWindow = w_UserProfileWindow::Instance();
+    w_UserProfileWindow * userProfileWindow = new w_UserProfileWindow();
     userProfileWindow->show();
-
-//    QMap<QString, QVariant> userProperties;
-//    QMap<QString, QVariant> employeeProperties;
-//    QList<myStructures::myLog> logs;
 
     connect( userProfileWindow, SIGNAL(getUserPanelProperties(QMap<QString, QVariant> *, QMap<QString, QVariant> *, QList<myStructures::myLog> * )),
              user->thread(), SLOT(getProperties(QMap<QString, QVariant> *, QMap<QString, QVariant> *, QList<myStructures::myLog> * )), Qt::DirectConnection );
 
-//    connect( userProfileWindow, SIGNAL(getUserPanelProperties()),
-//             user->thread(), SLOT(getProperties()), Qt::DirectConnection );
-
-//    c_waitingLoop::c_waitingLoop loop;
-//    loop.setExpireTime(100000);
 
     userProfileWindow->setUpLoop();
 
@@ -355,31 +346,7 @@ void c_ClinicClient::showUserPanelWindow()
         connect(this->user, SIGNAL(passLogs(QList<myStructures::myLog>)), userProfileWindow, SLOT(setLogs(QList<myStructures::myLog>)));
     }
 
-
     userProfileWindow->refreshProperties();
-
-    //loop.startExec();
-
-//    QTimer timer;
-//    timer.setSingleShot(true);
-//    QEventLoop loop;
-//    connect( this->user->thread(), SIGNAL(propertiesSaved()), &loop, SLOT(quit()) );
-//    connect( &timer, &QTimer::timeout, &loop, &QEventLoop::quit );
-//    timer.start(10000);
-//    loop.exec();
-
-
-//    if(timer.isActive()) {
-//        emit newLog(QString("Properties received.\n"));
-//    }
-//    else{
-//        emit newLog(QString("Properties not received.\n"));
-//    }
-
-//    userProfileWindow->setUserProperties( userProperties );
-//    userProfileWindow->setEmployeeProperties( employeeProperties );
-
-//    userProfileWindow->setLogs(logs);
 
     userProfileWindow->refresh();
 }

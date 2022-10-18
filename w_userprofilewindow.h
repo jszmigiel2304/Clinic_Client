@@ -17,7 +17,7 @@ class w_UserProfileWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    static w_UserProfileWindow *Instance();
+    explicit w_UserProfileWindow(QWidget *parent = nullptr);
     ~w_UserProfileWindow();
     void setProperties(QMap<QString, QVariant> userProperties, QMap<QString, QVariant> employeeProperties, bool refresh = 0);
     void setUpLoop();
@@ -40,7 +40,6 @@ public slots:
     void setLogs(QList<myStructures::myLog> list);
 
 private:
-    explicit w_UserProfileWindow(QWidget *parent = nullptr);
     Ui::w_UserProfileWindow *ui;
 
 

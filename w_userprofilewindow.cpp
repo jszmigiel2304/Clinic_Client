@@ -6,9 +6,14 @@ w_UserProfileWindow::w_UserProfileWindow(QWidget *parent) :
     ui(new Ui::w_UserProfileWindow)
 {
     ui->setupUi(this);
+    this->setAttribute(Qt::WA_DeleteOnClose);
     connect(this->ui->b_more_logs_button, SIGNAL(clicked(bool)), this, SLOT(on_more_logs_button_clicked(bool)));
 
     waitingLoop = new c_waitingLoop::c_waitingLoop();
+
+    this->setEnabled(true);
+    ui->w_mask->setEnabled(false);
+    ui->w_mask->hide();
 }
 
 void w_UserProfileWindow::on_more_logs_button_clicked(bool checked)
@@ -99,17 +104,11 @@ void w_UserProfileWindow::processingFault(QString text)
     ui->w_mask->hide();
 }
 
-w_UserProfileWindow *w_UserProfileWindow::Instance()
-{
-    static w_UserProfileWindow * instance = nullptr;
-    if ( instance == nullptr ) {
-        instance = new w_UserProfileWindow();
-    }
-    return instance;
-}
 
 w_UserProfileWindow::~w_UserProfileWindow()
 {
+    if(waitingLoop != nullptr)
+        delete waitingLoop;
     delete ui;
 }
 
@@ -163,10 +162,16 @@ void w_UserProfileWindow::refreshProperties()
 {
     //emit getUserPanelProperties();
     emit getUserPanelProperties(&userProperties, &employeeProperties, &Logs);
-    waitingLoop->startExec();
+
+    if(waitingLoop->getConditionsNumber() > 0)
+        waitingLoop->startExec();
 }
 
 void w_UserProfileWindow::closeEvent(QCloseEvent *event)
 {
+    this->Logs.clear();
+    this->employeeProperties.clear();
+    this->userProperties.clear();
+
     event->accept();
 }

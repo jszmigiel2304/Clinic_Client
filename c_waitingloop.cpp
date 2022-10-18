@@ -19,8 +19,6 @@ c_waitingLoop::c_waitingLoop::c_waitingLoop(QObject *parent)
     connect(this, SIGNAL(exitLoop(int)), this, SLOT(exit(int)));
 
     connect(&exitLoopTimer, SIGNAL(timeout()), this, SLOT(stopLoop()));
-
-    connect(&checkConditionsTimer, SIGNAL(timeout()), this, SLOT(checkConditions()));
 }
 
 c_waitingLoop::c_waitingLoop::~c_waitingLoop()
@@ -45,6 +43,11 @@ c_waitingLoop::waitingCondition *c_waitingLoop::c_waitingLoop::newCondition()
     return condition;
 }
 
+int c_waitingLoop::c_waitingLoop::getConditionsNumber()
+{
+    return waitingConditions.size();
+}
+
 void c_waitingLoop::c_waitingLoop::removeCondition(int id)
 {
     int i;
@@ -55,12 +58,14 @@ void c_waitingLoop::c_waitingLoop::removeCondition(int id)
     }
     waitingConditions.removeAt(i);
 
+
+    if(waitingConditions.size() == 0)
+        emit exitLoop(0);
 }
 
 void c_waitingLoop::c_waitingLoop::startExec()
 {
     emit loopStarted( QString("Pobieram dane. Liczba potrzebnych danych: %1").arg(waitingConditions.size()) );
-    checkConditionsTimer.start(1000);
     exitLoopTimer.start(exitLoopTime);
     this->exec();
 }
@@ -68,17 +73,6 @@ void c_waitingLoop::c_waitingLoop::startExec()
 void c_waitingLoop::c_waitingLoop::stopLoop()
 {
     emit exitLoop( waitingConditions.size() );
-}
-
-void c_waitingLoop::c_waitingLoop::checkConditions()
-{
-    checkConditionsTimer.stop();
-
-    if(waitingConditions.size() == 0)
-        emit exitLoop(0);
-
-
-    checkConditionsTimer.start();
 }
 
 

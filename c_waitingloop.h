@@ -43,6 +43,8 @@ namespace c_waitingLoop {
 
         waitingCondition * newCondition();
 
+        int getConditionsNumber();
+
     public slots:
         void removeCondition(int id);
         void startExec();
@@ -50,12 +52,10 @@ namespace c_waitingLoop {
     private:
         QList<waitingCondition *> waitingConditions;
         QTimer exitLoopTimer;
-        QTimer checkConditionsTimer;
         quint32 exitLoopTime;
 
     private slots:
         void stopLoop();
-        void checkConditions();
 
     signals:
         void exitLoop(int exitCode);
