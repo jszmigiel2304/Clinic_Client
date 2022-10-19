@@ -7,6 +7,12 @@
 #include <QMainWindow>
 #include <QEvent>
 #include <QCloseEvent>
+#include <QPushButton>
+#include <QAbstractButton>
+#include <QWidget>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QLabel>
 
 namespace Ui {
 class w_UserProfileWindow;
@@ -45,7 +51,7 @@ private:
 
 
 private slots:
-    void on_more_logs_button_clicked(bool checked);
+    void moreLogsButtonClicked(bool checked);
     void refreshUserInfo();
     void refreshEmployeeInfo();
     void refreshLogs();    
@@ -57,6 +63,20 @@ private slots:
 signals:
     //void getUserPanelProperties();
     void getUserPanelProperties(QMap<QString, QVariant> * userProperties, QMap<QString, QVariant> * employeeProperties, QList<myStructures::myLog> * Logs);
+};
+
+class w_moreLogsWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit w_moreLogsWindow(QList<myStructures::myLog> * Logs, QWidget *parent = nullptr);
+    ~w_moreLogsWindow();
+
+private:
+    QWidget central;
+    QScrollArea scrollArea;
+    QWidget scrollAreaWidget;
 };
 
 #endif // W_USERPROFILEWINDOW_H

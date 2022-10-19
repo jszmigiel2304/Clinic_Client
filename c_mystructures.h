@@ -89,6 +89,24 @@ namespace myStructures {
         QDateTime time;
         QHostAddress ip_address;
         QString log_text;
+
+        QMap<QString, QVariant> toMap() const {
+            QMap<QString, QVariant> map;
+            map["activity"] = this->log_text;
+            map["ip_address"] = this->ip_address.toString();
+            map["log_time"] = this->time.toString(Qt::ISODateWithMs);
+            return map;
+        }
+
+        static myLog fromMap(const QMap<QString, QVariant>& map) {
+            myLog log;
+            log.log_text = map["activity"].toString();
+            log.ip_address = QHostAddress( QHostAddress::parseSubnet(map["ip_address"].toString()).first );
+            log.time = QDateTime::fromString(map["log_time"].toString(), Qt::ISODateWithMs);
+            return log;
+        }
+
+        bool operator<(const myLog& other) const { return time < other.time; }
     };
 }
 

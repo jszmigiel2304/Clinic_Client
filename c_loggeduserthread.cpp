@@ -232,8 +232,8 @@ void c_loggedUserThread::logOutOffLine()
 {
     emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Połączenie przerwane. Wylogowano użytkownika. \n"));
 
-    dynamic_cast<c_loggedUser *>(myParentConnector)->clearProperties();
     dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs()->clear();
+    dynamic_cast<c_loggedUser *>(myParentConnector)->clearProperties();
     emit userNotLogged();
 }
 
@@ -289,8 +289,8 @@ void c_loggedUserThread::logOutConfirmationReceivedFromServer(myStructures::logO
 {
     emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Udane wylogowanie. \n"));
 
-    dynamic_cast<c_loggedUser *>(myParentConnector)->clearProperties();
     dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs()->clear();
+    dynamic_cast<c_loggedUser *>(myParentConnector)->clearProperties();
     emit userNotLogged();
     loggingOutState = false;
 }

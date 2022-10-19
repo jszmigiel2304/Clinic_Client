@@ -7,7 +7,7 @@ w_UserProfileWindow::w_UserProfileWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);
-    connect(this->ui->b_more_logs_button, SIGNAL(clicked(bool)), this, SLOT(on_more_logs_button_clicked(bool)));
+    connect(this->ui->b_more_logs_button, SIGNAL(clicked(bool)), this, SLOT(moreLogsButtonClicked(bool)));
 
     waitingLoop = new c_waitingLoop::c_waitingLoop();
 
@@ -16,9 +16,10 @@ w_UserProfileWindow::w_UserProfileWindow(QWidget *parent) :
     ui->w_mask->hide();
 }
 
-void w_UserProfileWindow::on_more_logs_button_clicked(bool checked)
+void w_UserProfileWindow::moreLogsButtonClicked(bool checked)
 {
-
+    w_moreLogsWindow * moreLogsWindow = new w_moreLogsWindow(&Logs, this);
+    moreLogsWindow->show();
 }
 
 void w_UserProfileWindow::refreshUserInfo()
@@ -75,9 +76,9 @@ void w_UserProfileWindow::refreshLogs()
     for( int i = 0; i < 11 && i < Logs.size(); i++) {
         QLabel * l_log = new QLabel(ui->w_logs_container);
         l_log->setStyleSheet( QString("color: rgb(221, 221, 221);") );
-        l_log->setGeometry( 0, 25 * (i + 1), 255, 25 );
+        l_log->setGeometry( 0, 25 * (i + 1), 355, 25 );
         l_log->setIndent(5);
-        l_log->setText( QString("%1\t\t(%2)").arg(Logs[i].log_text, Logs[i].time.toString()) );
+        l_log->setText( QString("%2\t%3\t[ %1 ]").arg( Logs[i].log_text, Logs[i].time.toString(), Logs[i].ip_address.toString() ) );
         l_log->show();
     }
 }
@@ -177,4 +178,48 @@ void w_UserProfileWindow::closeEvent(QCloseEvent *event)
     this->userProperties.clear();
 
     event->accept();
+}
+
+w_moreLogsWindow::w_moreLogsWindow(QList<myStructures::myLog> * Logs, QWidget *parent) : QMainWindow(parent)
+{
+    setAttribute(Qt::WA_DeleteOnClose);
+
+    setWindowModality(Qt::NonModal);
+    setWindowTitle(QString("Clinic Clinet - more logs"));
+    setStyleSheet(QString("background-color: rgb(221, 221, 221);\ncolor: rgb(0,0,0);"));
+    setGeometry(0,0,450,700);
+    setMinimumSize(450,700);
+    setMaximumSize(450,700);
+
+    central.setStyleSheet(QString("background-color: rgb(66, 66, 66);\ncolor: rgb(221, 221, 221);"));
+    this->setCentralWidget(&central);
+    setGeometry(0,0,450,690);
+
+    scrollArea.setParent(&central);
+    scrollArea.setGeometry(0,0,450,690);
+    scrollArea.setStyleSheet(QString("background-color: rgb(66, 66, 66);\ncolor: rgb(221, 221, 221);"));
+    scrollArea.setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea.setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+    scrollArea.setWidget(&scrollAreaWidget);
+    scrollAreaWidget.setGeometry(0,0,430, 25 * Logs->size() + 20);
+    scrollAreaWidget.setStyleSheet(QString("background-color: rgb(66, 66, 66);\ncolor: rgb(221, 221, 221);"));
+
+    for( int i = 0; i < Logs->size(); i++) {
+        QLabel * l_log = new QLabel(&scrollAreaWidget);
+        l_log->setStyleSheet( QString("color: rgb(221, 221, 221);") );
+        l_log->setGeometry( 0, 25 * (i + 1), 450, 25 );
+        l_log->setIndent(5);
+        l_log->setText( QString("%4: %2\t%3\t[ %1 ]").arg( (*Logs)[i].log_text, (*Logs)[i].time.toString(), (*Logs)[i].ip_address.toString(), QString("%1").arg(i+1) ) );
+        l_log->show();
+    }
+
+    central.show();
+    scrollArea.show();
+    scrollAreaWidget.show();
+}
+
+w_moreLogsWindow::~w_moreLogsWindow()
+{
+
 }

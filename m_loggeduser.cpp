@@ -160,6 +160,9 @@ void m_loggedUser::clearProperties()
     setBlocked(false);
     role = NO_ROLE;
 
+    if(employee->getSupervisor() != nullptr)
+        employee->getSupervisor()->deleteLater();
+
     if(employee != nullptr)
         employee->deleteLater();
 

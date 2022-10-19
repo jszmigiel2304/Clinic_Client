@@ -8,8 +8,7 @@ c_employee::c_employee(bool allocSupervisor, QObject *parent) : m_employee(paren
 
 c_employee::~c_employee()
 {
-    if(supervisor != nullptr)
-        delete supervisor;
+
 }
 
 c_employee *c_employee::getSupervisor() const
