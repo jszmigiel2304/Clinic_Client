@@ -42,9 +42,9 @@ public:
 
 public slots:
     void moduleButtonPressed(QString action);
-    void moduleButtonPressedDoFunction(QString target, QStringList params);
-    void moduleButtonPressedShow(QString target, QStringList params);
-    void moduleButtonPressedProcess(QString target, QStringList params);
+    void moduleButtonPressedDoFunction(QString target, QMap<QString, QString> params);
+    void moduleButtonPressedShow(QString target, QMap<QString, QString> params);
+    void moduleButtonPressedProcess(QString target, QMap<QString, QString> params);
 
 
     void Processing(QString processText = QString(""));
@@ -93,6 +93,7 @@ signals:
     void loggingWindowModuleClicked();
     void closeApplicationButtonClicked();
     void userProfileButtonClicked();
+    void processAppButtonClicked(QString target, QMap<QString, QString> params);
 };
 
 #endif // MAINWINDOW_H

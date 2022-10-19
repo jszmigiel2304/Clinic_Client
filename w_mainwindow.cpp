@@ -181,7 +181,13 @@ void w_MainWindow::moduleButtonPressed(QString action)
         QStringList temp = arg.split('=');
         paramsMap[temp[0]] = temp[1];
     }
-    QStringList parameters = paramsMap["params"].split(':');
+    QStringList parametersList = paramsMap["params"].split(QString("||"));
+
+    QMap<QString, QString> parameters;
+    foreach(QString param, parametersList) {
+        QStringList temp = param.split(QString("::::"));
+        parameters[temp[0]] = temp[1];
+    }
 
 
     if(paramsMap["type"] == "NULL") {return;}
@@ -191,24 +197,27 @@ void w_MainWindow::moduleButtonPressed(QString action)
 
 }
 
-void w_MainWindow::moduleButtonPressedDoFunction(QString target, QStringList params)
+void w_MainWindow::moduleButtonPressedDoFunction(QString target, QMap<QString, QString> params)
 {
     if(target == "NULL") {return;}
     if(target == "close_application") { setMinimizeToTrayOnClose(false); emit closeApplicationButtonClicked(); }
     if(target == "logout") { emit logOutModuleClicked(-1, QString(), QString()); return;}
 }
 
-void w_MainWindow::moduleButtonPressedShow(QString target, QStringList params)
+void w_MainWindow::moduleButtonPressedShow(QString target, QMap<QString, QString> params)
 {
     if(target == "NULL") {return;}
     if(target == "configure_window") { emit settingsWindowModuleClicked(); return;}
     if(target == "login_dialog") { emit loggingWindowModuleClicked(); return;}
 }
 
-void w_MainWindow::moduleButtonPressedProcess(QString target, QStringList params)
+void w_MainWindow::moduleButtonPressedProcess(QString target, QMap<QString, QString> params)
 {
     if(target == "NULL") {return;}
     if(target == "USER_PROFILE_CARD") { emit userProfileButtonClicked(); return;}
+
+    emit processAppButtonClicked(target, params);
+    return;
 }
 
 void w_MainWindow::Processing(QString processText)

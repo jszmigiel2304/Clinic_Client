@@ -208,6 +208,7 @@ void c_ClinicClient::createConnections()
     connect(this->mainWindow, SIGNAL(settingsWindowModuleClicked()), this, SLOT(showSettingsWindow()));
     connect(this->mainWindow, SIGNAL(loggingWindowModuleClicked()), this, SLOT(showLoggingDialog()));
     connect(this->mainWindow, SIGNAL(closeApplicationButtonClicked()), this, SLOT(closeApplication()));
+    connect(this->mainWindow, SIGNAL(processAppButtonClicked(QString, QMap<QString, QString>)), this, SLOT(processApp(QString, QMap<QString, QString>)));
 
     connect(qApp, SIGNAL(sessionTimeExpireChanged(QTime)), this->mainWindow->getUserPanel(), SLOT(sessionTimeChanged(QTime)));
 //    connect(sessionCtrlr->thread(), SIGNAL(sessionTimeExpireChanged(QTime)), this->mainWindow->getUserPanel(), SLOT(sessionTimeChanged(QTime)));
@@ -391,6 +392,37 @@ void c_ClinicClient::sessionUnlocked()
 {
     emit newLog(QString("Session Unlocked\n"));
     emit unlockSessionSignal();
+}
+
+void c_ClinicClient::processApp(QString target, QMap<QString, QString> parameters)
+{
+    if(target.isEmpty() || parameters["app_path"].isEmpty()) return;
+
+    QProcess * process = new QProcess(this);
+    QStringList arguments;
+
+    foreach (const QString parameter, parameters.keys()) {
+        if(parameter == "app_path") { process->setProgram( parameters["app_path"] ); }
+        if(parameter == "userId") {
+            if(parameters["userId"] == "CURRENT_LOGGED_USER_ID")
+                arguments.append(QString("userId:%1").arg(this->user->getId()));
+            else
+                arguments.append(QString("userId:%1").arg(parameters["userId"]));
+        }
+
+        if(parameter == "userName") {
+            if(parameters["userName"] == "CURRENT_LOGGED_USER_NAME")
+                arguments.append(QString("userName:%1").arg(this->user->getName()));
+            else
+                arguments.append(QString("userName:%1").arg(parameters["userName"]));
+        }
+
+
+    }
+    process->setArguments(arguments);
+
+    emit newLog(QString("Uruchamiono moduł: %1, Path: %2\n").arg(target, parameters["app_path"]));
+
 }
 
 

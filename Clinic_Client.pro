@@ -30,6 +30,7 @@ SOURCES += \
     c_loggeduser.cpp \
     c_loggeduserthread.cpp \
     c_logscontroller.cpp \
+    c_moduleprocess.cpp \
     c_myfiles.cpp \
     c_parser.cpp \
     c_sendingpacketscontroller.cpp \
@@ -81,6 +82,7 @@ HEADERS += \
     c_loggeduser.h \
     c_loggeduserthread.h \
     c_logscontroller.h \
+    c_moduleprocess.h \
     c_myfiles.h \
     c_parser.h \
     c_sendingpacketscontroller.h \

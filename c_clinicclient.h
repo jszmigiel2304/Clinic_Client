@@ -44,6 +44,7 @@
 #include <QAbstractSocket>
 #include <QMetaType>
 #include <QEventLoop>
+#include <QProcess>
 
 class c_AppTrayIcon;
 
@@ -111,6 +112,8 @@ private:
 
     c_loggedUser *user;
 
+    QList<QProcess *> openedModules;
+
 
 
 signals:
@@ -137,6 +140,7 @@ public slots:
     void closeApplication();
     void applicatioIdleDetected();
     void sessionUnlocked();
+    void processApp(QString target, QMap<QString, QString> parameters);
 
 private slots:
     void dataReceived(quint64 data_size, QByteArray data);
