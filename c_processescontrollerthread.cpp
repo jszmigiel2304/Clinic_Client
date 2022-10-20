@@ -96,4 +96,14 @@ void c_processesControllerThread::incomingConnection(qintptr socketDescriptor)
 
     emit newModuleConnectedToServer(moduleProcessConnection);
     emit dynamic_cast<c_processesController *>(myParentConnector)->newLog(log);
+
+    c_Parser parser;
+    QPair<QByteArray, QByteArray> pair = parser.prepareRequestConnectionToProcessPacket(getId());
+
+    myStructures::packet packet;
+    packet.md5_hash = pair.first;
+    packet.packet_to_send = pair.second;
+    packet.wait_for_reply = true;
+
+    emit moduleProcessConnection->sendDataToModuleProcessSignal(packet);
 }

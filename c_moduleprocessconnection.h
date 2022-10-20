@@ -54,7 +54,7 @@ private slots:
     void readyRead();
     //------------------
     void parseReceivedPacket(quint64 size, QByteArray data, qintptr socketDescriptor);
-    void sendDataToModuleProcess(myStructures::packet);
+    void sendDataToModuleProcess(myStructures::packet packet);
 
 signals:
     void newLog(QString log);

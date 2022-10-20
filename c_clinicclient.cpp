@@ -66,7 +66,7 @@ void c_ClinicClient::run()
 
     user->setUpThread();
     sessionCtrlr->setUpThread();
-    //processCtrlr->setUpThread();
+    processCtrlr->setUpThread();
     emit setUpConnection(settCtrlr->getSettings("server"));
 
 

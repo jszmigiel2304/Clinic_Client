@@ -7,9 +7,9 @@ c_processesController::c_processesController(QObject *parent)
     mThread.reset(new c_processesControllerThread);
     moveToThread(mThread.get());
 
-    connect(this, SIGNAL(openedModuleProcessConnections(int)), this, SLOT(processesNumberChanged(int)));
-    connect(this, SIGNAL(newModuleProcessStartServer()()), this->thread(), SLOT(startServer()));
-    connect(this, SIGNAL(noModuleProcessStopServer()()), this->thread(), SLOT(stopServer()));
+    connect(this, SIGNAL(openedModuleProcessesNumberChanged(int)), this, SLOT(processesNumberChanged(int)));
+    connect(this, SIGNAL(newModuleProcessStartServer()), this->thread(), SLOT(startServer()));
+    connect(this, SIGNAL(noModuleProcessStopServer()), this->thread(), SLOT(stopServer()));
 }
 
 c_processesController::~c_processesController()

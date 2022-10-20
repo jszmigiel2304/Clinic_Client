@@ -8,7 +8,6 @@
 #include "mythread.h"
 #include "c_threadcontroller.h"
 #include "cv_processdata.h"
-#include "c_parser.h"
 
 #include <QObject>
 #include <QTcpSocket>
