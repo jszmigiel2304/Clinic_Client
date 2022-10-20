@@ -31,8 +31,11 @@ SOURCES += \
     c_loggeduserthread.cpp \
     c_logscontroller.cpp \
     c_moduleprocess.cpp \
+    c_moduleprocessconnection.cpp \
     c_myfiles.cpp \
     c_parser.cpp \
+    c_processescontroller.cpp \
+    c_processescontrollerthread.cpp \
     c_sendingpacketscontroller.cpp \
     c_sessioncontroller.cpp \
     c_sessioncontrollerthread.cpp \
@@ -83,8 +86,11 @@ HEADERS += \
     c_loggeduserthread.h \
     c_logscontroller.h \
     c_moduleprocess.h \
+    c_moduleprocessconnection.h \
     c_myfiles.h \
     c_parser.h \
+    c_processescontroller.h \
+    c_processescontrollerthread.h \
     c_sendingpacketscontroller.h \
     c_sessioncontroller.h \
     c_sessioncontrollerthread.h \

@@ -1,0 +1,56 @@
+#ifndef C_PROCESSESCONTROLLERTHREAD_H
+#define C_PROCESSESCONTROLLERTHREAD_H
+
+#include "mythread.h"
+#include "c_actionexecutive.h"
+#include "c_moduleprocess.h"
+#include "c_moduleprocessconnection.h"
+
+
+#include <QObject>
+#include <QTime>
+#include <QTimer>
+#include <QThread>
+#include <QMetaType>
+#include <QLocalServer>
+#include <QLocalSocket>
+#include <QCryptographicHash>
+
+class c_processesControllerThread : public MyThread
+{
+    Q_OBJECT
+public:
+    explicit c_processesControllerThread(qint32 id = -1, QString parentIdent = QString(), QString note = QString(), QObject *parent = nullptr);
+    ~c_processesControllerThread();
+
+    void run() override;
+
+
+public slots:
+    void processData(myStructures::threadData data) override;
+
+    void startServer();
+    void stopServer();
+
+private:
+    QLocalServer *localServer;
+    const QString serverName = "ClinicClientLocalServer";
+
+
+    QByteArray hashServerName(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5, bool toHex = true);
+
+private slots:
+    void threadStarted() override;
+
+signals:
+    void newModuleConnectedToServer(c_moduleProcessConnection *processConnection);
+//    void moduleProcessConnectionFinished(c_moduleProcessConnection *processConnection);
+    void needConnectionToProcessSettings();
+
+protected:
+    void incomingConnection(qintptr socketDescriptor);
+
+
+};
+
+#endif // C_PROCESSESCONTROLLERTHREAD_H

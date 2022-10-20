@@ -175,13 +175,13 @@ w_userPanel *w_MainWindow::getUserPanel() const
 
 void w_MainWindow::moduleButtonPressed(QString action)
 {
-    QStringList args = action.split(',');
+    QStringList args = action.split(',', Qt::SkipEmptyParts);
     QMap<QString, QString> paramsMap;
     foreach(QString arg, args) {
         QStringList temp = arg.split('=');
         paramsMap[temp[0]] = temp[1];
     }
-    QStringList parametersList = paramsMap["params"].split(QString("||"));
+    QStringList parametersList = paramsMap["params"].split(QString("||"), Qt::SkipEmptyParts);
 
     QMap<QString, QString> parameters;
     foreach(QString param, parametersList) {
@@ -216,7 +216,7 @@ void w_MainWindow::moduleButtonPressedProcess(QString target, QMap<QString, QStr
     if(target == "NULL") {return;}
     if(target == "USER_PROFILE_CARD") { emit userProfileButtonClicked(); return;}
 
-    emit processAppButtonClicked(target, params);
+    //emit processAppButtonClicked(target, params);
     return;
 }
 

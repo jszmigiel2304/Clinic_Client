@@ -2,34 +2,7 @@
 
 c_moduleProcess::c_moduleProcess(QObject *parent) : QProcess(parent)
 {
-    connect(this, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT());
-    connect(this, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT());
-    connect(this, SIGNAL(readyReadStandardError()), this, SLOT());
-    connect(this, SIGNAL(readyReadStandardOutput()), this, SLOT());
-    connect(this, SIGNAL(started()), this, SLOT());
-    connect(this, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT());
-
-    connect(this, SIGNAL(aboutToClose()), this, SLOT());
-    connect(this, SIGNAL(bytesWritten(qint64)), this, SLOT());
-    connect(this, SIGNAL(channelBytesWritten(int, qint64)), this, SLOT());
-    connect(this, SIGNAL(channelReadyRead(int)), this, SLOT());
-    connect(this, SIGNAL(readChannelFinished()), this, SLOT());
-    connect(this, SIGNAL(readyRead()), this, SLOT());
-
-    // from QProcess signals
-    void	moduleProcessErrorOccurred(QProcess::ProcessError error);
-    void	moduleProcessFinished(int exitCode, QProcess::ExitStatus exitStatus = NormalExit);
-    void	moduleProcessReadyReadStandardError();
-    void	moduleProcessReadyReadStandardOutput();
-    void	moduleProcessStarted();
-    void	moduleProcessStateChanged(QProcess::ProcessState newState);
-    //from QIODevice siganls
-    void	moduleProcessAboutToClose();
-    void	moduleProcessBytesWritten(qint64 bytes);
-    void	moduleProcessChannelBytesWritten(int channel, qint64 bytes);
-    void	moduleProcessChannelReadyRead(int channel);
-    void	moduleProcessReadChannelFinished();
-    void	moduleProcessReadyRead();
+    executive = new c_actionExecutive(this);
 }
 
 c_moduleProcess::~c_moduleProcess()
@@ -37,62 +10,41 @@ c_moduleProcess::~c_moduleProcess()
 
 }
 
-void c_moduleProcess::moduleProcessErrorOccurred(ProcessError error)
+c_actionExecutive *c_moduleProcess::getExecutive() const
 {
-
+    return executive;
 }
 
-void c_moduleProcess::moduleProcessFinished(int exitCode, ExitStatus exitStatus)
+void c_moduleProcess::setExecutive(c_actionExecutive *newExecutive)
 {
-
+    executive = newExecutive;
 }
 
-void c_moduleProcess::moduleProcessReadyReadStandardError()
+void c_moduleProcess::setModuleProcessName(const QString &newModuleProcessName)
 {
-
+    moduleProcessName = newModuleProcessName;
 }
 
-void c_moduleProcess::moduleProcessReadyReadStandardOutput()
+const QString &c_moduleProcess::getModuleProcessName() const
 {
-
+    return moduleProcessName;
 }
 
-void c_moduleProcess::moduleProcessStarted()
+QByteArray c_moduleProcess::getModuleProcessNameHash(QCryptographicHash::Algorithm algorithm, bool toHex)
 {
+    QByteArray encryptedName;
 
+    QByteArray encryptionSeed;
+    QDataStream encryptionStream(&encryptionSeed, QIODevice::ReadWrite);
+    encryptionStream.setVersion(QDataStream::Qt_6_0);
+    encryptionStream << moduleProcessName.toStdString().c_str();
+
+    QCryptographicHash hasher(algorithm);
+    hasher.addData(encryptionSeed);
+    encryptedName = hasher.result();
+
+    QString hax = encryptedName.toHex();
+
+    return (toHex ? encryptedName.toHex() : encryptedName);
 }
 
-void c_moduleProcess::moduleProcessStateChanged(ProcessState newState)
-{
-
-}
-
-void c_moduleProcess::moduleProcessAboutToClose()
-{
-
-}
-
-void c_moduleProcess::moduleProcessBytesWritten(qint64 bytes)
-{
-
-}
-
-void c_moduleProcess::moduleProcessChannelBytesWritten(int channel, qint64 bytes)
-{
-
-}
-
-void c_moduleProcess::moduleProcessChannelReadyRead(int channel)
-{
-
-}
-
-void c_moduleProcess::moduleProcessReadChannelFinished()
-{
-
-}
-
-void c_moduleProcess::moduleProcessReadyRead()
-{
-
-}

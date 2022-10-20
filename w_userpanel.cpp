@@ -94,13 +94,13 @@ void w_userPanel::userLogged(QString name, QString role)
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->show();
 
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(QString("%1 [%2]").arg(name, role));
-    loggedUserName->setPressedAction("type=process,target=USER_PROFILE_CARD,params=CURRENT_USER");
+    loggedUserName->setPressedAction("type=process,target=USER_PROFILE_CARD,params=userId::::CURRENT_LOGGED_USER_ID||userName::::CURRENT_LOGGED_USER_NAME");
 
 
     logStateButton->setName("log_out");
     logStateButton->setIcon(":/icons/log_out_128_128.png");
     logStateButton->setDescription("Nacisnij aby wylogować się z systemu.");
-    logStateButton->setPressedAction("type=doFunction,target=logout,params=CURRENT_USER");
+    logStateButton->setPressedAction("type=doFunction,target=logout,params=userId::::CURRENT_LOGGED_USER_ID||userName::::CURRENT_LOGGED_USER_NAME");
     logStateButton->loadButton();
 }
 
@@ -109,12 +109,12 @@ void w_userPanel::userNotLogged()
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->hide();
 
     dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(QString(""));
-    loggedUserName->setPressedAction("type=NULL,target=NULL,params=NULL");
+    loggedUserName->setPressedAction("type=NULL,target=NULL,params=");
 
     logStateButton->setName("log_in");
     logStateButton->setIcon(":/icons/log_in_128_128.png");
     logStateButton->setDescription("Nacisnij aby zalogować się do systemu.");
-    logStateButton->setPressedAction("type=show,target=login_dialog,params=NULL");
+    logStateButton->setPressedAction("type=show,target=login_dialog,params=");
     logStateButton->loadButton();
 }
 
@@ -189,7 +189,7 @@ void w_userPanel::createControlButton()
     controlButton->setName("name=settings");
     controlButton->setIcon(":/icons/settings_128_128.png");
     controlButton->setDescription("Ustawienia systemu.");
-    controlButton->setPressedAction("type=show,target=configure_window,params=NULL");
+    controlButton->setPressedAction("type=show,target=configure_window,params=");
 
     controlButton->loadButton();
 }
@@ -200,12 +200,12 @@ void w_userPanel::createLogStateButton()
         logStateButton->setName("log_in");
         logStateButton->setIcon(":/icons/log_in_128_128.png");
         logStateButton->setDescription("Nacisnij aby zalogować się do systemu.");
-        logStateButton->setPressedAction("type=show,target=login_dialog,params=NULL");
+        logStateButton->setPressedAction("type=show,target=login_dialog,params=");
     } else {
         logStateButton->setName("log_out");
         logStateButton->setIcon(":/icons/log_out_128_128.png");
         logStateButton->setDescription("Nacisnij aby wylogować się z systemu.");
-        logStateButton->setPressedAction("type=doFunction,target=logout,params=CURRENT_USER");
+        logStateButton->setPressedAction("type=doFunction,target=logout,params=userId::::CURRENT_LOGGED_USER_ID||userName::::CURRENT_LOGGED_USER_NAME");
     }
 
     logStateButton->loadButton();
@@ -222,12 +222,12 @@ void w_userPanel::createLoggedUserName()
 {
     if( ( dynamic_cast<c_ClinicClient *>(c_AppTrayIcon::Instance()->parent()) )->getUser()->getIsLogged()) {
         loggedUserName->setName("UserName");
-        loggedUserName->setPressedAction("type=process,target=USER_PROFILE_CARD,params=CURRENT_USER");
+        loggedUserName->setPressedAction("type=process,target=USER_PROFILE_CARD,params=userId::::CURRENT_LOGGED_USER_ID||userName::::CURRENT_LOGGED_USER_NAME");
         loggedUserName->loadButton();
         dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(QString("Zalogowany USER"));
     } else {
         loggedUserName->setName("UserName");
-        loggedUserName->setPressedAction("type=NULL,target=NULL,params=NULL");
+        loggedUserName->setPressedAction("type=NULL,target=NULL,params=");
         loggedUserName->loadButton();
         dynamic_cast<w_moduleButtonLabel *>(loggedUserName)->getLabel()->setText(QString("Nie zalogowany USER"));
     }
@@ -238,7 +238,7 @@ void w_userPanel::createCloseButton()
     closeButton->setName("name=exit");
     closeButton->setIcon(":/icons/exit_256_256.png");
     closeButton->setDescription("Nacisnij aby zakończyć pracę i zamknąć system. Nastąpi automatyczne wylogowanie.");
-    closeButton->setPressedAction("type=doFunction,target=close_application,params=NULL");
+    closeButton->setPressedAction("type=doFunction,target=close_application,params=");
 
     closeButton->loadButton();
 }
@@ -247,7 +247,7 @@ void w_userPanel::createSessionTimeOutLabel()
 {
     sessionTimeOutLabel->setName("SessionExpireTime");
     sessionTimeOutLabel->setDescription("Czas pozostały do zakończenia sesji.");
-    sessionTimeOutLabel->setPressedAction("type=NULL,target=NULL,params=NULL");
+    sessionTimeOutLabel->setPressedAction("type=NULL,target=NULL,params=");
 
     sessionTimeOutLabel->loadButton();
 }

@@ -22,6 +22,8 @@
 #include "w_authorizationdialog.h"
 #include "w_userprofilewindow.h"
 #include "c_waitingloop.h"
+#include "c_moduleprocess.h"
+#include "c_processescontroller.h"
 
 #include <QApplication>
 #include <QObject>
@@ -108,11 +110,11 @@ private:
     c_connectionToServerController *connectionCtrlr;
     c_SessionController *sessionCtrlr;
     c_ThreadController *threadCtrlr;
+    c_processesController *processCtrlr;
+
     c_Parser parser;
 
     c_loggedUser *user;
-
-    QList<QProcess *> openedModules;
 
 
 

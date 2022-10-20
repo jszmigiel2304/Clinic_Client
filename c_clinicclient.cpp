@@ -16,6 +16,7 @@ c_ClinicClient::c_ClinicClient(QObject *parent)
     connectionCtrlr = new c_connectionToServerController();
     user = new c_loggedUser();
     sessionCtrlr = new c_SessionController();
+    processCtrlr = new c_processesController();
 
     sessionCtrlr->setLoggedUser(user);
 
@@ -65,14 +66,15 @@ void c_ClinicClient::run()
 
     user->setUpThread();
     sessionCtrlr->setUpThread();
+    //processCtrlr->setUpThread();
     emit setUpConnection(settCtrlr->getSettings("server"));
 
 
 
     connectionCtrlr->start();
     user->thread()->start();
-    sessionCtrlr->thread()->start();
-
+    sessionCtrlr->thread()->start();    
+    processCtrlr->thread()->start();
 }
 
 w_MainWindow *c_ClinicClient::getMainWindow() const
@@ -398,7 +400,7 @@ void c_ClinicClient::processApp(QString target, QMap<QString, QString> parameter
 {
     if(target.isEmpty() || parameters["app_path"].isEmpty()) return;
 
-    QProcess * process = new QProcess(this);
+    c_moduleProcess * process = new c_moduleProcess(this);
     QStringList arguments;
 
     foreach (const QString parameter, parameters.keys()) {
@@ -422,6 +424,7 @@ void c_ClinicClient::processApp(QString target, QMap<QString, QString> parameter
     process->setArguments(arguments);
 
     emit newLog(QString("Uruchamiono moduł: %1, Path: %2\n").arg(target, parameters["app_path"]));
+    emit process->passModuleProcessToController(process);
 
 }
 

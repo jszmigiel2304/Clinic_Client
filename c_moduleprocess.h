@@ -1,8 +1,13 @@
 #ifndef C_MODULEPROCESS_H
 #define C_MODULEPROCESS_H
 
+#include "c_actionExecutive.h"
+#include "c_moduleprocessconnection.h"
+
 #include <QProcess>
 #include <QObject>
+#include <QLocalSocket>
+#include <QCryptographicHash>
 
 class c_moduleProcess : public QProcess
 {
@@ -11,23 +16,22 @@ public:
     c_moduleProcess(QObject *parent = nullptr);
     ~c_moduleProcess();
 
+    c_actionExecutive *getExecutive() const;
+    void setExecutive(c_actionExecutive *newExecutive);
+
+    void setModuleProcessName(const QString &newModuleProcessName);
+    const QString &getModuleProcessName() const;
+    QByteArray getModuleProcessNameHash(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5, bool toHex = true);
+
 private:
+    c_actionExecutive *executive;
+    QString moduleProcessName;
 
 private slots:
-    // from QProcess signals
-    void	moduleProcessErrorOccurred(QProcess::ProcessError error);
-    void	moduleProcessFinished(int exitCode, QProcess::ExitStatus exitStatus = NormalExit);
-    void	moduleProcessReadyReadStandardError();
-    void	moduleProcessReadyReadStandardOutput();
-    void	moduleProcessStarted();
-    void	moduleProcessStateChanged(QProcess::ProcessState newState);
-    //from QIODevice siganls
-    void	moduleProcessAboutToClose();
-    void	moduleProcessBytesWritten(qint64 bytes);
-    void	moduleProcessChannelBytesWritten(int channel, qint64 bytes);
-    void	moduleProcessChannelReadyRead(int channel);
-    void	moduleProcessReadChannelFinished();
-    void	moduleProcessReadyRead();
+
+signals:
+    void passModuleProcessToController(c_moduleProcess * process);
+
 
 
 };
