@@ -60,11 +60,6 @@ bool w_modulesScrollArea::eventFilter(QObject *, QEvent *evt)
 
 void w_modulesScrollArea::moduleButtonPress(QString moduleAction)
 {
-    QMessageBox msgBox;
-     QString as = moduleAction;
-     as += "/n w_modulescrollarea";
-     msgBox.setText(as);
-     msgBox.exec();
     emit ButtonPressed(moduleAction);
 }
 

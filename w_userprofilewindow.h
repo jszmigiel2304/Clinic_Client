@@ -63,6 +63,7 @@ private slots:
 signals:
     //void getUserPanelProperties();
     void getUserPanelProperties(QMap<QString, QVariant> * userProperties, QMap<QString, QVariant> * employeeProperties, QList<myStructures::myLog> * Logs);
+    void aboutToClose(QWidget * wnd);
 };
 
 class w_moreLogsWindow : public QMainWindow

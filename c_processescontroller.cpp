@@ -6,14 +6,13 @@ c_processesController::c_processesController(QObject *parent)
 {
     mThread.reset(new c_processesControllerThread);
     moveToThread(mThread.get());
-
-    connect(this, SIGNAL(openedModuleProcessesNumberChanged(int)), this, SLOT(processesNumberChanged(int)));
-    connect(this, SIGNAL(newModuleProcessStartServer()), this->thread(), SLOT(startServer()));
-    connect(this, SIGNAL(noModuleProcessStopServer()), this->thread(), SLOT(stopServer()));
 }
 
 c_processesController::~c_processesController()
 {
+    if(thread()->getLocalServer()->isListening())
+        thread()->stopServer();
+
     QMetaObject::invokeMethod(this, "cleanUpThread");
     mThread->wait();
 }
@@ -97,17 +96,15 @@ void c_processesController::removeModuleProcessConnection(quint32 index)
 void c_processesController::newModuleProcess(c_moduleProcess *moduleProcess)
 {
     this->openedModulesProcesses.append(moduleProcess);
-    QString log = QString("c_processesController::newModuleProcess(c_moduleProcess *moduleProcess)  \n"
-                          "dodano połączenie \n");
-    emit newLog(log);
-    emit openedModuleProcessesNumberChanged(openedModulesProcesses.size());
+
+    emit newLog(QString("c_processesController::newModuleProcess(c_moduleProcess *moduleProcess)  \n"
+                        "dodano utworzony proces do listy \n"));
 }
 
 void c_processesController::removeModuleProcess(c_moduleProcess *moduleProcess)
 {
     openedModulesProcesses.removeAll(moduleProcess);
     openedModulesProcesses.squeeze();
-    emit openedModuleProcessesNumberChanged(openedModulesProcesses.size());
 }
 
 void c_processesController::removeModuleProcess(QByteArray hashedName)
@@ -122,7 +119,6 @@ void c_processesController::removeModuleProcess(QByteArray hashedName)
             break;
         }
     }
-    emit openedModuleProcessesNumberChanged(openedModulesProcesses.size());
 }
 
 void c_processesController::removeModuleProcess(quint32 index)
@@ -130,7 +126,33 @@ void c_processesController::removeModuleProcess(quint32 index)
     c_moduleProcess * temp;
     temp = openedModulesProcesses.takeAt(index);
     delete temp;
-    emit openedModuleProcessesNumberChanged(openedModulesProcesses.size());
+}
+
+void c_processesController::removeAllModuleProcesses()
+{
+    while(openedModulesProcesses.size() != 0) {
+        openedModulesProcesses.takeFirst()->close();
+
+        //Wysłać request zamkniecia + QProcess::waitForFinish
+    }
+}
+
+void c_processesController::moduleClosed(c_moduleProcess *proces, int exitCode, QProcess::ExitStatus exitStatus)
+{
+    if(exitCode == 0) {
+        emit newLog(QString("c_processesController::moduleClosed(c_moduleProcess *proces, int exitCode, QProcess::ExitStatus exitStatus)  \n"
+                            "Proces zatrzymany. Usuwam z listy. ExitCode: %1 \t ExitStatus: %2\n").arg( QString("%1").arg(exitCode), (exitStatus == QProcess::NormalExit ? QString("NormalExit") : QString("CrashExit ") ) ));
+
+    } else {
+        switch(exitCode) {
+        case 0xff01: {emit newLog(QString("Argument error: ServerName \nModule close. \n")); break;}
+        case 0xff02: {emit newLog(QString("Argument error: ModuleName \nModule close. \n")); break;}
+        case 0xff03: {emit newLog(QString("Argument error: UserId or UserName \nModule close. \n")); break;}
+        default: {break;}
+        }
+    }
+
+    removeModuleProcess(proces);
 }
 
 
@@ -144,17 +166,13 @@ void c_processesController::setThread(std::unique_ptr<c_processesControllerThrea
     mThread = std::move(newThread);
 }
 
+QString c_processesController::getHashServerName()
+{
+    return thread()->getLocalServer()->hashServerName();
+}
+
 void c_processesController::cleanUpThread()
 {
     mThread->quit();
 }
 
-void c_processesController::processesNumberChanged(int processesNumber)
-{
-    if(processesNumber == 0) {
-        emit noModuleProcessStopServer();
-    }
-    if(processesNumber == 1) {
-        emit newModuleProcessStartServer();
-    }
-}

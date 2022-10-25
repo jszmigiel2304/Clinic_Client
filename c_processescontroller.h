@@ -42,6 +42,8 @@ public:
     c_processesControllerThread*thread() const;
     void setThread(std::unique_ptr<c_processesControllerThread> newThread);
 
+    QString getHashServerName();
+
 public slots:
     void newModuleProcessConnection(c_moduleProcessConnection * moduleConnection);
     void removeModuleProcessConnection(c_moduleProcessConnection * moduleConnection);
@@ -51,7 +53,10 @@ public slots:
     void newModuleProcess(c_moduleProcess * moduleProcess);
     void removeModuleProcess(c_moduleProcess * moduleProcess);
     void removeModuleProcess(QByteArray hashedName);
-    void removeModuleProcess(quint32 index);
+    void removeModuleProcess(quint32 index);    
+    void removeAllModuleProcesses();
+
+    void moduleClosed(c_moduleProcess * proces, int exitCode, QProcess::ExitStatus exitStatus = QProcess::NormalExit);
 
 
 
@@ -66,16 +71,9 @@ private:
 private slots:
     void cleanUpThread();
 
-    void processesNumberChanged(int processesNumber);
-
 signals:
     void threadAssigned(MyThread * thread);
     void newLog(QString log); // log on window
-
-    void openedModuleProcessesNumberChanged(int processesNumber);
-    void newModuleProcessStartServer();
-    void noModuleProcessStopServer();
-
 
 };
 

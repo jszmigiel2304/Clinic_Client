@@ -5,6 +5,8 @@
 #include "c_moduleprocessconnection.h"
 
 #include <QProcess>
+#include <QMap>
+#include <QVariant>
 #include <QObject>
 #include <QLocalSocket>
 #include <QCryptographicHash>
@@ -15,6 +17,8 @@ class c_moduleProcess : public QProcess
 public:
     c_moduleProcess(QObject *parent = nullptr);
     ~c_moduleProcess();
+    void insertMapInArgsList(QMap<QString, QVariant> map, QStringList * argList);
+
 
     c_actionExecutive *getExecutive() const;
     void setExecutive(c_actionExecutive *newExecutive);
@@ -28,9 +32,11 @@ private:
     QString moduleProcessName;
 
 private slots:
+    void moduleFinished(int exitCode, QProcess::ExitStatus exitStatus = NormalExit);
 
 signals:
     void passModuleProcessToController(c_moduleProcess * process);
+    void moduleClosed(c_moduleProcess * proces, int exitCode, QProcess::ExitStatus exitStatus = NormalExit);
 
 
 

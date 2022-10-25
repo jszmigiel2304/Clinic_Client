@@ -21,3 +21,10 @@ w_SettingsWindow::~w_SettingsWindow()
 {
     delete ui;
 }
+
+void w_SettingsWindow::closeEvent(QCloseEvent *event)
+{
+    emit aboutToClose( dynamic_cast<QWidget *>(this) );
+
+    event->accept();
+}

@@ -112,12 +112,10 @@ QMap<QString, QVariant> c_loggedUser::getUserProperties()
 {
     QMap<QString, QVariant> map;
 
-    //QMetaEnum metaEnum = QMetaEnum::fromType<m_loggedUser::UserRole>();
 
     map["id"] = this->getId();
     map["name"] = this->getName();    
     map["role"] = this->getRoleString();
-    //map["role"] = metaEnum.valueToKey( this->getRole() );
     map["create_date"] = this->getCreate_date().toString();
     map["email"] = this->getEmail();
     map["is_blocked"] = this->getBlocked();

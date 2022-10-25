@@ -3,7 +3,7 @@
 MyThread::MyThread(qint32 id, QString parentIdent, QString note,  QObject *parent)
     : QThread{parent}, idThread(id), parentIdentifier(parentIdent), note(note)
 {
-    connect(this, SIGNAL(started()), this, SLOT(threadStarted()));
+//    connect(this, SIGNAL(started()), this, SLOT(threadStarted()));
     connect(this, SIGNAL(finished()), this, SLOT(threadFinished()));
 }
 

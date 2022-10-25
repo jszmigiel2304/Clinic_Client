@@ -46,11 +46,7 @@ private slots:
     void errorOccurred(QLocalSocket::LocalSocketError socketError);
     void stateChanged(QLocalSocket::LocalSocketState socketState);
     //from QIODevice
-    void aboutToClose();
     void bytesWritten(qint64 bytes);
-    void channelBytesWritten(int channel, qint64 bytes);
-    void channelReadyRead(int channel);
-    void readChannelFinished();
     void readyRead();
     //------------------
     void parseReceivedPacket(quint64 size, QByteArray data, qintptr socketDescriptor);

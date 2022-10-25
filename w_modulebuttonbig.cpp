@@ -94,16 +94,12 @@ void w_moduleButtonBig::leaveEvent(QEvent *)
 
 void w_moduleButtonBig::mouseReleaseEvent(QMouseEvent *)
 {
-    QMessageBox msgBox;
-    msgBox.setText("release w_moduleBigButton");
-    msgBox.exec();
-
     emit moduleClicked(getPressedAction());
 }
 
 void w_moduleButtonBig::showNameLabel()
 {
-    QString str = nameLabel->text();
+    //QString str = nameLabel->text();
     this->nameLabel->setVisible(true);
 }
 

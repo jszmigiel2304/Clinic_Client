@@ -3,11 +3,20 @@
 c_moduleProcess::c_moduleProcess(QObject *parent) : QProcess(parent)
 {
     executive = new c_actionExecutive(this);
+
+    connect(this, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(moduleFinished(int, QProcess::ExitStatus)));
 }
 
 c_moduleProcess::~c_moduleProcess()
 {
 
+}
+
+void c_moduleProcess::insertMapInArgsList(QMap<QString, QVariant> map, QStringList *argList)
+{
+    foreach (const QString key, map.keys()) {
+        (*argList) << QString("MyArg%1=%2").arg(key, map[key].toString());
+    }
 }
 
 c_actionExecutive *c_moduleProcess::getExecutive() const
@@ -46,5 +55,10 @@ QByteArray c_moduleProcess::getModuleProcessNameHash(QCryptographicHash::Algorit
     QString hax = encryptedName.toHex();
 
     return (toHex ? encryptedName.toHex() : encryptedName);
+}
+
+void c_moduleProcess::moduleFinished(int exitCode, ExitStatus exitStatus)
+{
+    emit moduleClosed(this, exitCode, exitStatus);
 }
 

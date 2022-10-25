@@ -74,11 +74,11 @@ QStringList c_modulesController::parseModuleActionString(QString action)
 
 void c_modulesController::modulePressed(QString action)
 {
-    QMessageBox msgBox;
-     QString as = action;
-     as += "/n c_modulescontroller";
-     msgBox.setText(as);
-     msgBox.exec();
+//    QMessageBox msgBox;
+//     QString as = action;
+//     as += "/n c_modulescontroller";
+//     msgBox.setText(as);
+//     msgBox.exec();
 
-    msgBox.exec();
+//    msgBox.exec();
 }

@@ -114,8 +114,7 @@ private:
 
     c_Parser parser;
 
-    c_loggedUser *user;
-
+    c_loggedUser *user;    
 
 
 signals:

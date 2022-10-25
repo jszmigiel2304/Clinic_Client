@@ -5,6 +5,7 @@
 #include "c_actionexecutive.h"
 #include "c_moduleprocess.h"
 #include "c_moduleprocessconnection.h"
+#include "w_logswindow.h"
 
 
 #include <QObject>
@@ -16,6 +17,26 @@
 #include <QLocalSocket>
 #include <QCryptographicHash>
 
+class c_myLocalServer : public QLocalServer
+{
+    Q_OBJECT
+public:
+    explicit c_myLocalServer(QObject * parent = nullptr);
+    ~c_myLocalServer();
+    QByteArray hashServerName(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5, bool toHex = true);
+
+private:
+    const QString srvrName = "ClinicClientLocalServer";
+
+protected:
+    void incomingConnection(quintptr  socketDescriptor);
+
+signals:
+    void newModuleConnectedToServer(c_moduleProcessConnection *processConnection);
+    void needConnectionToProcessSettings();
+
+};
+
 class c_processesControllerThread : public MyThread
 {
     Q_OBJECT
@@ -26,6 +47,9 @@ public:
     void run() override;
 
 
+    c_myLocalServer *getLocalServer() const;
+//    QByteArray hashServerName(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5, bool toHex = true);
+
 public slots:
     void processData(myStructures::threadData data) override;
 
@@ -33,23 +57,21 @@ public slots:
     void stopServer();
 
 private:
-    QLocalServer *localServer;
-    const QString serverName = "ClinicClientLocalServer";
+    c_myLocalServer *localServer;
+//    const QString serverName = "ClinicClientLocalServer";
 
 
-    QByteArray hashServerName(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5, bool toHex = true);
 
 private slots:
     void threadStarted() override;
 
 signals:
-    void newModuleConnectedToServer(c_moduleProcessConnection *processConnection);
+//    void newModuleConnectedToServer(c_moduleProcessConnection *processConnection);
 //    void moduleProcessConnectionFinished(c_moduleProcessConnection *processConnection);
-    void needConnectionToProcessSettings();
+//    void needConnectionToProcessSettings();
 
 protected:
     void incomingConnection(qintptr socketDescriptor);
-
 
 };
 

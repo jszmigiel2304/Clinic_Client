@@ -24,11 +24,7 @@ c_moduleProcessConnection::c_moduleProcessConnection(qintptr ID, QObject *parent
     connect(this->socket, SIGNAL(errorOccurred(QLocalSocket::LocalSocketError)), this, SLOT(errorOccurred(QLocalSocket::LocalSocketError)));
     connect(this->socket, SIGNAL(stateChanged(QLocalSocket::LocalSocketState)), this, SLOT(stateChanged(QLocalSocket::LocalSocketState)));
     //from QIODevice
-    connect(this->socket, SIGNAL(aboutToClose()), this, SLOT(aboutToClose()));
-    connect(this->socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64 bytes)));
-    connect(this->socket, SIGNAL(channelBytesWritten(int, qint64)), this, SLOT(channelBytesWritten(int channel, qint64 bytes)));
-    connect(this->socket, SIGNAL(channelReadyRead(int)), this, SLOT(channelReadyRead(int channel)));
-    connect(this->socket, SIGNAL(readChannelFinished()), this, SLOT(readChannelFinished()));
+    connect(this->socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
     connect(this->socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
     //from c_moduleProcessConnection
     connect(this, SIGNAL(dataRead(quint64, QByteArray, qintptr)), this, SLOT(parseReceivedPacket(quint64, QByteArray, qintptr)));
@@ -83,38 +79,42 @@ void c_moduleProcessConnection::disconnected()
 
 void c_moduleProcessConnection::errorOccurred(QLocalSocket::LocalSocketError socketError)
 {
-
+    emit newLog( QString("c_clientProcessConnection::errorOccurred(QLocalSocket::LocalSocketError socketError) \n") );
+    //LocalSocketError { ConnectionRefusedError, PeerClosedError, ServerNotFoundError, SocketAccessError, SocketResourceError, …, UnknownSocketError }
+    switch(socketError) {
+    case QLocalSocket::ConnectionRefusedError: {emit newLog( QString("ConnectionRefusedError \n") ); return;}
+    case QLocalSocket::PeerClosedError: {emit newLog( QString("PeerClosedError \n") ); return;}
+    case QLocalSocket::ServerNotFoundError: {emit newLog( QString("ServerNotFoundError \n") ); return;}
+    case QLocalSocket::SocketAccessError: {emit newLog( QString("SocketAccessError \n") ); return;}
+    case QLocalSocket::SocketResourceError: {emit newLog( QString("SocketResourceError \n") ); return;}
+    case QLocalSocket::SocketTimeoutError: {emit newLog( QString("SocketTimeoutError \n") ); return;}
+    case QLocalSocket::DatagramTooLargeError: {emit newLog( QString("DatagramTooLargeError \n") ); return;}
+    case QLocalSocket::ConnectionError: {emit newLog( QString("ConnectionError \n") ); return;}
+    case QLocalSocket::UnsupportedSocketOperationError: {emit newLog( QString("UnsupportedSocketOperationError \n") ); return;}
+    case QLocalSocket::OperationError: {emit newLog( QString("OperationError \n") ); return;}
+    case QLocalSocket::UnknownSocketError: {emit newLog( QString("UnknownSocketError \n") ); return;}
+    default: {emit newLog( QString("UnknownSocketError \n") ); return;}
+    }
 }
 
 void c_moduleProcessConnection::stateChanged(QLocalSocket::LocalSocketState socketState)
 {
-
+    emit newLog( QString("c_clientProcessConnection::stateChanged(QLocalSocket::LocalSocketState socketState) \n") );
+    switch (socketState) {
+    case QLocalSocket::UnconnectedState: {emit newLog( QString("UnconnectedState \n") ); return;}
+    case QLocalSocket::ConnectingState: {emit newLog( QString("ConnectingState \n") ); return;}
+    case QLocalSocket::ConnectedState: {emit newLog( QString("ConnectedState \n") ); return;}
+    case QLocalSocket::ClosingState: {emit newLog( QString("ClosingState \n") ); return;}
+    default: {emit newLog( QString("No state att. \n") ); return;}
+    }
 }
 
-void c_moduleProcessConnection::aboutToClose()
-{
-
-}
 
 void c_moduleProcessConnection::bytesWritten(qint64 bytes)
 {
 
 }
 
-void c_moduleProcessConnection::channelBytesWritten(int channel, qint64 bytes)
-{
-
-}
-
-void c_moduleProcessConnection::channelReadyRead(int channel)
-{
-
-}
-
-void c_moduleProcessConnection::readChannelFinished()
-{
-
-}
 
 void c_moduleProcessConnection::readyRead()
 {
@@ -137,7 +137,10 @@ void c_moduleProcessConnection::readyRead()
 
 void c_moduleProcessConnection::parseReceivedPacket(quint64 size, QByteArray data, qintptr socketDescriptor)
 {
-
+        c_Parser parser;
+        QPair<QByteArray, QByteArray> receivedDataFromServer = parser.parseData(size, data);
+        myStructures::threadData attchedData;
+        parser.parseJson( &receivedDataFromServer.second, &attchedData );
 
     //---------------------------------------------------------------------------------------------------------------------
 

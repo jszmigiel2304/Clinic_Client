@@ -17,6 +17,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QTimer>
+#include <QWidget>
 
 namespace Ui {
 class w_MainWindow;
@@ -40,6 +41,8 @@ public:
     bool eventFilter(QObject *watched, QEvent *event) override;
     w_userPanel *getUserPanel() const;
 
+    void newAddWindow(QWidget * window);
+
 public slots:
     void moduleButtonPressed(QString action);
     void moduleButtonPressedDoFunction(QString target, QMap<QString, QString> params);
@@ -53,6 +56,12 @@ public slots:
 
     void IdleDetected(QString username = QString());
     void unlockWindow();
+
+    void unLockModulesScrollArea(QString n, QString r);
+    void lockModulesScrollArea();
+
+    void closeAllAddWindows();
+    void removeAddWindow(QWidget * window);
 
 private:
     explicit w_MainWindow(QWidget *parent = nullptr);
@@ -78,6 +87,8 @@ private:
     c_modulesController * mCtr;    
 
     QTimer * processingTimer;
+
+    QList<QWidget *> addWindows;
 
 private slots:
     void processingTimerFinished();

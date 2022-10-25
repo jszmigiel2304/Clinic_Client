@@ -53,7 +53,8 @@ void w_MainWindow::createModulesScrollArea()
 
     QList<myStructures::moduleInfo> modulesProperties = ( dynamic_cast<c_modulesController *>(this->watchedObjectsList["modulesController"]) )->getModulesProperties();
     this->modulesScrollArea->loadModules(modulesProperties);
-    this->modulesScrollArea->setVisible(true);
+    this->modulesScrollArea->setVisible(false);
+    this->modulesScrollArea->setEnabled(false);
     this->modulesScrollArea->refresh();    
 
 }
@@ -173,20 +174,34 @@ w_userPanel *w_MainWindow::getUserPanel() const
     return topPanel->getUserPanel();
 }
 
+void w_MainWindow::newAddWindow(QWidget * window)
+{
+    if(window != nullptr)
+        addWindows.append(window);
+}
+
+void w_MainWindow::removeAddWindow(QWidget *window)
+{
+    addWindows.removeAll(window);
+    addWindows.squeeze();
+}
+
 void w_MainWindow::moduleButtonPressed(QString action)
 {
     QStringList args = action.split(',', Qt::SkipEmptyParts);
     QMap<QString, QString> paramsMap;
     foreach(QString arg, args) {
         QStringList temp = arg.split('=');
-        paramsMap[temp[0]] = temp[1];
+        if(!temp.isEmpty())
+            paramsMap[temp[0]] = temp[1];
     }
     QStringList parametersList = paramsMap["params"].split(QString("||"), Qt::SkipEmptyParts);
 
     QMap<QString, QString> parameters;
     foreach(QString param, parametersList) {
         QStringList temp = param.split(QString("::::"));
-        parameters[temp[0]] = temp[1];
+        if(!temp.isEmpty())
+          parameters[temp[0]] = temp[1];
     }
 
 
@@ -216,7 +231,7 @@ void w_MainWindow::moduleButtonPressedProcess(QString target, QMap<QString, QStr
     if(target == "NULL") {return;}
     if(target == "USER_PROFILE_CARD") { emit userProfileButtonClicked(); return;}
 
-    //emit processAppButtonClicked(target, params);
+    emit processAppButtonClicked(target, params);
     return;
 }
 
@@ -259,3 +274,23 @@ void w_MainWindow::unlockWindow()
     mask->setEnabled(false);
     this->setEnabled(true);
 }
+
+void w_MainWindow::lockModulesScrollArea()
+{
+    this->modulesScrollArea->setEnabled(false);
+    this->modulesScrollArea->setVisible(false);
+}
+
+void w_MainWindow::closeAllAddWindows()
+{
+    while(addWindows.size() != 0) {
+        addWindows.takeFirst()->close();
+    }
+}
+
+void w_MainWindow::unLockModulesScrollArea(QString n, QString r)
+{
+    this->modulesScrollArea->setEnabled(true);
+    this->modulesScrollArea->setVisible(true);
+}
+

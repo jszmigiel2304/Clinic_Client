@@ -241,6 +241,10 @@ void c_ClinicClient::createConnections()
     connect(user->thread(), SIGNAL(userLogged(QString, QString)), sessionCtrlr->thread(), SLOT(configureSession(QString, QString)));
     connect(user->thread(), SIGNAL(userNotLogged()), this->getTrayIcon(), SLOT(userNotLogged()));
     connect(user->thread(), SIGNAL(userAuthorizationDataNeededToUnlock(QString)), this->getTrayIcon(), SLOT(appLocked(QString)));
+    connect(user->thread(), SIGNAL(userLogged(QString, QString)), this->mainWindow, SLOT(unLockModulesScrollArea(QString, QString)));
+    connect(user->thread(), SIGNAL(userNotLogged()), this->mainWindow, SLOT(lockModulesScrollArea()));
+    connect(user->thread(), SIGNAL(userNotLogged()), this->mainWindow, SLOT(closeAllAddWindows()));
+    connect(user->thread(), SIGNAL(userNotLogged()), processCtrlr, SLOT(removeAllModuleProcesses()));
 
     connect(user->thread(), SIGNAL(aboutToLogOut()), sessionCtrlr->thread(), SLOT(sessionClose()), Qt::DirectConnection);
 
@@ -252,6 +256,9 @@ void c_ClinicClient::createConnections()
     connect( this, SIGNAL(logOutUserBeforeCloseApp(qint32, QString, QString)), user->thread(), SLOT(logOut(qint32, QString, QString)), Qt::DirectConnection );
 
     connect( this->mainWindow, SIGNAL(userProfileButtonClicked()), this, SLOT(showUserPanelWindow()));
+
+    connect(processCtrlr, SIGNAL(newLog(QString)), logsWindow, SLOT(addLog(QString)));
+    connect(processCtrlr, SIGNAL(threadAssigned(MyThread *)), threadCtrlr, SLOT(newThread(MyThread *)) );
 }
 
 w_logsWindow *c_ClinicClient::getLogsWindow() const
@@ -280,13 +287,16 @@ void c_ClinicClient::cleanup()
     sessionCtrlr->deleteLater();
     user->deleteLater();
     connectionCtrlr->deleteLater();
+    processCtrlr->deleteLater();
 
     qApp->exit(0);
 }
 
 void c_ClinicClient::showSettingsWindow()
 {
-    w_SettingsWindow::Instance()->show();
+    w_SettingsWindow::Instance()->show();    
+    mainWindow->newAddWindow(w_SettingsWindow::Instance());
+    connect(w_SettingsWindow::Instance(), SIGNAL(aboutToClose(QWidget *)), mainWindow, SLOT(removeAddWindow(QWidget *)));
 }
 
 void c_ClinicClient::showLoggingDialog()
@@ -325,6 +335,8 @@ void c_ClinicClient::showAuthorizationDialogOnIdle(QString username)
 void c_ClinicClient::showUserPanelWindow()
 {
     w_UserProfileWindow * userProfileWindow = new w_UserProfileWindow();
+    mainWindow->newAddWindow(userProfileWindow);
+    connect(userProfileWindow, SIGNAL(aboutToClose(QWidget *)), mainWindow, SLOT(removeAddWindow(QWidget *)));
     userProfileWindow->show();
 
     connect( userProfileWindow, SIGNAL(getUserPanelProperties(QMap<QString, QVariant> *, QMap<QString, QVariant> *, QList<myStructures::myLog> * )),
@@ -401,31 +413,47 @@ void c_ClinicClient::processApp(QString target, QMap<QString, QString> parameter
     if(target.isEmpty() || parameters["app_path"].isEmpty()) return;
 
     c_moduleProcess * process = new c_moduleProcess(this);
+    process->setModuleProcessName( QString("%1.%2").arg(target, QRandomGenerator::global()->bounded(1000,9999)) );
+
+    connect(process, SIGNAL(passModuleProcessToController(c_moduleProcess *)), processCtrlr, SLOT(newModuleProcess(c_moduleProcess *)));
+    connect(process, SIGNAL(moduleClosed(c_moduleProcess *, int, QProcess::ExitStatus)), processCtrlr, SLOT(moduleClosed(c_moduleProcess *, int, QProcess::ExitStatus)));
+
     QStringList arguments;
+    arguments.append( QString("MyArgServerName=%1").arg(processCtrlr->getHashServerName()) );
+    arguments.append( QString("MyArgModuleName=%1").arg( process->getModuleProcessNameHash() ) );
+    arguments.append( QString("MyArgThreadId=%1").arg( threadCtrlr->generateThreadId() ) );
 
     foreach (const QString parameter, parameters.keys()) {
         if(parameter == "app_path") { process->setProgram( parameters["app_path"] ); }
         if(parameter == "userId") {
             if(parameters["userId"] == "CURRENT_LOGGED_USER_ID")
-                arguments.append(QString("userId:%1").arg(this->user->getId()));
+                arguments.append(QString("MyArgUserId=%1").arg(this->user->getId()));
             else
-                arguments.append(QString("userId:%1").arg(parameters["userId"]));
+                arguments.append(QString("MyArgUserId=%1").arg(parameters["userId"]));
         }
 
         if(parameter == "userName") {
             if(parameters["userName"] == "CURRENT_LOGGED_USER_NAME")
-                arguments.append(QString("userName:%1").arg(this->user->getName()));
+                arguments.append(QString("MyArgUserName=%1").arg(this->user->getName()));
             else
-                arguments.append(QString("userName:%1").arg(parameters["userName"]));
+                arguments.append(QString("MyArgUserName=%1").arg(parameters["userName"]));
         }
 
 
     }
+
+    process->insertMapInArgsList(user->getUserProperties(), &arguments);
+
     process->setArguments(arguments);
+    process->start();
 
-    emit newLog(QString("Uruchamiono moduł: %1, Path: %2\n").arg(target, parameters["app_path"]));
-    emit process->passModuleProcessToController(process);
-
+    if( process->waitForStarted(-1) ) {
+        emit newLog(QString("Uruchamiono moduł: %1, Path: %2\n").arg(target, parameters["app_path"]));
+        emit process->passModuleProcessToController(process);
+    } else {
+        emit newLog(QString("Błąd uruchamiania modułu: %1, Path: %2\n").arg(target, parameters["app_path"]));
+        return;
+    }
 }
 
 

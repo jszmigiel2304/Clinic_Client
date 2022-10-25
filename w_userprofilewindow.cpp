@@ -19,6 +19,7 @@ w_UserProfileWindow::w_UserProfileWindow(QWidget *parent) :
 void w_UserProfileWindow::moreLogsButtonClicked(bool checked)
 {
     w_moreLogsWindow * moreLogsWindow = new w_moreLogsWindow(&Logs, this);
+    connect(this, SIGNAL(aboutToClose(QWidget *)), moreLogsWindow, SLOT(deleteLater()));
     moreLogsWindow->show();
 }
 
@@ -176,6 +177,7 @@ void w_UserProfileWindow::closeEvent(QCloseEvent *event)
     this->Logs.clear();
     this->employeeProperties.clear();
     this->userProperties.clear();
+    emit aboutToClose( dynamic_cast<QWidget *>(this) );
 
     event->accept();
 }
