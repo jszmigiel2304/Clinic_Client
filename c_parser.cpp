@@ -468,6 +468,29 @@ QPair<QByteArray, QByteArray> c_Parser::prepareRequestConnectionToProcessPacket(
     return pair;
 }
 
+QPair<QByteArray, QByteArray> c_Parser::prepareConnectionEstablishedConfirmationPacket(quint32 threadID)
+{
+    QByteArray packet;
+
+    QMap<QString, QVariant> packetInfo;
+    packetInfo["thread_dest"] = static_cast<qint8>(myTypes::CLINIC_MODULE_CONNECTION_CONTROLLER);
+    packetInfo["thread_id"] = threadID;
+    packetInfo["req_type"] = static_cast<qint8>(myTypes::REPLY);
+    packetInfo["type_flag"] = 0x00000000;
+    packetInfo["content"] = static_cast<qint32>(myTypes::CONNECTION_ESTABLISHED_CONFIRMATION);
+
+    QJsonDocument jsonPacket = prepareJson(packetInfo, QList<QMap<QString, QVariant>>());
+    QByteArray JsonMD5 = getJsonMD5Hash(jsonPacket);
+
+    QDataStream ds2(&packet, QIODevice::ReadWrite);
+    ds2.setVersion(QDataStream::Qt_6_0);
+
+    ds2 << JsonMD5.toHex() << jsonPacket.toJson();
+
+    QPair<QByteArray, QByteArray> pair(JsonMD5.toHex(), packet);
+    return pair;
+}
+
 
 QJsonDocument c_Parser::prepareJson(QMap<QString, QVariant> packet_info, QList<QMap<QString, QVariant>> packet_data)
 {
@@ -572,4 +595,40 @@ QByteArray c_Parser::getJsonMD5Hash(QJsonDocument json)
     md5Hash = hasher.result();
 
     return md5Hash;
+}
+
+void c_Parser::insertAuthDataInJson(QJsonDocument *json, QString name, QString encryptedPassword)
+{
+    QJsonObject mainObject = (*json).object();
+
+    QJsonArray dataArray = mainObject["data"].toArray();
+
+    for(int i = 0; i < dataArray.size(); i++)
+    {
+        QJsonObject object = dataArray[i].toObject();
+        object["name"] = name;
+        object["encryptedPassword"] = encryptedPassword;
+    }
+}
+
+void c_Parser::insertAuthDataInJson(QByteArray *json, QString name, QString encryptedPassword)
+{
+    QJsonParseError error;
+    QJsonDocument jsonDoc = QJsonDocument::fromJson((*json), &error);
+
+    if (error.error != QJsonParseError::NoError) {
+        return;
+    }
+
+    QJsonObject mainObject = jsonDoc.object();
+
+    QJsonArray dataArray = mainObject["data"].toArray();
+
+    for(int i = 0; i < dataArray.size(); i++)
+    {
+        QJsonObject object = dataArray[i].toObject();
+        object["name"] = name;
+        object["encryptedPassword"] = encryptedPassword;
+    }
+
 }

@@ -158,6 +158,17 @@ void c_processesController::connectProcessWithConnection(QMap<QString, QVariant>
             tempModProcessConnection = openedModuleProcessConnections[i];
             tempModProcess->setConnection( tempModProcessConnection );
             tempModProcessConnection->setConnectedToProcess(true);
+
+            //wysyłam potwierdzenie nawiazania połączenia
+            c_Parser parser;
+            QPair<QByteArray, QByteArray> pair = parser.prepareConnectionEstablishedConfirmationPacket(thread_id);
+
+            myStructures::packet packet;
+            packet.md5_hash = pair.first;
+            packet.packet_to_send = pair.second;
+            packet.wait_for_reply = false;
+
+            emit tempModProcessConnection->sendDataToModuleProcessSignal(packet);
         }
     }
 }

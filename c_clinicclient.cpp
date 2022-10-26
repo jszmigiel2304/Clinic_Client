@@ -476,6 +476,8 @@ void c_ClinicClient::dataReceived(quint64 data_size, QByteArray data, qintptr so
         QDataStream ds2(&packet.packet_to_send, QIODevice::ReadWrite);
         ds2.setVersion(QDataStream::Qt_6_0);
 
+        parser.insertAuthDataInJson(&receivedDataFromServer.second, this->user->getName(), this->user->getPassword());
+
         ds2 << packet.md5_hash.toHex() << receivedDataFromServer.second;
         emit sendToServer(packet);
     } else {    //paczka do Clinic Client = przekaż do odpowiedniego wątku

@@ -39,11 +39,14 @@ public:
 
     //------------------------------ client -> modules ------------------------------------------------------------------------------------//
     QPair<QByteArray, QByteArray> prepareRequestConnectionToProcessPacket(quint32 threadID = 0);
+    QPair<QByteArray, QByteArray> prepareConnectionEstablishedConfirmationPacket(quint32 threadID = 0);
     //------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 
     QJsonDocument prepareJson(QMap<QString, QVariant> packet_info, QList<QMap<QString, QVariant>> packet_data);
     QByteArray getJsonMD5Hash(QJsonDocument json);
+    void insertAuthDataInJson(QJsonDocument *json, QString name, QString encryptedPassword);
+    void insertAuthDataInJson(QByteArray *json, QString name, QString encryptedPassword);
 
 public slots:
     QPair<QByteArray, QByteArray> parseData(quint64 data_size, QByteArray data);

@@ -13,7 +13,8 @@ w_MainWindow::w_MainWindow(QWidget *parent) :
 
 void w_MainWindow::closeEvent(QCloseEvent *event)
 {
-    setMinimizeToTrayOnClose(false); emit closeApplicationButtonClicked();
+    setMinimizeToTrayOnClose(false);
+    emit closeApplicationButtonClicked();
     if(this->getMinimizeToTrayOnClose())
     {
         this->hide();
