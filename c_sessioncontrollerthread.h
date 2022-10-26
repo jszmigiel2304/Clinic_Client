@@ -35,7 +35,7 @@ public:
 //    void setSessionExpireTime(const QTime &newSessionExpireTime);
 
 public slots:
-    void processData(myStructures::threadData data) override;
+    void processData(myStructures::threadData data, qintptr socketDescriptor) override;
     void sessionRun();
     void unlockSession();
 //    void resetIDLEtimer();

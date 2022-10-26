@@ -12,7 +12,7 @@ void MyThread::run()
     exec();
 }
 
-void MyThread::processData(myStructures::threadData data)
+void MyThread::processData(myStructures::threadData data, qintptr socketDescriptor)
 {
 
 }
@@ -47,11 +47,11 @@ void MyThread::setNote(const QString &newNote)
     note = newNote;
 }
 
-void MyThread::dataReceived(myStructures::threadData data)
+void MyThread::dataReceived(myStructures::threadData data, qintptr socketDescriptor)
 {
     //przetworzenie otrzymanych danych z ThreadController
 
-    dynamic_cast<MyThread *>(myParentConnector->thread())->processData(data);
+    dynamic_cast<MyThread *>(myParentConnector->thread())->processData(data, socketDescriptor);
 }
 
 QObject *MyThread::getMyParentConnector() const

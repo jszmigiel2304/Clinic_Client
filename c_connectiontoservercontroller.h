@@ -31,7 +31,7 @@ public:
 
     void start();
 
-    void processData(myStructures::threadData data) override;
+    void processData(myStructures::threadData data, qintptr socketDescriptor) override;
 
 
     QString getHost() const;
@@ -101,7 +101,7 @@ private slots:
 signals:
     void newLog(QString log);
     void threadAssigned(MyThread * thread);
-    void dataReceived(quint64 data_size, QByteArray data);
+    void dataReceived(quint64 data_size, QByteArray data, qintptr socketDescriptor);
     void connectionToServerStateChanged(QAbstractSocket::SocketState state);
     void socketDisconnectedLogOutUser();
     void packetInBuffer();

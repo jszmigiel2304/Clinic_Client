@@ -27,8 +27,8 @@ public:
     void setMyParentConnector(QObject *newMyParentConnector);
 
 public slots:
-    void dataReceived(myStructures::threadData data);
-    virtual void processData(myStructures::threadData data);
+    void dataReceived(myStructures::threadData data, qintptr socketDescriptor);
+    virtual void processData(myStructures::threadData data, qintptr socketDescriptor);
 
 
 protected:
@@ -44,7 +44,7 @@ private slots:
 
 signals:
     void resultReady(quint32 resultBefore, quint32 resultAfter);
-    void newData(myStructures::threadData data);
+    void newData(myStructures::threadData data, qintptr socketDescriptor);
 
     void sendToServer(myStructures::packet packet);
     void processingError(QString error);

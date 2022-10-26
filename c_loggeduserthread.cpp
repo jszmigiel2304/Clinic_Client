@@ -27,7 +27,7 @@ void c_loggedUserThread::setLoggingState(bool newLoggingState)
     loggingState = newLoggingState;
 }
 
-void c_loggedUserThread::processData(myStructures::threadData data)
+void c_loggedUserThread::processData(myStructures::threadData data, qintptr socketDescriptor)
 {
     if( this->getId() == data.thread_id && (data.thread_dest == myTypes::CLINIC_LOGGED_USER_CONTROLLER  || data.thread_dest == myTypes::CLINIC_ERROR_CONTROLLER) )
     {
@@ -45,7 +45,7 @@ void c_loggedUserThread::processData(myStructures::threadData data)
         connect( executive, SIGNAL(employeePropertiesReceivedFromServerResultReady(QMap<QString, QVariant>)), this, SLOT(employeePropertiesReceivedFromServer(QMap<QString, QVariant>)) );
         connect( executive, SIGNAL(userPropertiesReceivedFromServerResultReady(QMap<QString, QVariant>)), this, SLOT(userPropertiesReceivedFromServer(QMap<QString, QVariant>)) );
 
-        executive->processData(data);
+        executive->processData(data, socketDescriptor);
 
         executive->deleteLater();
     }

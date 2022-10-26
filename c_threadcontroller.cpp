@@ -25,16 +25,16 @@ qint32 c_ThreadController::generateThreadId()
 void c_ThreadController::newThread(MyThread *thread)
 {
     threadsList.push_front(thread);
-    connect(thread, SIGNAL(newData(myStructures::threadData)), thread, SLOT(dataReceived(myStructures::threadData)));
+    connect(thread, SIGNAL(newData(myStructures::threadData, qintptr)), thread, SLOT(dataReceived(myStructures::threadData, qintptr)));
 }
 
-void c_ThreadController::dataReceived(myStructures::threadData data)
+void c_ThreadController::dataReceived(myStructures::threadData data, qintptr socketDescriptor)
 {
     for(int i = 0; i < threadsList.length(); i++)
     {
         if(threadsList[i]->getId() == data.thread_id)
         {
-            emit threadsList[i]->newData(data);
+            emit threadsList[i]->newData(data, socketDescriptor);
             break;
         }
     }

@@ -4,6 +4,8 @@
 c_processesController::c_processesController(QObject *parent)
     : QObject{parent}
 {
+    logs = w_logsWindow::Instance();
+
     mThread.reset(new c_processesControllerThread);
     moveToThread(mThread.get());
 }
@@ -134,6 +136,29 @@ void c_processesController::removeAllModuleProcesses()
         openedModulesProcesses.takeFirst()->close();
 
         //Wysłać request zamkniecia + QProcess::waitForFinish
+    }
+}
+
+void c_processesController::connectProcessWithConnection(QMap<QString, QVariant> connectionSettings, qintptr socketDescriptor)
+{
+    QByteArray server_id = connectionSettings["server_id"].toByteArray();
+    QByteArray module_id = connectionSettings["module_id"].toByteArray();
+    qint32 thread_id = connectionSettings["thread_id"].toInt();
+
+    c_moduleProcess * tempModProcess = nullptr;
+    for(int i=0; i<openedModulesProcesses.size(); i++) {
+        if( openedModulesProcesses[i]->getModuleProcessNameHash() == module_id && openedModulesProcesses[i]->getThreadId() == thread_id) {
+            tempModProcess = openedModulesProcesses[i];
+            break;
+        }
+    }
+    c_moduleProcessConnection * tempModProcessConnection = nullptr;
+    for(int i=0; i<openedModuleProcessConnections.size(); i++) {
+        if(openedModuleProcessConnections[i]->getSocketDescriptor() == socketDescriptor) {
+            tempModProcessConnection = openedModuleProcessConnections[i];
+            tempModProcess->setConnection( tempModProcessConnection );
+            tempModProcessConnection->setConnectedToProcess(true);
+        }
     }
 }
 

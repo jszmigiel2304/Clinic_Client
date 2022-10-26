@@ -452,7 +452,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareRequestConnectionToProcessPacket(
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::CLINIC_MODULE);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
-    packetInfo["type_flag"] = 0x01000003;
+    packetInfo["type_flag"] = 0xFFFF0000;
     packetInfo["content"] = static_cast<qint32>(myTypes::CONNECTION_TO_PROCESS_REQUEST);
 
 

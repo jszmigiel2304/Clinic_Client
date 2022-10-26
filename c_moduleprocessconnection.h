@@ -49,7 +49,6 @@ private slots:
     void bytesWritten(qint64 bytes);
     void readyRead();
     //------------------
-    void parseReceivedPacket(quint64 size, QByteArray data, qintptr socketDescriptor);
     void sendDataToModuleProcess(myStructures::packet packet);
 
 signals:

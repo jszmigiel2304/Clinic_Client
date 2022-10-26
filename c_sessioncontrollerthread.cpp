@@ -57,7 +57,7 @@ void c_SessionControllerThread::setSessionExpireSeconds(quint32 newSessionExpire
 }
 
 
-void c_SessionControllerThread::processData(myStructures::threadData data)
+void c_SessionControllerThread::processData(myStructures::threadData data, qintptr socketDescriptor)
 {
     if( this->getId() == data.thread_id && (data.thread_dest == myTypes::CLINIC_SESSION_CONTROLLER  || data.thread_dest == myTypes::CLINIC_ERROR_CONTROLLER) )
     {
@@ -69,7 +69,7 @@ void c_SessionControllerThread::processData(myStructures::threadData data)
         connect( executive, SIGNAL(updateSessionFileConfirmationReceived()), this, SLOT(sessionFileUpdateConfirmationReceivedFromServer()) );
         //connect( executive, SIGNAL(sessionUnlockConfirmationReceived()), this, SLOT(sessionUnlockConfirmationReceived()) );
 
-        executive->processData(data);
+        executive->processData(data, socketDescriptor);
 
         executive->deleteLater();
     }

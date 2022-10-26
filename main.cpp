@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     c_ClinicClient *client = new c_ClinicClient();
     client->setThreadCtrlr(threadCtrlr);
 
-    QObject::connect(client, SIGNAL(passDataToThread(threadData)), threadCtrlr, SLOT(dataReceived(threadData)));
+    QObject::connect(client, SIGNAL(passDataToThread(threadData, qintptr)), threadCtrlr, SLOT(dataReceived(threadData, qintptr)));
     QObject::connect(&a, SIGNAL(idleDetected()), client, SLOT(applicatioIdleDetected()), Qt::DirectConnection);
     QObject::connect(client->getSessionCtrlr()->thread(), SIGNAL(sessionTimeSet(quint32)), &a, SLOT(idleTimeReceived(quint32)), Qt::DirectConnection);
 

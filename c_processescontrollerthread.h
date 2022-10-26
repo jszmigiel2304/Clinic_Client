@@ -51,7 +51,8 @@ public:
 //    QByteArray hashServerName(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5, bool toHex = true);
 
 public slots:
-    void processData(myStructures::threadData data) override;
+    void processData(myStructures::threadData data, qintptr socketDescriptor) override;
+    void parseReceivedPacket(quint64 size, QByteArray data, qintptr socketDescriptor);
 
     void startServer();
     void stopServer();
@@ -66,6 +67,7 @@ private slots:
     void threadStarted() override;
 
 signals:
+    void passDataToClinicClient(quint64 size, QByteArray data, qintptr socketDescriptor);
 //    void newModuleConnectedToServer(c_moduleProcessConnection *processConnection);
 //    void moduleProcessConnectionFinished(c_moduleProcessConnection *processConnection);
 //    void needConnectionToProcessSettings();

@@ -3,13 +3,14 @@
 c_moduleProcess::c_moduleProcess(QObject *parent) : QProcess(parent)
 {
     executive = new c_actionExecutive(this);
+    connection = nullptr;
 
     connect(this, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(moduleFinished(int, QProcess::ExitStatus)));
 }
 
 c_moduleProcess::~c_moduleProcess()
 {
-
+    executive->deleteLater();
 }
 
 void c_moduleProcess::insertMapInArgsList(QMap<QString, QVariant> map, QStringList *argList)
@@ -55,6 +56,26 @@ QByteArray c_moduleProcess::getModuleProcessNameHash(QCryptographicHash::Algorit
     QString hax = encryptedName.toHex();
 
     return (toHex ? encryptedName.toHex() : encryptedName);
+}
+
+qint32 c_moduleProcess::getThreadId() const
+{
+    return threadId;
+}
+
+void c_moduleProcess::setThreadId(qint32 newThreadId)
+{
+    threadId = newThreadId;
+}
+
+c_moduleProcessConnection *c_moduleProcess::getConnection() const
+{
+    return connection;
+}
+
+void c_moduleProcess::setConnection(c_moduleProcessConnection *newConnection)
+{
+    connection = newConnection;
 }
 
 void c_moduleProcess::moduleFinished(int exitCode, ExitStatus exitStatus)

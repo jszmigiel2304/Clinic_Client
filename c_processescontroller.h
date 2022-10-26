@@ -56,6 +56,8 @@ public slots:
     void removeModuleProcess(quint32 index);    
     void removeAllModuleProcesses();
 
+    void connectProcessWithConnection(QMap<QString, QVariant> connectionSettings, qintptr socketDescriptor);
+
     void moduleClosed(c_moduleProcess * proces, int exitCode, QProcess::ExitStatus exitStatus = QProcess::NormalExit);
 
 

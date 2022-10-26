@@ -21,7 +21,7 @@ void c_connectionToServerController::start()
     reconnectTimer->start(100);
 }
 
-void c_connectionToServerController::processData(myStructures::threadData data)
+void c_connectionToServerController::processData(myStructures::threadData data, qintptr socketDescriptor)
 {
 
 }
@@ -185,7 +185,7 @@ void c_connectionToServerController::socketReadyRead()
             QString log = QString("%1 has been read. \n").arg(myPack.size());
             emit newLog(log);
 
-            emit dataReceived(myPack.size(), myPack);
+            emit dataReceived(myPack.size(), myPack, socket->socketDescriptor());
         } else {
             myPack.append(line);
         }

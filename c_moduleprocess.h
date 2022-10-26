@@ -27,9 +27,18 @@ public:
     const QString &getModuleProcessName() const;
     QByteArray getModuleProcessNameHash(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5, bool toHex = true);
 
+    qint32 getThreadId() const;
+    void setThreadId(qint32 newThreadId);
+
+    c_moduleProcessConnection *getConnection() const;
+    void setConnection(c_moduleProcessConnection *newConnection);
+
 private:
     c_actionExecutive *executive;
     QString moduleProcessName;
+    qint32 threadId; //służy do połącznia c_moduleProcess z c_moduleProcessConnection
+
+    c_moduleProcessConnection * connection;
 
 private slots:
     void moduleFinished(int exitCode, QProcess::ExitStatus exitStatus = NormalExit);

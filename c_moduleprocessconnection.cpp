@@ -27,7 +27,7 @@ c_moduleProcessConnection::c_moduleProcessConnection(qintptr ID, QObject *parent
     connect(this->socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
     connect(this->socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
     //from c_moduleProcessConnection
-    connect(this, SIGNAL(dataRead(quint64, QByteArray, qintptr)), this, SLOT(parseReceivedPacket(quint64, QByteArray, qintptr)));
+//    connect(this, SIGNAL(dataRead(quint64, QByteArray, qintptr)), this, SLOT(parseReceivedPacket(quint64, QByteArray, qintptr)));
     connect(this, SIGNAL(sendDataToModuleProcessSignal(myStructures::packet)), this, SLOT(sendDataToModuleProcess(myStructures::packet)), Qt::DirectConnection );
 
 
@@ -135,27 +135,6 @@ void c_moduleProcessConnection::readyRead()
     }
 }
 
-void c_moduleProcessConnection::parseReceivedPacket(quint64 size, QByteArray data, qintptr socketDescriptor)
-{
-        c_Parser parser;
-        QPair<QByteArray, QByteArray> receivedDataFromServer = parser.parseData(size, data);
-        myStructures::threadData attchedData;
-        parser.parseJson( &receivedDataFromServer.second, &attchedData );
-
-    //---------------------------------------------------------------------------------------------------------------------
-
-//    c_Parser parser;
-//    QPair<QByteArray, QByteArray> receivedDataFromServer = parser.parseData(data_size, data);
-//    myStructures::threadData attchedData;
-//    parser.parseJson( &receivedDataFromServer.second, &attchedData );
-
-//    if(attchedData.content == myTypes::PACKET_RECEIVE_CONFIRMATION)
-//        emit packetReceiveConfirmationReceived(attchedData);
-//    else {
-//        emit replyReceived( attchedData.ref_md5 );
-//        emit passDataToThread(attchedData);
-    //    }
-}
 
 void c_moduleProcessConnection::sendDataToModuleProcess(myStructures::packet packet)
 {

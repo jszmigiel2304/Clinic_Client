@@ -3,7 +3,7 @@
 c_actionExecutive::c_actionExecutive(QObject *parent)
     : QObject{parent}
 {
-    connect( this, SIGNAL(resultReady(myTypes::JsonContent, QList<QMap<QString, QVariant>>)), this, SLOT(processResults(myTypes::JsonContent, QList<QMap<QString, QVariant>>)), Qt::DirectConnection );
+    connect( this, SIGNAL(resultReady(myTypes::JsonContent, QList<QMap<QString, QVariant>>, qintptr)), this, SLOT(processResults(myTypes::JsonContent, QList<QMap<QString, QVariant>>, qintptr)), Qt::DirectConnection );
     connect( this, SIGNAL(errors(QMap<QString, QString> *)), this, SLOT(processErrors(QMap<QString, QString> *)), Qt::DirectConnection );
 }
 
@@ -11,7 +11,7 @@ c_actionExecutive::~c_actionExecutive()
 {
 }
 
-void c_actionExecutive::processData(myStructures::threadData data)
+void c_actionExecutive::processData(myStructures::threadData data, qintptr socketDescriptor)
 {
         // obsługa otrzymanych danych
 
@@ -21,17 +21,17 @@ void c_actionExecutive::processData(myStructures::threadData data)
         }
         case myTypes::REPLY:
         {
-            processReply(data, &processedDataErrors);            
+            processReply(data, socketDescriptor, &processedDataErrors);
             break;
         }
         case myTypes::MESSAGE:
         {
-            processMessage(data, &processedDataErrors);
+            processMessage(data, socketDescriptor, &processedDataErrors);
             break;
         }
         case myTypes::GET:
         {
-            processGet(data, &processedDataErrors);
+            processGet(data, socketDescriptor, &processedDataErrors);
             break;
         }
         case myTypes::REQUEST:
@@ -52,17 +52,17 @@ void c_actionExecutive::processData(myStructures::threadData data)
         }
 }
 
-void c_actionExecutive::processMessage(myStructures::threadData data, QMap<QString, QString> * processedDataErrors)
+void c_actionExecutive::processMessage(myStructures::threadData data, qintptr socketDescriptor, QMap<QString, QString> * processedDataErrors)
 {
 
 }
 
-void c_actionExecutive::processGet(myStructures::threadData data, QMap<QString, QString> * processedDataErrors)
+void c_actionExecutive::processGet(myStructures::threadData data, qintptr socketDescriptor, QMap<QString, QString> * processedDataErrors)
 {
 
 }
 
-void c_actionExecutive::processReply(myStructures::threadData data, QMap<QString, QString> * processedDataErrors)
+void c_actionExecutive::processReply(myStructures::threadData data, qintptr socketDescriptor, QMap<QString, QString> * processedDataErrors)
 {
         c_Parser parser;
         myTypes::JsonContent jsonContent = data.content;
@@ -72,10 +72,10 @@ void c_actionExecutive::processReply(myStructures::threadData data, QMap<QString
             parser.parseErrors(&jsonData, processedDataErrors);
 
         if(jsonContent == myTypes::EMPTY) { (*processedDataErrors)[QString("JSON_DOC_ERROR")] = QString("Pusty dokument JSON.\n"); emit errors(processedDataErrors);  return; }
-        else { emit resultReady(jsonContent, jsonData); }
+        else { emit resultReady(jsonContent, jsonData, socketDescriptor); }
 }
 
-void c_actionExecutive::processResults(myTypes::JsonContent jsonContent, QList<QMap<QString, QVariant> > results)
+void c_actionExecutive::processResults(myTypes::JsonContent jsonContent, QList<QMap<QString, QVariant> > results, qintptr socketDescriptor)
 {
     switch (jsonContent) {
     case myTypes::LOGGING_ANSWER:
@@ -173,6 +173,10 @@ void c_actionExecutive::processResults(myTypes::JsonContent jsonContent, QList<Q
     }
     case myTypes::ERRORS: {
         emit errors(&processedDataErrors);
+        break;
+    }
+    case myTypes::CONNECTION_TO_PROCESS_ANSWER: {
+        emit connectionSettingsReceived(results[0], socketDescriptor);
         break;
     }
     default:

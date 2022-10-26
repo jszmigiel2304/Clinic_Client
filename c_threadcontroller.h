@@ -30,7 +30,7 @@ public:
 
 public slots:
     void newThread(MyThread * thread);
-    void dataReceived(myStructures::threadData data);
+    void dataReceived(myStructures::threadData data, qintptr socketDescriptor);
     void cleanUpThread();
     void stopAllThreads();
 

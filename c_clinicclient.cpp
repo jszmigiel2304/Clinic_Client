@@ -8,6 +8,7 @@ c_ClinicClient::c_ClinicClient(QObject *parent)
 
     qRegisterMetaType<myStructures::packet>("packet");
     qRegisterMetaType<myStructures::threadData>("threadData");
+    qRegisterMetaType<qintptr>("qintptr");
 
     //----------------------------------------//
     settCtrlr = new c_SettingsController();
@@ -27,6 +28,7 @@ c_ClinicClient::c_ClinicClient(QObject *parent)
     //----------------------------------------//
 
     connect(this, SIGNAL(replyReceived(QByteArray)), connectionCtrlr, SLOT(replyReceivedRemoveFromList(QByteArray)), Qt::QueuedConnection );
+    connect(processCtrlr->thread(), SIGNAL(passDataToClinicClient(quint64, QByteArray, qintptr)), this, SLOT(dataReceived(quint64, QByteArray, qintptr)), Qt::QueuedConnection);
     connect(this, SIGNAL(sendToServer(packet)), connectionCtrlr, SLOT(passDataToBuffer(packet)), Qt::QueuedConnection );
     connect(this, SIGNAL(setUpConnection(QMap<QString, QVariant>)), connectionCtrlr, SLOT(setConnection(QMap<QString, QVariant>)), Qt::DirectConnection);
 
@@ -188,7 +190,7 @@ void c_ClinicClient::createConnections()
     connect(this, SIGNAL(newLog(QString)), logsWindow, SLOT(addLog(QString)) );
     connect(this, SIGNAL(idleSignalReceived()), sessionCtrlr->thread(), SLOT(appIDLEdetected()), Qt::DirectConnection);
 
-    connect( connectionCtrlr, SIGNAL(dataReceived(quint64, QByteArray)), this, SLOT(dataReceived(quint64, QByteArray)) );
+    connect( connectionCtrlr, SIGNAL(dataReceived(quint64, QByteArray, qintptr)), this, SLOT(dataReceived(quint64, QByteArray, qintptr)) );
     connect( connectionCtrlr, SIGNAL(newLog(QString)), logsWindow, SLOT(addLog(QString)) );
     connect( connectionCtrlr, SIGNAL(threadAssigned(MyThread *)), threadCtrlr, SLOT(newThread(MyThread *)) );
 
@@ -413,15 +415,16 @@ void c_ClinicClient::processApp(QString target, QMap<QString, QString> parameter
     if(target.isEmpty() || parameters["app_path"].isEmpty()) return;
 
     c_moduleProcess * process = new c_moduleProcess(this);
-    process->setModuleProcessName( QString("%1.%2").arg(target, QRandomGenerator::global()->bounded(1000,9999)) );
+    process->setModuleProcessName( QString("%1%2").arg(target, QString("%1").arg(QRandomGenerator::global()->bounded(1000,9999))) );
+    process->setThreadId( threadCtrlr->generateThreadId() );
 
     connect(process, SIGNAL(passModuleProcessToController(c_moduleProcess *)), processCtrlr, SLOT(newModuleProcess(c_moduleProcess *)));
     connect(process, SIGNAL(moduleClosed(c_moduleProcess *, int, QProcess::ExitStatus)), processCtrlr, SLOT(moduleClosed(c_moduleProcess *, int, QProcess::ExitStatus)));
 
     QStringList arguments;
-    arguments.append( QString("MyArgServerName=%1").arg(processCtrlr->getHashServerName()) );
+    arguments.append( QString("MyArgServerName=%1").arg( processCtrlr->getHashServerName()) );
     arguments.append( QString("MyArgModuleName=%1").arg( process->getModuleProcessNameHash() ) );
-    arguments.append( QString("MyArgThreadId=%1").arg( threadCtrlr->generateThreadId() ) );
+    arguments.append( QString("MyArgThreadId=%1").arg( process->getThreadId() ) );
 
     foreach (const QString parameter, parameters.keys()) {
         if(parameter == "app_path") { process->setProgram( parameters["app_path"] ); }
@@ -457,18 +460,31 @@ void c_ClinicClient::processApp(QString target, QMap<QString, QString> parameter
 }
 
 
-void c_ClinicClient::dataReceived(quint64 data_size, QByteArray data)
+void c_ClinicClient::dataReceived(quint64 data_size, QByteArray data, qintptr socketDescriptor)
 {
     c_Parser parser;
     QPair<QByteArray, QByteArray> receivedDataFromServer = parser.parseData(data_size, data);
     myStructures::threadData attchedData;
     parser.parseJson( &receivedDataFromServer.second, &attchedData );
 
-    if(attchedData.content == myTypes::PACKET_RECEIVE_CONFIRMATION)
-        emit packetReceiveConfirmationReceived(attchedData);
-    else {
-        emit replyReceived( attchedData.ref_md5 );
-        emit passDataToThread(attchedData);
+    if(attchedData.thread_dest == myTypes::SERVER) {        //przygotuj paczke i wyślij do Clinic Server
+        myStructures::packet packet;
+
+        packet.md5_hash = parser.getJsonMD5Hash( QJsonDocument::fromJson(receivedDataFromServer.second) );
+        packet.wait_for_reply = true;
+
+        QDataStream ds2(&packet.packet_to_send, QIODevice::ReadWrite);
+        ds2.setVersion(QDataStream::Qt_6_0);
+
+        ds2 << packet.md5_hash.toHex() << receivedDataFromServer.second;
+        emit sendToServer(packet);
+    } else {    //paczka do Clinic Client = przekaż do odpowiedniego wątku
+        if(attchedData.content == myTypes::PACKET_RECEIVE_CONFIRMATION)
+            emit packetReceiveConfirmationReceived(attchedData);
+        else {
+            emit replyReceived( attchedData.ref_md5 );
+            emit passDataToThread(attchedData, socketDescriptor);
+        }
     }
 }
 

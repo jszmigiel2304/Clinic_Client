@@ -121,7 +121,7 @@ signals:
     void newLog(QString log);
     void setUpConnection(QMap<QString, QVariant> settings);
     void runSession();
-    void passDataToThread(myStructures::threadData data);
+    void passDataToThread(myStructures::threadData data, qintptr socketDescriptor);
     void packetReceiveConfirmationReceived(myStructures::threadData data);
     void replyReceived(QByteArray ref_md5);
     void sendToServer(myStructures::packet packet);
@@ -144,7 +144,7 @@ public slots:
     void processApp(QString target, QMap<QString, QString> parameters);
 
 private slots:
-    void dataReceived(quint64 data_size, QByteArray data);
+    void dataReceived(quint64 data_size, QByteArray data, qintptr socketDescriptor);
 };
 
 #endif // C_CLINICCLIENT_H

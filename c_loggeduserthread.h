@@ -27,7 +27,7 @@ public:
     void setLoggingOutState(bool newLoggingOutState);
 
 public slots:
-    void processData(myStructures::threadData data) override;
+    void processData(myStructures::threadData data, qintptr socketDescriptor) override;
     void sessionLocked();
     void logOut(qint32 id = -1, QString name = QString(""), QString password = QString(""));
     void getUserId(QString userName, QString userPassword);
