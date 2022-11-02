@@ -44,6 +44,7 @@ myStructures::threadData c_Parser::ParseJsonPacket(QByteArray json, qintptr sock
 
 
     packetData.thread_dest = static_cast<myTypes::ThreadDestination>( mainObject["thread_dest"].toInteger() );
+    packetData.thread_src = static_cast<myTypes::ThreadDestination>( mainObject["thread_src"].toInteger() );
     packetData.thread_id = mainObject["thread_id"].toInteger();
     packetData.req_type = static_cast<myTypes::RequestType>( mainObject["req_type"].toInteger() );
     packetData.type_flag = mainObject["type_flag"].toInteger();
@@ -66,7 +67,7 @@ myStructures::threadData c_Parser::ParseJsonPacket(QByteArray json, qintptr sock
     return packetData;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -74,6 +75,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(QString name, QString
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
     packetInfo["type_flag"] = 0x00000000;
@@ -97,7 +99,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(QString name, QString
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(qint32 id, QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(qint32 id, QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -105,6 +107,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(qint32 id, QString na
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
     packetInfo["type_flag"] = 0x00000000;
@@ -129,7 +132,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareLogInPacket(qint32 id, QString na
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareLogOutPacket(qint32 id, QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareLogOutPacket(qint32 id, QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -137,6 +140,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareLogOutPacket(qint32 id, QString n
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
     packetInfo["type_flag"] = 0x00000001;
@@ -159,7 +163,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareLogOutPacket(qint32 id, QString n
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareGetUserIdPacket(QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareGetUserIdPacket(QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -167,6 +171,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetUserIdPacket(QString name, QSt
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
     packetInfo["type_flag"] = 0x00000000;
@@ -189,7 +194,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetUserIdPacket(QString name, QSt
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareGetUserPropertiesPacket(QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareGetUserPropertiesPacket(QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -197,6 +202,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetUserPropertiesPacket(QString n
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
     packetInfo["type_flag"] = 0x00000001;
@@ -219,7 +225,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetUserPropertiesPacket(QString n
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareGetEmployeePropertiesPacket(QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareGetEmployeePropertiesPacket(QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -227,6 +233,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetEmployeePropertiesPacket(QStri
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
     packetInfo["type_flag"] = 0x00000002;
@@ -249,7 +256,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetEmployeePropertiesPacket(QStri
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareGetLogsPacket(qint32 id, QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareGetLogsPacket(qint32 id, QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -257,6 +264,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetLogsPacket(qint32 id, QString 
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
     packetInfo["type_flag"] = 0x00000005;
@@ -280,7 +288,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetLogsPacket(qint32 id, QString 
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::unlockOnIdle(QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::unlockOnIdle(QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -288,6 +296,7 @@ QPair<QByteArray, QByteArray> c_Parser::unlockOnIdle(QString name, QString encry
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
     packetInfo["type_flag"] = 0x00000002;
@@ -310,7 +319,7 @@ QPair<QByteArray, QByteArray> c_Parser::unlockOnIdle(QString name, QString encry
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareGetSessionSettingsPacket(qint32 id, QString name, QString encryptedPassword, QUuid identifier, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareGetSessionSettingsPacket(qint32 id, QString name, QString encryptedPassword, QUuid identifier, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -318,6 +327,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetSessionSettingsPacket(qint32 i
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::GET);
     packetInfo["type_flag"] = 0x00000100;
@@ -343,7 +353,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareGetSessionSettingsPacket(qint32 i
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionFileToServerPacket(QUuid identifier, QByteArray fileData, qint32 id, QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionFileToServerPacket(QUuid identifier, QByteArray fileData, qint32 id, QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -351,6 +361,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionFileToServerPacket(QUu
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::UPDATE);
     packetInfo["type_flag"] = 0x01000001;
@@ -376,7 +387,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionFileToServerPacket(QUu
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionStateToServerPacket(QUuid id_session, qint32 state, qint32 id, QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionStateToServerPacket(QUuid id_session, qint32 state, qint32 id, QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -384,6 +395,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionStateToServerPacket(QU
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::UPDATE);
     packetInfo["type_flag"] = 0x01000002;
@@ -409,7 +421,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareSendSessionStateToServerPacket(QU
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareUpdateSessionCloseTimeToServerPacket(QUuid id_session, QDateTime time, qint32 id, QString name, QString encryptedPassword, quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareUpdateSessionCloseTimeToServerPacket(QUuid id_session, QDateTime time, qint32 id, QString name, QString encryptedPassword, myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -417,6 +429,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareUpdateSessionCloseTimeToServerPac
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::SERVER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::UPDATE);
     packetInfo["type_flag"] = 0x01000003;
@@ -442,7 +455,34 @@ QPair<QByteArray, QByteArray> c_Parser::prepareUpdateSessionCloseTimeToServerPac
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareRequestConnectionToProcessPacket(quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::preparePacket(const myStructures::threadData &data)
+{
+    QByteArray packet;
+
+    QList<QMap<QString, QVariant>> packetData = data.data;
+
+    QMap<QString, QVariant> packetInfo;
+    packetInfo["thread_dest"] = static_cast<qint8>( data.thread_dest );
+    packetInfo["thread_src"] = static_cast<qint8>( data.thread_src );
+    packetInfo["thread_id"] = data.thread_id;
+    packetInfo["req_type"] = data.req_type;
+    packetInfo["type_flag"] = data.type_flag;
+    packetInfo["content"] = data.content;
+
+
+    QJsonDocument jsonPacket = prepareJson(packetInfo, packetData);
+    QByteArray JsonMD5 = getJsonMD5Hash(jsonPacket);
+
+    QDataStream ds2(&packet, QIODevice::ReadWrite);
+    ds2.setVersion(QDataStream::Qt_6_0);
+
+    ds2 << JsonMD5.toHex() << jsonPacket.toJson();
+
+    QPair<QByteArray, QByteArray> pair(JsonMD5.toHex(), packet);
+    return pair;
+}
+
+QPair<QByteArray, QByteArray> c_Parser::prepareRequestConnectionToProcessPacket(myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
@@ -450,6 +490,7 @@ QPair<QByteArray, QByteArray> c_Parser::prepareRequestConnectionToProcessPacket(
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::CLINIC_MODULE);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::REQUEST);
     packetInfo["type_flag"] = 0xFFFF0000;
@@ -468,12 +509,13 @@ QPair<QByteArray, QByteArray> c_Parser::prepareRequestConnectionToProcessPacket(
     return pair;
 }
 
-QPair<QByteArray, QByteArray> c_Parser::prepareConnectionEstablishedConfirmationPacket(quint32 threadID)
+QPair<QByteArray, QByteArray> c_Parser::prepareConnectionEstablishedConfirmationPacket(myTypes::ThreadDestination thread_src, quint32 threadID)
 {
     QByteArray packet;
 
     QMap<QString, QVariant> packetInfo;
     packetInfo["thread_dest"] = static_cast<qint8>(myTypes::CLINIC_MODULE_CONNECTION_CONTROLLER);
+    packetInfo["thread_src"] = static_cast<qint8>(thread_src);
     packetInfo["thread_id"] = threadID;
     packetInfo["req_type"] = static_cast<qint8>(myTypes::REPLY);
     packetInfo["type_flag"] = 0x00000000;
@@ -551,6 +593,7 @@ void c_Parser::parseJson(QByteArray * json, myStructures::threadData * data)
     QJsonObject mainObject = jsonDoc.object();
 
     (*data).thread_dest = static_cast<myTypes::ThreadDestination>( mainObject["thread_dest"].toInteger() );
+    (*data).thread_src = static_cast<myTypes::ThreadDestination>( mainObject["thread_src"].toInteger() );
     (*data).thread_id = mainObject["thread_id"].toInteger();
     (*data).req_type = static_cast<myTypes::RequestType>( mainObject["req_type"].toInteger() );
     (*data).type_flag = mainObject["type_flag"].toInteger();
@@ -597,7 +640,7 @@ QByteArray c_Parser::getJsonMD5Hash(QJsonDocument json)
     return md5Hash;
 }
 
-void c_Parser::insertAuthDataInJson(QJsonDocument *json, QString name, QString encryptedPassword)
+void c_Parser::insertAuthDataInJson(QJsonDocument *json, qint32 id, QString name, QString encryptedPassword)
 {
     QJsonObject mainObject = (*json).object();
 
@@ -606,12 +649,18 @@ void c_Parser::insertAuthDataInJson(QJsonDocument *json, QString name, QString e
     for(int i = 0; i < dataArray.size(); i++)
     {
         QJsonObject object = dataArray[i].toObject();
+        object["id"] = id;
         object["name"] = name;
         object["encryptedPassword"] = encryptedPassword;
+        dataArray[i] = object;
     }
+
+    mainObject["data"] = dataArray;
+
+    (*json).setObject(mainObject);
 }
 
-void c_Parser::insertAuthDataInJson(QByteArray *json, QString name, QString encryptedPassword)
+void c_Parser::insertAuthDataInJson(QByteArray *json, qint32 id, QString name, QString encryptedPassword)
 {
     QJsonParseError error;
     QJsonDocument jsonDoc = QJsonDocument::fromJson((*json), &error);
@@ -627,8 +676,15 @@ void c_Parser::insertAuthDataInJson(QByteArray *json, QString name, QString encr
     for(int i = 0; i < dataArray.size(); i++)
     {
         QJsonObject object = dataArray[i].toObject();
+        object["id"] = id;
         object["name"] = name;
         object["encryptedPassword"] = encryptedPassword;
+
+        dataArray[i] = object;
     }
 
+    mainObject["data"] = dataArray;
+    jsonDoc.setObject(mainObject);
+
+    (*json) = jsonDoc.toJson();
 }

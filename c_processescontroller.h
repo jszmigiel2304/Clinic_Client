@@ -44,6 +44,8 @@ public:
 
     QString getHashServerName();
 
+    c_moduleProcess* getProcess(qint32 threadID);
+
 public slots:
     void newModuleProcessConnection(c_moduleProcessConnection * moduleConnection);
     void removeModuleProcessConnection(c_moduleProcessConnection * moduleConnection);

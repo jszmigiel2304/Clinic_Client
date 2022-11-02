@@ -45,7 +45,7 @@ private slots:
 
 signals:
     void passModuleProcessToController(c_moduleProcess * process);
-    void moduleClosed(c_moduleProcess * proces, int exitCode, QProcess::ExitStatus exitStatus = NormalExit);
+    void moduleClosed(c_moduleProcess * proces, int exitCode, QProcess::ExitStatus exitStatus);
 
 
 

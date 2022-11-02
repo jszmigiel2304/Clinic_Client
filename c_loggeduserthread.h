@@ -26,6 +26,8 @@ public:
     bool getLoggingOutState() const;
     void setLoggingOutState(bool newLoggingOutState);
 
+    myTypes::ThreadDestination getNameThreadDestination() const;
+
 public slots:
     void processData(myStructures::threadData data, qintptr socketDescriptor) override;
     void sessionLocked();
@@ -38,6 +40,7 @@ public slots:
     void getLogsFromServer(qint32 id, QString name = QString(""), QString password = QString(""));
 
 private:
+    const myTypes::ThreadDestination nameThreadDestination = myTypes::CLINIC_LOGGED_USER_CONTROLLER;
     bool loggingState;
     bool loggingOutState;
     QTimer * loggingTimer;

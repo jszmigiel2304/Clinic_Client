@@ -49,7 +49,7 @@ void MyThread::setNote(const QString &newNote)
 
 void MyThread::dataReceived(myStructures::threadData data, qintptr socketDescriptor)
 {
-    //przetworzenie otrzymanych danych z ThreadController
+    //przetworzenie otrzymanych danych z ThreadController        
 
     dynamic_cast<MyThread *>(myParentConnector->thread())->processData(data, socketDescriptor);
 }

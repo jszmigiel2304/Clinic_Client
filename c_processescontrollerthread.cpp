@@ -26,6 +26,27 @@ void c_processesControllerThread::run()
 
 void c_processesControllerThread::processData(myStructures::threadData data, qintptr socketDescriptor)
 {
+    if(data.thread_dest == myTypes::CLINIC_MODULE) {
+        c_moduleProcess * process = _PARENT_PROC_CTRLR_->getProcess( data.thread_id );
+        if(process) {
+            c_Parser parser;
+            QPair<QByteArray, QByteArray> pair = parser.preparePacket(data);
+
+            myStructures::packet packet;
+            packet.md5_hash = pair.first;
+            packet.packet_to_send = pair.second;
+            packet.wait_for_reply = false;
+
+
+            QString errMsg = QString("Wysyłam do odpowiedniego procesu. \n");
+            emit _PARENT_PROC_CTRLR_->newLog(errMsg);
+
+            emit process->getConnection()->sendDataToModuleProcessSignal( packet );
+        }
+
+        return;
+    }
+
     if( this->getId() == data.thread_id && (data.thread_dest == myTypes::CLINIC_MODULE_PROCESS_CONTROLLER  || data.thread_dest == myTypes::CLINIC_ERROR_CONTROLLER) )
     {
         c_actionExecutive *executive = new c_actionExecutive();
@@ -70,7 +91,12 @@ void c_processesControllerThread::stopServer()
 {
     localServer->close();
     emit _PARENT_PROC_CTRLR_->newLog(QString("c_processesControllerThread::stopServer()  \n"
-                                                                                  "Serwer zatrzymany. \n"));
+                                             "Serwer zatrzymany. \n"));
+}
+
+myTypes::ThreadDestination c_processesControllerThread::getNameThreadDestination() const
+{
+    return nameThreadDestination;
 }
 
 c_myLocalServer *c_processesControllerThread::getLocalServer() const
@@ -136,7 +162,8 @@ void c_myLocalServer::incomingConnection(quintptr  socketDescriptor)
         emit moduleProcessConnection->newLog(log);
 
         c_Parser parser;
-        QPair<QByteArray, QByteArray> pair = parser.prepareRequestConnectionToProcessPacket( _PARENT_PROC_CTRLR_T->getId() );
+        QPair<QByteArray, QByteArray> pair = parser.prepareRequestConnectionToProcessPacket(_PARENT_PROC_CTRLR_T->getNameThreadDestination(),
+                                                                                            _PARENT_PROC_CTRLR_T->getId() );
 
         myStructures::packet packet;
         packet.md5_hash = pair.first;

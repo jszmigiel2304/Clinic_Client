@@ -467,27 +467,67 @@ void c_ClinicClient::dataReceived(quint64 data_size, QByteArray data, qintptr so
     myStructures::threadData attchedData;
     parser.parseJson( &receivedDataFromServer.second, &attchedData );
 
-    if(attchedData.thread_dest == myTypes::SERVER) {        //przygotuj paczke i wyślij do Clinic Server
-        myStructures::packet packet;
+    switch( static_cast<qint8>(attchedData.thread_dest) ) {
+    case myTypes::SERVER: {
+        parser.insertAuthDataInJson(&receivedDataFromServer.second, this->user->getId(), this->user->getName(), this->user->getPassword());
 
-        packet.md5_hash = parser.getJsonMD5Hash( QJsonDocument::fromJson(receivedDataFromServer.second) );
-        packet.wait_for_reply = true;
+        QByteArray packet;
 
-        QDataStream ds2(&packet.packet_to_send, QIODevice::ReadWrite);
+        QJsonDocument jsonPacket = QJsonDocument::fromJson(receivedDataFromServer.second);
+        QByteArray JsonMD5 = parser.getJsonMD5Hash(jsonPacket);
+
+        QDataStream ds2(&packet, QIODevice::ReadWrite);
         ds2.setVersion(QDataStream::Qt_6_0);
 
-        parser.insertAuthDataInJson(&receivedDataFromServer.second, this->user->getName(), this->user->getPassword());
+        ds2 << JsonMD5.toHex() << jsonPacket.toJson();
 
-        ds2 << packet.md5_hash.toHex() << receivedDataFromServer.second;
-        emit sendToServer(packet);
-    } else {    //paczka do Clinic Client = przekaż do odpowiedniego wątku
+        QPair<QByteArray, QByteArray> pair(JsonMD5.toHex(), packet);
+
+        myStructures::packet packetToSend;
+        packetToSend.md5_hash = pair.first;
+        packetToSend.packet_to_send = pair.second;
+        packetToSend.wait_for_reply = true;
+
+        emit sendToServer(packetToSend);
+        break;
+    }
+    case myTypes::CLINIC_MODULE: {
+        emit replyReceived( attchedData.ref_md5 );
+        processCtrlr->thread()->processData(attchedData, socketDescriptor);
+        break;
+    }
+    default: {
         if(attchedData.content == myTypes::PACKET_RECEIVE_CONFIRMATION)
             emit packetReceiveConfirmationReceived(attchedData);
         else {
             emit replyReceived( attchedData.ref_md5 );
             emit passDataToThread(attchedData, socketDescriptor);
         }
+        break;
     }
+    }
+
+//    if(attchedData.thread_dest == myTypes::SERVER) {        //przygotuj paczke i wyślij do Clinic Server
+//        myStructures::packet packet;
+
+//        packet.md5_hash = parser.getJsonMD5Hash( QJsonDocument::fromJson(receivedDataFromServer.second) );
+//        packet.wait_for_reply = true;
+
+//        QDataStream ds2(&packet.packet_to_send, QIODevice::ReadWrite);
+//        ds2.setVersion(QDataStream::Qt_6_0);
+
+//        parser.insertAuthDataInJson(&receivedDataFromServer.second, this->user->getId(), this->user->getName(), this->user->getPassword());
+
+//        ds2 << packet.md5_hash.toHex() << receivedDataFromServer.second;
+//        emit sendToServer(packet);
+//    } else {    //paczka do Clinic Client = przekaż do odpowiedniego wątku
+//        if(attchedData.content == myTypes::PACKET_RECEIVE_CONFIRMATION)
+//            emit packetReceiveConfirmationReceived(attchedData);
+//        else {
+//            emit replyReceived( attchedData.ref_md5 );
+//            emit passDataToThread(attchedData, socketDescriptor);
+//        }
+//    }
 }
 
 

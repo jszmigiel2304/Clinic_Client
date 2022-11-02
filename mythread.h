@@ -2,6 +2,7 @@
 #define MYTHREAD_H
 
 #include "cv_processdata.h"
+#include "c_mystructures.h"
 
 #include <QThread>
 #include <QObject>

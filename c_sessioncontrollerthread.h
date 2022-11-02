@@ -34,6 +34,8 @@ public:
 //    const QTime &getSessionExpireTime() const;
 //    void setSessionExpireTime(const QTime &newSessionExpireTime);
 
+    myTypes::ThreadDestination getNameThreadDestination() const;
+
 public slots:
     void processData(myStructures::threadData data, qintptr socketDescriptor) override;
     void sessionRun();
@@ -47,6 +49,7 @@ public slots:
     void configureSession(QString username, QString role);
 
 private:
+    const myTypes::ThreadDestination nameThreadDestination = myTypes::CLINIC_SESSION_CONTROLLER;
 //    QTimer * idleTimer;
 //    QTimer * secsTimer;
 

@@ -73,6 +73,7 @@ void c_loggedUserThread::getUserId(QString userName, QString userPassword)
     c_Parser parser;
     QPair<QByteArray, QByteArray> pair = parser.prepareGetUserIdPacket(dynamic_cast<c_loggedUser *>(myParentConnector)->getName(),
                                                                        dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword(false, true),
+                                                                       getNameThreadDestination(),
                                                                        getId());
 
     myStructures::packet packet;
@@ -102,7 +103,10 @@ void c_loggedUserThread::unlockOnIdle(QString userName, QString userPassword)
     hasher.addData(encryptionSeed);
     encryptedPassword = hasher.result();
 
-    QPair<QByteArray, QByteArray> pair = parser.unlockOnIdle(userName, encryptedPassword.toHex(), getId());
+    QPair<QByteArray, QByteArray> pair = parser.unlockOnIdle(userName,
+                                                             encryptedPassword.toHex(),
+                                                             getNameThreadDestination(),
+                                                             getId());
 
     myStructures::packet packet;
     packet.md5_hash = pair.first;
@@ -139,7 +143,10 @@ void c_loggedUserThread::getProperties(QMap<QString, QVariant> *userProperties, 
 void c_loggedUserThread::getUserPropertiesFromServer(QString name, QString password)
 {
     c_Parser parser;
-    QPair<QByteArray, QByteArray> pair = parser.prepareGetUserPropertiesPacket(name, password, getId());
+    QPair<QByteArray, QByteArray> pair = parser.prepareGetUserPropertiesPacket(name,
+                                                                               password,
+                                                                               getNameThreadDestination(),
+                                                                               getId());
 
     myStructures::packet packet;
     packet.md5_hash = pair.first;
@@ -152,7 +159,10 @@ void c_loggedUserThread::getUserPropertiesFromServer(QString name, QString passw
 void c_loggedUserThread::getEmployeePropertiesFromServer(QString name, QString password)
 {
     c_Parser parser;
-    QPair<QByteArray, QByteArray> pair = parser.prepareGetEmployeePropertiesPacket(name, password, getId());
+    QPair<QByteArray, QByteArray> pair = parser.prepareGetEmployeePropertiesPacket(name,
+                                                                                   password,
+                                                                                   getNameThreadDestination(),
+                                                                                   getId());
 
     myStructures::packet packet;
     packet.md5_hash = pair.first;
@@ -165,7 +175,11 @@ void c_loggedUserThread::getEmployeePropertiesFromServer(QString name, QString p
 void c_loggedUserThread::getLogsFromServer(qint32 id, QString name, QString password)
 {
     c_Parser parser;
-    QPair<QByteArray, QByteArray> pair = parser.prepareGetLogsPacket(id, name, password, getId());
+    QPair<QByteArray, QByteArray> pair = parser.prepareGetLogsPacket(id,
+                                                                     name,
+                                                                     password,
+                                                                     getNameThreadDestination(),
+                                                                     getId());
 
     myStructures::packet packet;
     packet.md5_hash = pair.first;
@@ -173,6 +187,11 @@ void c_loggedUserThread::getLogsFromServer(qint32 id, QString name, QString pass
     packet.wait_for_reply = true;
 
     emit sendToServer(packet);
+}
+
+myTypes::ThreadDestination c_loggedUserThread::getNameThreadDestination() const
+{
+    return nameThreadDestination;
 }
 
 
@@ -192,7 +211,11 @@ void c_loggedUserThread::logIn(qint32 id, QString name, QString password)
     loggingTimer->stop();
 
     c_Parser parser;
-    QPair<QByteArray, QByteArray> pair = parser.prepareLogInPacket(id, name, password, getId());
+    QPair<QByteArray, QByteArray> pair = parser.prepareLogInPacket(id,
+                                                                   name,
+                                                                   password,
+                                                                   getNameThreadDestination(),
+                                                                   getId());
 
     myStructures::packet packet;
     packet.md5_hash = pair.first;
@@ -218,7 +241,11 @@ void c_loggedUserThread::logOut(qint32 id, QString name, QString password)
     if(password.isEmpty()) passwordc = dynamic_cast<c_loggedUser *>(myParentConnector)->getEncryptedPassword(false, true); else passwordc = password;
 
 
-    QPair<QByteArray, QByteArray> pair = parser.prepareLogOutPacket(idc, namec, passwordc, getId());
+    QPair<QByteArray, QByteArray> pair = parser.prepareLogOutPacket(idc,
+                                                                    namec,
+                                                                    passwordc,
+                                                                    getNameThreadDestination(),
+                                                                    getId());
 
     myStructures::packet packet;
     packet.md5_hash = pair.first;

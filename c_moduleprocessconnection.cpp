@@ -57,7 +57,7 @@ void c_moduleProcessConnection::setConnectedToProcess(bool newConnectedToProcess
 void c_moduleProcessConnection::sendConnectionToProcessSettingsRequest()
 {
     c_Parser parser;
-    QPair<QByteArray, QByteArray> pair = parser.prepareRequestConnectionToProcessPacket();
+    QPair<QByteArray, QByteArray> pair = parser.prepareRequestConnectionToProcessPacket(myTypes::CLINIC_MODULE_PROCESS_CONTROLLER);
 
     myStructures::packet packet;
     packet.md5_hash = pair.first;

@@ -50,6 +50,8 @@ public:
     c_myLocalServer *getLocalServer() const;
 //    QByteArray hashServerName(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5, bool toHex = true);
 
+    myTypes::ThreadDestination getNameThreadDestination() const;
+
 public slots:
     void processData(myStructures::threadData data, qintptr socketDescriptor) override;
     void parseReceivedPacket(quint64 size, QByteArray data, qintptr socketDescriptor);
@@ -58,6 +60,7 @@ public slots:
     void stopServer();
 
 private:
+    const myTypes::ThreadDestination nameThreadDestination = myTypes::CLINIC_MODULE_PROCESS_CONTROLLER;
     c_myLocalServer *localServer;
 //    const QString serverName = "ClinicClientLocalServer";
 

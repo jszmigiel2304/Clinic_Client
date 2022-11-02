@@ -32,6 +32,7 @@ void c_SessionControllerThread::getSessionSettingsFromServer()
                                                                                 dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getName(),
                                                                                 dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(false, true),
                                                                                 dynamic_cast<c_SessionController *>(myParentConnector)->getIdentifier(),
+                                                                                getNameThreadDestination(),
                                                                                 getId());
 
     myStructures::packet packet;
@@ -108,6 +109,7 @@ void c_SessionControllerThread::sendSessionFileToServer(QUuid id_session, QByteA
                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getId(),
                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getName(),
                                                                                      dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(false, true),
+                                                                                     getNameThreadDestination(),
                                                                                      getId());
 
     myStructures::packet packet;
@@ -129,6 +131,7 @@ void c_SessionControllerThread::sendSessionStateToServer(QUuid id_session, qint3
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getId(),
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getName(),
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(false, true),
+                                                                                      getNameThreadDestination(),
                                                                                       getId());
 
     myStructures::packet packet;
@@ -170,6 +173,7 @@ void c_SessionControllerThread::sessionClose()
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getId(),
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getName(),
                                                                                       dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getEncryptedPassword(false, true),
+                                                                                      getNameThreadDestination(),
                                                                                       getId());
 
     myStructures::packet packet;
@@ -247,5 +251,10 @@ void c_SessionControllerThread::configureSession(QString username, QString role)
         emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Rozpoczynam konfigurowanie sesji.\n"));
         emit processingStarted(QString("Konfigurowanie sesji dla %1 [%2]...").arg(username, role));
         dynamic_cast<c_SessionController *>(myParentConnector)->setIdentifier();
-        if(!dynamic_cast<c_SessionController *>(myParentConnector)->isValid()) getsessionSettingsTimer->start(10);
+    if(!dynamic_cast<c_SessionController *>(myParentConnector)->isValid()) getsessionSettingsTimer->start(10);
+}
+
+myTypes::ThreadDestination c_SessionControllerThread::getNameThreadDestination() const
+{
+    return nameThreadDestination;
 }

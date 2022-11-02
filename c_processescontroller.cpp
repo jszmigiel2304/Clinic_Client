@@ -161,7 +161,7 @@ void c_processesController::connectProcessWithConnection(QMap<QString, QVariant>
 
             //wysyłam potwierdzenie nawiazania połączenia
             c_Parser parser;
-            QPair<QByteArray, QByteArray> pair = parser.prepareConnectionEstablishedConfirmationPacket(thread_id);
+            QPair<QByteArray, QByteArray> pair = parser.prepareConnectionEstablishedConfirmationPacket(myTypes::CLINIC_MODULE_PROCESS_CONTROLLER, thread_id);
 
             myStructures::packet packet;
             packet.md5_hash = pair.first;
@@ -205,6 +205,15 @@ void c_processesController::setThread(std::unique_ptr<c_processesControllerThrea
 QString c_processesController::getHashServerName()
 {
     return thread()->getLocalServer()->hashServerName();
+}
+
+c_moduleProcess *c_processesController::getProcess(qint32 threadID)
+{
+    for(int i=0; i<openedModulesProcesses.size(); i++) {
+        if( openedModulesProcesses[i]->getThreadId() == threadID ) return openedModulesProcesses[i];
+    }
+
+    return nullptr;
 }
 
 void c_processesController::cleanUpThread()

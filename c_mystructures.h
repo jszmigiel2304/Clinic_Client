@@ -77,6 +77,7 @@ namespace myStructures {
         myTypes::JsonContent content;
         quint32 thread_id;
         myTypes::ThreadDestination thread_dest;
+        myTypes::ThreadDestination thread_src;
         myTypes::RequestType req_type;
         quint32 type_flag;
         QByteArray ref_md5;
@@ -90,6 +91,7 @@ namespace myStructures {
         myTypes::JsonContent content;
         quint32 thread_id;
         myTypes::ThreadDestination thread_dest;
+        myTypes::ThreadDestination thread_src;
         myTypes::RequestType req_type;
         quint32 type_flag;
         //quint64 data_size;
