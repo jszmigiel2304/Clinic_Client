@@ -10,11 +10,6 @@ c_moduleProcessConnection::c_moduleProcessConnection(qintptr ID, QObject *parent
     if(!this->socket->setSocketDescriptor(this->socketDescriptor))
     {
         emit error(this->socket->error());
-
-        QString log = QString("c_ClientConnection::run() \n"
-                              "error(this->socket->error())");
-        emit newLog(log);
-
         return;
     }
 
@@ -27,9 +22,7 @@ c_moduleProcessConnection::c_moduleProcessConnection(qintptr ID, QObject *parent
     connect(this->socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
     connect(this->socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
     //from c_moduleProcessConnection
-//    connect(this, SIGNAL(dataRead(quint64, QByteArray, qintptr)), this, SLOT(parseReceivedPacket(quint64, QByteArray, qintptr)));
     connect(this, SIGNAL(sendDataToModuleProcessSignal(myStructures::packet)), this, SLOT(sendDataToModuleProcess(myStructures::packet)), Qt::DirectConnection );
-
 
     socket->open(QIODeviceBase::ReadWrite);
 }
@@ -79,34 +72,33 @@ void c_moduleProcessConnection::disconnected()
 
 void c_moduleProcessConnection::errorOccurred(QLocalSocket::LocalSocketError socketError)
 {
-    emit newLog( QString("c_clientProcessConnection::errorOccurred(QLocalSocket::LocalSocketError socketError) \n") );
-    //LocalSocketError { ConnectionRefusedError, PeerClosedError, ServerNotFoundError, SocketAccessError, SocketResourceError, …, UnknownSocketError }
-    switch(socketError) {
-    case QLocalSocket::ConnectionRefusedError: {emit newLog( QString("ConnectionRefusedError \n") ); return;}
-    case QLocalSocket::PeerClosedError: {emit newLog( QString("PeerClosedError \n") ); return;}
-    case QLocalSocket::ServerNotFoundError: {emit newLog( QString("ServerNotFoundError \n") ); return;}
-    case QLocalSocket::SocketAccessError: {emit newLog( QString("SocketAccessError \n") ); return;}
-    case QLocalSocket::SocketResourceError: {emit newLog( QString("SocketResourceError \n") ); return;}
-    case QLocalSocket::SocketTimeoutError: {emit newLog( QString("SocketTimeoutError \n") ); return;}
-    case QLocalSocket::DatagramTooLargeError: {emit newLog( QString("DatagramTooLargeError \n") ); return;}
-    case QLocalSocket::ConnectionError: {emit newLog( QString("ConnectionError \n") ); return;}
-    case QLocalSocket::UnsupportedSocketOperationError: {emit newLog( QString("UnsupportedSocketOperationError \n") ); return;}
-    case QLocalSocket::OperationError: {emit newLog( QString("OperationError \n") ); return;}
-    case QLocalSocket::UnknownSocketError: {emit newLog( QString("UnknownSocketError \n") ); return;}
-    default: {emit newLog( QString("UnknownSocketError \n") ); return;}
-    }
+//      wypisanie błędu na tymczasowym oknie w_logsWindow
+//    switch(socketError) {
+//    case QLocalSocket::ConnectionRefusedError: {emit newLog( QString("ConnectionRefusedError \n") ); return;}
+//    case QLocalSocket::PeerClosedError: {emit newLog( QString("PeerClosedError \n") ); return;}
+//    case QLocalSocket::ServerNotFoundError: {emit newLog( QString("ServerNotFoundError \n") ); return;}
+//    case QLocalSocket::SocketAccessError: {emit newLog( QString("SocketAccessError \n") ); return;}
+//    case QLocalSocket::SocketResourceError: {emit newLog( QString("SocketResourceError \n") ); return;}
+//    case QLocalSocket::SocketTimeoutError: {emit newLog( QString("SocketTimeoutError \n") ); return;}
+//    case QLocalSocket::DatagramTooLargeError: {emit newLog( QString("DatagramTooLargeError \n") ); return;}
+//    case QLocalSocket::ConnectionError: {emit newLog( QString("ConnectionError \n") ); return;}
+//    case QLocalSocket::UnsupportedSocketOperationError: {emit newLog( QString("UnsupportedSocketOperationError \n") ); return;}
+//    case QLocalSocket::OperationError: {emit newLog( QString("OperationError \n") ); return;}
+//    case QLocalSocket::UnknownSocketError: {emit newLog( QString("UnknownSocketError \n") ); return;}
+//    default: {emit newLog( QString("UnknownSocketError \n") ); return;}
+//    }
 }
 
 void c_moduleProcessConnection::stateChanged(QLocalSocket::LocalSocketState socketState)
 {
-    emit newLog( QString("c_clientProcessConnection::stateChanged(QLocalSocket::LocalSocketState socketState) \n") );
-    switch (socketState) {
-    case QLocalSocket::UnconnectedState: {emit newLog( QString("UnconnectedState \n") ); return;}
-    case QLocalSocket::ConnectingState: {emit newLog( QString("ConnectingState \n") ); return;}
-    case QLocalSocket::ConnectedState: {emit newLog( QString("ConnectedState \n") ); return;}
-    case QLocalSocket::ClosingState: {emit newLog( QString("ClosingState \n") ); return;}
-    default: {emit newLog( QString("No state att. \n") ); return;}
-    }
+    // wypisanie stanu na tymczasowym oknie w_logsWindow
+//    switch (socketState) {
+//    case QLocalSocket::UnconnectedState: {emit newLog( QString("UnconnectedState \n") ); return;}
+//    case QLocalSocket::ConnectingState: {emit newLog( QString("ConnectingState \n") ); return;}
+//    case QLocalSocket::ConnectedState: {emit newLog( QString("ConnectedState \n") ); return;}
+//    case QLocalSocket::ClosingState: {emit newLog( QString("ClosingState \n") ); return;}
+//    default: {emit newLog( QString("No state att. \n") ); return;}
+//    }
 }
 
 
@@ -125,9 +117,6 @@ void c_moduleProcessConnection::readyRead()
         if( QString::fromUtf8(line) == QString("PACKET_BEGINNING\n") ) {
             myPack.clear();
         } else if( QString::fromUtf8(line) == QString("PACKET_END\n") ) {
-            QString log = QString("%1 has been read. \n").arg(myPack.size());
-            emit newLog(log);
-
             emit dataRead(myPack.size(), myPack, this->getSocketDescriptor());
         } else {
             myPack.append(line);
@@ -141,6 +130,4 @@ void c_moduleProcessConnection::sendDataToModuleProcess(myStructures::packet pac
     socket->write( QString("PACKET_BEGINNING\n").toUtf8() );
     socket->write( packet.packet_to_send );
     socket->write( QString("PACKET_END\n").toUtf8() );
-
-    QString log = QString("%1 has been written. \n").arg(packet.packet_to_send.size());
 }

@@ -5,7 +5,6 @@
 #include "c_actionexecutive.h"
 #include "c_moduleprocess.h"
 #include "c_moduleprocessconnection.h"
-#include "w_logswindow.h"
 
 
 #include <QObject>
@@ -48,7 +47,6 @@ public:
 
 
     c_myLocalServer *getLocalServer() const;
-//    QByteArray hashServerName(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5, bool toHex = true);
 
     myTypes::ThreadDestination getNameThreadDestination() const;
 
@@ -62,18 +60,11 @@ public slots:
 private:
     const myTypes::ThreadDestination nameThreadDestination = myTypes::CLINIC_MODULE_PROCESS_CONTROLLER;
     c_myLocalServer *localServer;
-//    const QString serverName = "ClinicClientLocalServer";
-
-
-
 private slots:
     void threadStarted() override;
 
 signals:
     void passDataToClinicClient(quint64 size, QByteArray data, qintptr socketDescriptor);
-//    void newModuleConnectedToServer(c_moduleProcessConnection *processConnection);
-//    void moduleProcessConnectionFinished(c_moduleProcessConnection *processConnection);
-//    void needConnectionToProcessSettings();
 
 protected:
     void incomingConnection(qintptr socketDescriptor);

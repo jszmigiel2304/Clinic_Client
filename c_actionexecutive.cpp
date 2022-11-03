@@ -188,8 +188,9 @@ void c_actionExecutive::processResults(myTypes::JsonContent jsonContent, QList<Q
 
 void c_actionExecutive::processErrors(QMap<QString, QString> *receivedErrors)
 {
-    foreach(const QString key, receivedErrors->keys()) {
-        emit newLog(QString("%1: %2 \n").arg(key, (*receivedErrors)[key]));
-    }
+//    foreach(const QString key, receivedErrors->keys()) {
+//        // ty było wypisanie błędów w tymczasowym oknie -----> cały blok do usunięcia
+//        //emit newLog(QString("%1: %2 \n").arg(key, (*receivedErrors)[key]));
+//    }
     receivedErrors->clear();
 }

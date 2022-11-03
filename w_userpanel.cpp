@@ -52,13 +52,6 @@ void w_userPanel::moduleButtonPress(QString moduleAction)
 
 void w_userPanel::sessionTimeChanged(QTime time)
 {
-//    QMessageBox msgBox;
-//     QString as = "sessionTimeChanged";
-//     as += "/n w_userpanel";
-//     msgBox.setText(as);
-//     msgBox.exec();
-
-    //dynamic_cast<w_moduleButtonLabel *>(sessionTimeOutLabel)->getLabel()->setText("time.toString()");
     dynamic_cast<w_moduleButtonLabel *>(sessionTimeOutLabel)->getLabel()->setText(time.toString());
 }
 

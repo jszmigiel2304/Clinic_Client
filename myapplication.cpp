@@ -2,7 +2,6 @@
 
 MyApplication::MyApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
-//    idleTimer.setInterval(100000);
     sessionExpireSeconds = -1;
 
     connect(&idleTimer, SIGNAL(timeout()), this, SLOT(idleTimerTimeout()));
@@ -17,8 +16,6 @@ MyApplication::MyApplication(int &argc, char **argv) : QApplication(argc, argv)
 bool MyApplication::notify(QObject *receiver, QEvent *event)
 {
     if (event->type() == QEvent::MouseMove || event->type() == QEvent::KeyPress) {
-//         idleTimer.stop(); // reset timer
-//         idleTimer.start();
         if(currentSessionExpireTime.second() != 0 || currentSessionExpireTime.minute() != 0 || currentSessionExpireTime.hour() != 0)
             resetIDLEtimer();
     }
@@ -77,7 +74,6 @@ void MyApplication::resetIDLEtimer()
 void MyApplication::appIDLEdetected()
 {
     emit idleDetected();
-    //resetIDLEtimer();
 }
 
 

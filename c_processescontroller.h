@@ -4,7 +4,6 @@
 #include "c_mystructures.h"
 #include "c_moduleprocess.h"
 #include "mythread.h"
-#include "w_logswindow.h"
 #include "c_processescontrollerthread.h"
 #include "c_moduleprocessconnection.h"
 
@@ -35,9 +34,6 @@ public:
 
     void removeOpenedModuleProcessConnections();
     void removeOpenedModulesProcesses();
-
-    w_logsWindow *getLogs() const;
-    void setLogs(w_logsWindow *newLogs);
 
     c_processesControllerThread*thread() const;
     void setThread(std::unique_ptr<c_processesControllerThread> newThread);
@@ -70,14 +66,11 @@ private:
 
     std::unique_ptr<c_processesControllerThread> mThread;
 
-    w_logsWindow *logs;
-
 private slots:
     void cleanUpThread();
 
 signals:
     void threadAssigned(MyThread * thread);
-    void newLog(QString log); // log on window
 
 };
 

@@ -13,7 +13,6 @@ w_modulesScrollArea::w_modulesScrollArea()
     this->setWidget(this->areaContent);
 
     this->contentLayout = new QGridLayout();
-//    this->contentLayout->setMargin(0);
     areaContent->setLayout(contentLayout);
 
 }

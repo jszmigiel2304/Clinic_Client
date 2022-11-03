@@ -3,7 +3,6 @@
 MyThread::MyThread(qint32 id, QString parentIdent, QString note,  QObject *parent)
     : QThread{parent}, idThread(id), parentIdentifier(parentIdent), note(note)
 {
-//    connect(this, SIGNAL(started()), this, SLOT(threadStarted()));
     connect(this, SIGNAL(finished()), this, SLOT(threadFinished()));
 }
 
@@ -49,7 +48,7 @@ void MyThread::setNote(const QString &newNote)
 
 void MyThread::dataReceived(myStructures::threadData data, qintptr socketDescriptor)
 {
-    //przetworzenie otrzymanych danych z ThreadController        
+    //przetworzenie otrzymanych danych z ThreadController
 
     dynamic_cast<MyThread *>(myParentConnector->thread())->processData(data, socketDescriptor);
 }

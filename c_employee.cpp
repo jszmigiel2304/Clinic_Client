@@ -101,7 +101,6 @@ void c_employee::setProperties(QMap<QString, QVariant> employeeInfo)
     setCity_contact( employeeInfo["city_contact"].toString() );
     setPesel( employeeInfo["pesel"].toString() );
     setUser_name( employeeInfo["user_name"].toString() );
-    QDate dat = QDate::fromString(employeeInfo["employment_date"].toString(), Qt::ISODate);
     setEmployment_date( QDate::fromString( employeeInfo["employment_date"].toString(), Qt::ISODate ) );
     setGender( employeeInfo["gender"].toChar() );
     setPhoto(  QByteArray(employeeInfo["photo"].toByteArray()) );

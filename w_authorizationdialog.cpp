@@ -12,11 +12,8 @@ w_AuthorizationDialog::w_AuthorizationDialog(QWidget *parent) :
     connect(this, SIGNAL(finished(int)), this, SLOT(deleteLater()));
     connect(this, SIGNAL(rejected()), this, SLOT(deleteLater()));
 
-
     connect(ui->f_userName, SIGNAL(editingFinished()), this, SLOT(validateUserName()));
     connect(ui->f_password, SIGNAL(editingFinished()), this, SLOT(validateUserPassword()));
-    //connect(ui->b_logIn, SIGNAL(clicked()), this, SLOT(on_b_logIn_clicked()));
-
 
     logResultTimer = new QTimer();
 
@@ -28,7 +25,6 @@ w_AuthorizationDialog::w_AuthorizationDialog(QWidget *parent) :
     ui->w_loggingMask->hide();
     ui->f_password->setEnabled(true);
     ui->f_userName->setEnabled(true);
-
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 }

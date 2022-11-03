@@ -52,7 +52,6 @@ private slots:
     void sendDataToModuleProcess(myStructures::packet packet);
 
 signals:
-    void newLog(QString log);
     void error(QLocalSocket::LocalSocketError error);
     void dataRead(quint64 size, QByteArray data, qintptr socketDescriptor);
     void sendDataToModuleProcessSignal(myStructures::packet packet);

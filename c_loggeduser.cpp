@@ -98,9 +98,6 @@ void c_loggedUser::setDbLogs(QList<QMap<QString, QVariant> > logs)
 {
     for(int i = 0; i< logs.size(); i++) {
         myStructures::myLog log = myStructures::myLog::fromMap(logs[i]);
-//        log.ip_address = QHostAddress(logs[i]["ip_address"].toString());
-//        log.time = QDateTime::fromString(logs[i]["log_time"].toString(), Qt::ISODateWithMs);
-//        log.log_text = logs[i]["activity"].toString();
         this->dbLogs.append(log);
     }
 
@@ -111,7 +108,6 @@ void c_loggedUser::setDbLogs(QList<QMap<QString, QVariant> > logs)
 QMap<QString, QVariant> c_loggedUser::getUserProperties()
 {
     QMap<QString, QVariant> map;
-
 
     map["id"] = this->getId();
     map["name"] = this->getName();    
@@ -124,7 +120,6 @@ QMap<QString, QVariant> c_loggedUser::getUserProperties()
     map["verified_date"] = this->getVerify_date().toString();
     map["is_logged"] = this->getIsLogged();
     map["photo"] = this->getPhoto();
-
 
     return map;
 }
@@ -139,13 +134,3 @@ QList<myStructures::myLog> * c_loggedUser::getDbLogs()
     return &dbLogs;
 }
 
-
-w_logsWindow *c_loggedUser::getLogs() const
-{
-    return logs;
-}
-
-void c_loggedUser::setLogs(w_logsWindow *newLogs)
-{
-    logs = newLogs;
-}

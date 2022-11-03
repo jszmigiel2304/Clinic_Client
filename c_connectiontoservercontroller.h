@@ -1,8 +1,6 @@
 #ifndef C_CONNECTIONTOSERVERCONTROLLER_H
 #define C_CONNECTIONTOSERVERCONTROLLER_H
 
-
-#include "w_logswindow.h"
 #include "c_logscontroller.h"
 #include "c_mystructures.h"
 #include "mythread.h"
@@ -46,9 +44,6 @@ public:
 
     myTypes::ThreadDestination getNameThreadDestination() const;
 
-    w_logsWindow *getLogs() const;
-    void setLogs(w_logsWindow *newLogs);
-
     c_LogsController *getLogsController() const;
     void setLogsController(c_LogsController *newLogsController);
 
@@ -76,7 +71,6 @@ private:
     QTimer * reconnectTimer;
     QTimer * sendAgainPackets;
 
-    w_logsWindow *logs;
     c_LogsController *logsController;
 
     bool isWaitingForReply(myStructures::packet packet);

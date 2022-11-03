@@ -45,7 +45,6 @@ private:
 private slots:
 
 signals:
-    void newLog(QString log);
     void passDataToThread(myStructures::threadData data);
     void forceLogOutUser();
 

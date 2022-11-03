@@ -21,18 +21,10 @@ public:
     void run() override;
     void getSessionSettingsFromServer();
 
-
     QTimer * getsessionSettingsTimer;
-
 
     quint32 getSessionExpireSeconds() const;
     void setSessionExpireSeconds(quint32 newSessionExpireSeconds);
-
-//    const QTime &getCurrentSessionExpireTime() const;
-//    void setCurrentSessionExpireTime(const QTime &newCurrentSessionExpireTime);
-
-//    const QTime &getSessionExpireTime() const;
-//    void setSessionExpireTime(const QTime &newSessionExpireTime);
 
     myTypes::ThreadDestination getNameThreadDestination() const;
 
@@ -40,7 +32,6 @@ public slots:
     void processData(myStructures::threadData data, qintptr socketDescriptor) override;
     void sessionRun();
     void unlockSession();
-//    void resetIDLEtimer();
     void sendSessionFileToServer(QUuid id_session, QByteArray fileData);
     void sendSessionStateToServer(QUuid id_session, qint32 state);
     void appIDLEdetected();
@@ -50,18 +41,12 @@ public slots:
 
 private:
     const myTypes::ThreadDestination nameThreadDestination = myTypes::CLINIC_SESSION_CONTROLLER;
-//    QTimer * idleTimer;
-//    QTimer * secsTimer;
-
-//    QTime currentSessionExpireTime;
-//    QTime sessionExpireTime;
     quint32 sessionExpireSeconds;
 
     bool waitForSessionSavedBeforeClose;
     bool sessionSavedBeforeClose;
 
 private slots:
-//    void secsTimerTimeOut();
     void getsessionSettingsTimerTimeOut();
     void threadStarted() override;
     void sessionSettingsReceivedFromServer(QMap<QString, QVariant> settings);
@@ -70,15 +55,10 @@ private slots:
 
 
 signals:
-//    void sessionTimeExpireChanged(QTime time);
     void idleDetected();
     void sessionUnlocked();
     void sessionTimeSet(quint32 time);
     void sessionClosedCorrectly();
-//    void sendToServer(QByteArray packet);
-//    void processingError(QString error);
-//    void processingStarted(QString text);
-//    void processingFinished();
 
 };
 

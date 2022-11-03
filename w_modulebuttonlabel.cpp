@@ -4,10 +4,6 @@ w_moduleButtonLabel::w_moduleButtonLabel(QWidget *parent)
 {
     setParent(parent);
 
-//    this->setGeometry(0,0,220,220);
-//    this->setMaximumSize(QSize(220,220));
-//    this->setMinimumSize(QSize(220,220));
-
     this->setMouseTracking(true);
 
     this->createLabel();

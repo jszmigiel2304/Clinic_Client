@@ -123,9 +123,6 @@ void c_AppTrayIcon::actionTriggered(QAction *)
 
 void c_AppTrayIcon::closeActionTriggered(bool)
 {
-//    this->mainWnd->close();
-
-//    qApp->exit(0);
     emit closeActionSignal();
 }
 
@@ -166,7 +163,6 @@ void c_AppTrayIcon::mainWindowStateChanged(Qt::WindowStates states, bool appIsCl
     if(states.testFlag(Qt::WindowNoState) && !appIsClosing)
     {
         QIcon icon(":/icons/appIcon.png");
-        //hideAllWindows();
         this->showMessage(qApp->applicationName(), tr("Zminializowano do zasobnika systemowego"), icon, 2000);
     } else if(states.testFlag(Qt::WindowNoState) && appIsClosing)
     {
@@ -178,14 +174,6 @@ void c_AppTrayIcon::mainWindowStateChanged(Qt::WindowStates states, bool appIsCl
 
 void c_AppTrayIcon::userLogged(QString name, QString role)
 {
-//    QString roleText = QString("");
-//    if(role == myTypes::SUPER) roleText += QString("SUPER");
-//    else if(role == myTypes::ADMIN) roleText += QString("ADMIN");
-//    else if(role == myTypes::MODERATOR) roleText += QString("MODERATOR");
-//    else if(role == myTypes::USER) roleText += QString("UŻYTKOWNIK");
-//    else if(role == myTypes::GUEST) roleText += QString("GOŚĆ");
-//    else if(role == myTypes::NO_ROLE) roleText += QString("");
-
     logInAction->setEnabled(false);
     logInAction->setVisible(false);
 

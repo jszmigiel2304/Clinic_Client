@@ -53,15 +53,12 @@ w_LoggingDialog *w_LoggingDialog::Instance()
     static w_LoggingDialog * instance = nullptr;
     if ( instance == nullptr ) {
         instance = new w_LoggingDialog();
-    }    
-    //instance->setAttribute(Qt::WA_DeleteOnClose, true);
+    }
     return instance;
 }
 
 w_LoggingDialog::~w_LoggingDialog()
 {
-   //this->disconnect(SIGNAL(getUserId(QString,QString)), this);
-
     logResultTimer->deleteLater();
     delete ui;
 }
@@ -108,7 +105,6 @@ QMap<QString, QVariant> w_LoggingDialog::ShareProperties(QString sharedData)
         map.insert("address", this->serverAddress);
         map.insert("port", this->serverPort);
     }
-
 
     return map;
 }
@@ -161,19 +157,7 @@ void w_LoggingDialog::refresh()
 
 void w_LoggingDialog::closeEvent(QCloseEvent *event)
 {
-
     event->accept();
-//    if(this->minimizeToTrayOnClose)
-//    {
-//        this->hide();
-//        emit this->myStateChanged(this->windowState(), false);
-//        event->ignore();
-//    }
-//    else
-//    {
-//        emit this->myStateChanged(this->windowState(), true);
-//        event->accept();
-//    }
 }
 
 void w_LoggingDialog::logInProcessing(QString text)

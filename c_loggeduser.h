@@ -2,7 +2,6 @@
 #define C_LOGGEDUSER_H
 
 #include "m_loggeduser.h"
-#include "w_logswindow.h"
 #include "c_mystructures.h"
 #include "c_threadcontroller.h"
 #include "mythread.h"
@@ -34,10 +33,6 @@ public:
     QAuthenticator getAuthenticator();
     void setUpThread();
 
-
-    w_logsWindow *getLogs() const;
-    void setLogs(w_logsWindow *newLogs);
-
     c_loggedUserThread*thread() const;
     void setThread(std::unique_ptr<c_loggedUserThread> newThread);
 
@@ -55,15 +50,12 @@ public slots:
 private:
     std::unique_ptr<c_loggedUserThread> mThread;
 
-    w_logsWindow *logs;
-
     QList<myStructures::myLog> dbLogs;
 
 private slots:
     void cleanUpThread();
 
 signals:
-    void newLog(QString log);
     void threadAssigned(MyThread * thread);
     void logOutUser();
     void aboutToLogOut();
@@ -72,7 +64,6 @@ signals:
     void passProperties(QMap<QString, QVariant> userInfo);
     void logsSaved();
     void passLogs(QList<myStructures::myLog> logs);
-
 };
 
 #endif // C_LOGGEDUSER_H

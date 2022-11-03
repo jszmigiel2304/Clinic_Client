@@ -32,8 +32,6 @@ void c_loggedUserThread::processData(myStructures::threadData data, qintptr sock
     if( this->getId() == data.thread_id && (data.thread_dest == myTypes::CLINIC_LOGGED_USER_CONTROLLER  || data.thread_dest == myTypes::CLINIC_ERROR_CONTROLLER) )
     {
         c_actionExecutive *executive = new c_actionExecutive();
-        //executive->moveToThread(mThread.get());
-        connect( executive, SIGNAL(newLog(QString)), dynamic_cast<c_loggedUser *>(myParentConnector)->getLogs(), SLOT(addLog(QString)) );
 
         connect( executive, SIGNAL(getUserIdResultReady(qint32)), this, SLOT(userIdReceivedFromServer(qint32)) );
         connect( executive, SIGNAL(logInConfirmationReady(myStructures::logInConfirmation)),this, SLOT(logInConfirmationReceivedFromServer(myStructures::logInConfirmation)) );
@@ -52,9 +50,6 @@ void c_loggedUserThread::processData(myStructures::threadData data, qintptr sock
     else
     {
         //błąd złegodopasownia wątku
-
-        QString errMsg = QString("Thread ERROR. \n Wrong THREAD DESTINATION or THREAD ID");
-        emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(errMsg);
     }
 }
 
@@ -257,8 +252,6 @@ void c_loggedUserThread::logOut(qint32 id, QString name, QString password)
 
 void c_loggedUserThread::logOutOffLine()
 {
-    emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Połączenie przerwane. Wylogowano użytkownika. \n"));
-
     dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs()->clear();
     dynamic_cast<c_loggedUser *>(myParentConnector)->clearProperties();
     emit userNotLogged();
@@ -309,13 +302,10 @@ void c_loggedUserThread::logInConfirmationReceivedFromServer(myStructures::logIn
 
 
     loggingState = false;
-    emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Udane logowanie. \n"));
 }
 
 void c_loggedUserThread::logOutConfirmationReceivedFromServer(myStructures::logOutConfirmation confirmation)
 {
-    emit dynamic_cast<c_loggedUser *>(myParentConnector)->newLog(QString("Udane wylogowanie. \n"));
-
     dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs()->clear();
     dynamic_cast<c_loggedUser *>(myParentConnector)->clearProperties();
     emit userNotLogged();
@@ -335,44 +325,16 @@ void c_loggedUserThread::employeePropertiesReceivedFromServer(QMap<QString, QVar
 void c_loggedUserThread::userLogsReceivedFromServer(QList<QMap<QString, QVariant>> logs)
 {
     dynamic_cast<c_loggedUser *>(myParentConnector)->setDbLogs(logs);
-//    for(int i = 0; i< logs.size(); i++) {
-//        myStructures::myLog log;
-//        log.ip_address = QHostAddress(logs[i]["ip_address"].toString());
-//        log.time = QDateTime::fromString(logs[i]["log_time"].toString());
-//        log.log_text = logs[i]["log"].toString();
-//        dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs()->append(log);
-//    }
-
-//    emit logsDbSaved();
 }
 
 void c_loggedUserThread::userEmployeeLogsReceivedFromServer(QList<QMap<QString, QVariant>> logs)
 {
     dynamic_cast<c_loggedUser *>(myParentConnector)->setDbLogs(logs);
-
-//    for(int i = 0; i< logs.size(); i++) {
-//        myStructures::myLog log;
-//        log.ip_address = QHostAddress(logs[i]["ip_address"].toString());
-//        log.time = QDateTime::fromString(logs[i]["log_time"].toString());
-//        log.log_text = logs[i]["log"].toString();
-//        dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs()->append(log);
-//    }
-
-//    emit logsDbSaved();
 }
 
 void c_loggedUserThread::emlpoyeeLogsReceivedFromServer(QList<QMap<QString, QVariant>> logs)
 {
     dynamic_cast<c_loggedUser *>(myParentConnector)->setDbLogs(logs);
-//    for(int i = 0; i< logs.size(); i++) {
-//        myStructures::myLog log;
-//        log.ip_address = QHostAddress(logs[i]["ip_address"].toString());
-//        log.time = QDateTime::fromString(logs[i]["log_time"].toString());
-//        log.log_text = logs[i]["log"].toString();
-//        dynamic_cast<c_loggedUser *>(myParentConnector)->getDbLogs()->append(log);
-//    }
-
-//    emit logsDbSaved();
 }
 
 void c_loggedUserThread::unlockConfirmationReceived(bool canUnlock)
@@ -387,7 +349,6 @@ void c_loggedUserThread::unlockConfirmationReceived(bool canUnlock)
 
 void c_loggedUserThread::loggingTimerTimeout()
 {
-//    loggingTimer->deleteLater();
     if(!dynamic_cast<c_loggedUser *>(myParentConnector)->getIsLogged()) {
         emit logInError("Upłynął czas oczekiwania na odpiewdź serwera.");
         loggingState = false;

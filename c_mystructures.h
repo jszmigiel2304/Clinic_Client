@@ -30,9 +30,6 @@ namespace myTypes {
 
                        CONNECTION_TO_PROCESS_REQUEST = 0xFFFF0000, CONNECTION_TO_PROCESS_ANSWER = 0xFFFF0001, CONNECTION_ESTABLISHED_CONFIRMATION = 0xFFFF0002
                      };
-
-
-    //enum UserRole { NO_ROLE = 0x00, GUEST = 0x01, USER = 0x02, MODERATOR = 0x03, ADMIN = 0x04, SUPER = 0x05 };
 }
 
 namespace myStructures {
@@ -81,7 +78,6 @@ namespace myStructures {
         myTypes::RequestType req_type;
         quint32 type_flag;
         QByteArray ref_md5;
-        //quint64 data_size;
         QList<QMap<QString, QVariant>> data;
     };
 
@@ -94,7 +90,6 @@ namespace myStructures {
         myTypes::ThreadDestination thread_src;
         myTypes::RequestType req_type;
         quint32 type_flag;
-        //quint64 data_size;
         QList<QMap<QString, QVariant>> data;
     };
 

@@ -62,7 +62,6 @@ void c_ClinicClient::run()
 {    
     prepareModules();
 
-    user->setLogs(this->logsWindow);
     refreshWindows(true);
     createConnections();
 
@@ -70,8 +69,6 @@ void c_ClinicClient::run()
     sessionCtrlr->setUpThread();
     processCtrlr->setUpThread();
     emit setUpConnection(settCtrlr->getSettings("server"));
-
-
 
     connectionCtrlr->start();
     user->thread()->start();
@@ -139,16 +136,6 @@ void c_ClinicClient::setTrayIcon(c_AppTrayIcon *value)
     trayIcon = value;
 }
 
-w_ThreadsListWindow *c_ClinicClient::getThreadsListWindow() const
-{
-    return threadsListWindow;
-}
-
-void c_ClinicClient::setThreadsListWindow(w_ThreadsListWindow *newThreadsListWindow)
-{
-    threadsListWindow = newThreadsListWindow;
-}
-
 c_SessionController *c_ClinicClient::getSessionCtrlr() const
 {
     return sessionCtrlr;
@@ -162,13 +149,10 @@ void c_ClinicClient::setSessionCtrlr(c_SessionController *newSessionCtrlr)
 void c_ClinicClient::refreshWindows(bool show)
 {
     mainWindow->refresh();
-    threadsListWindow->refresh();
 
     if(show) {
         mainWindow->show();
         trayIcon->show();
-        logsWindow->show();
-        threadsListWindow->show();
     }
 }
 
@@ -187,15 +171,11 @@ void c_ClinicClient::prepareModules()
 
 void c_ClinicClient::createConnections()
 {
-    connect(this, SIGNAL(newLog(QString)), logsWindow, SLOT(addLog(QString)) );
     connect(this, SIGNAL(idleSignalReceived()), sessionCtrlr->thread(), SLOT(appIDLEdetected()), Qt::DirectConnection);
 
     connect( connectionCtrlr, SIGNAL(dataReceived(quint64, QByteArray, qintptr)), this, SLOT(dataReceived(quint64, QByteArray, qintptr)) );
-    connect( connectionCtrlr, SIGNAL(newLog(QString)), logsWindow, SLOT(addLog(QString)) );
     connect( connectionCtrlr, SIGNAL(threadAssigned(MyThread *)), threadCtrlr, SLOT(newThread(MyThread *)) );
 
-    connect( user, SIGNAL(newLog(QString)), logsWindow, SLOT(addLog(QString)) );
-    connect( sessionCtrlr, SIGNAL(newLog(QString)), logsWindow, SLOT(addLog(QString)) );
     connect(user, SIGNAL( threadAssigned(MyThread *) ), threadCtrlr, SLOT( newThread(MyThread *) ) );
     connect(user->thread(), SIGNAL(sendToServer(packet)), connectionCtrlr, SLOT(passDataToBuffer(packet)), Qt::QueuedConnection);
 
@@ -215,7 +195,6 @@ void c_ClinicClient::createConnections()
     connect(this->mainWindow, SIGNAL(processAppButtonClicked(QString, QMap<QString, QString>)), this, SLOT(processApp(QString, QMap<QString, QString>)));
 
     connect(qApp, SIGNAL(sessionTimeExpireChanged(QTime)), this->mainWindow->getUserPanel(), SLOT(sessionTimeChanged(QTime)));
-//    connect(sessionCtrlr->thread(), SIGNAL(sessionTimeExpireChanged(QTime)), this->mainWindow->getUserPanel(), SLOT(sessionTimeChanged(QTime)));
     connect(sessionCtrlr->thread(), SIGNAL(idleDetected()), user->thread(), SLOT(sessionLocked()));
     connect(connectionCtrlr, SIGNAL(connectionToServerStateChanged(QAbstractSocket::SocketState)), mainWindow->getUserPanel(), SLOT(connectionToServerStatusChanged(QAbstractSocket::SocketState)));
     connect( connectionCtrlr, SIGNAL(socketDisconnectedLogOutUser()), user->thread(), SLOT(logOutOffLine()), Qt::DirectConnection);
@@ -250,7 +229,6 @@ void c_ClinicClient::createConnections()
 
     connect(user->thread(), SIGNAL(aboutToLogOut()), sessionCtrlr->thread(), SLOT(sessionClose()), Qt::DirectConnection);
 
-    //connect(sessionCtrlr->thread(), SIGNAL(sessionUnlocked()), this, SLOT(sessionUnlocked()) );
     connect(user->thread(), SIGNAL(unlockSession()), this, SLOT(sessionUnlocked()));
     connect(user->thread(), SIGNAL(unlockSession()), sessionCtrlr->thread(), SLOT(sessionUnlockConfirmationReceived()));
     connect( this, SIGNAL(unlockSessionSignal()), this->mainWindow, SLOT(unlockWindow()) );
@@ -259,18 +237,7 @@ void c_ClinicClient::createConnections()
 
     connect( this->mainWindow, SIGNAL(userProfileButtonClicked()), this, SLOT(showUserPanelWindow()));
 
-    connect(processCtrlr, SIGNAL(newLog(QString)), logsWindow, SLOT(addLog(QString)));
     connect(processCtrlr, SIGNAL(threadAssigned(MyThread *)), threadCtrlr, SLOT(newThread(MyThread *)) );
-}
-
-w_logsWindow *c_ClinicClient::getLogsWindow() const
-{
-    return logsWindow;
-}
-
-void c_ClinicClient::setLogsWindow(w_logsWindow *newLogsWindow)
-{
-    logsWindow = newLogsWindow;
 }
 
 c_ThreadController *c_ClinicClient::getThreadCtrlr() const
@@ -386,10 +353,9 @@ void c_ClinicClient::closeApplication()
 
 
         if(timer.isActive()) {
-            emit newLog(QString("Wylogowano przed zamknięciem.\n"));
+            // komunikat, wylogowanie przed zamknięciem
         }
         else{
-            emit newLog(QString("Błąd wylogowania.\n"));
             emit user->forceLogOut();
         }
     }
@@ -400,13 +366,11 @@ void c_ClinicClient::closeApplication()
 
 void c_ClinicClient::applicatioIdleDetected()
 {
-    emit newLog(QString("IDLE from myApplication\n"));
     emit idleSignalReceived();
 }
 
 void c_ClinicClient::sessionUnlocked()
 {
-    emit newLog(QString("Session Unlocked\n"));
     emit unlockSessionSignal();
 }
 
@@ -451,10 +415,8 @@ void c_ClinicClient::processApp(QString target, QMap<QString, QString> parameter
     process->start();
 
     if( process->waitForStarted(-1) ) {
-        emit newLog(QString("Uruchamiono moduł: %1, Path: %2\n").arg(target, parameters["app_path"]));
         emit process->passModuleProcessToController(process);
     } else {
-        emit newLog(QString("Błąd uruchamiania modułu: %1, Path: %2\n").arg(target, parameters["app_path"]));
         return;
     }
 }
@@ -506,28 +468,6 @@ void c_ClinicClient::dataReceived(quint64 data_size, QByteArray data, qintptr so
         break;
     }
     }
-
-//    if(attchedData.thread_dest == myTypes::SERVER) {        //przygotuj paczke i wyślij do Clinic Server
-//        myStructures::packet packet;
-
-//        packet.md5_hash = parser.getJsonMD5Hash( QJsonDocument::fromJson(receivedDataFromServer.second) );
-//        packet.wait_for_reply = true;
-
-//        QDataStream ds2(&packet.packet_to_send, QIODevice::ReadWrite);
-//        ds2.setVersion(QDataStream::Qt_6_0);
-
-//        parser.insertAuthDataInJson(&receivedDataFromServer.second, this->user->getId(), this->user->getName(), this->user->getPassword());
-
-//        ds2 << packet.md5_hash.toHex() << receivedDataFromServer.second;
-//        emit sendToServer(packet);
-//    } else {    //paczka do Clinic Client = przekaż do odpowiedniego wątku
-//        if(attchedData.content == myTypes::PACKET_RECEIVE_CONFIRMATION)
-//            emit packetReceiveConfirmationReceived(attchedData);
-//        else {
-//            emit replyReceived( attchedData.ref_md5 );
-//            emit passDataToThread(attchedData, socketDescriptor);
-//        }
-//    }
 }
 
 

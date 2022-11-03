@@ -4,8 +4,6 @@
 c_processesController::c_processesController(QObject *parent)
     : QObject{parent}
 {
-    logs = w_logsWindow::Instance();
-
     mThread.reset(new c_processesControllerThread);
     moveToThread(mThread.get());
 }
@@ -49,22 +47,9 @@ void c_processesController::removeOpenedModulesProcesses()
     }
 }
 
-w_logsWindow *c_processesController::getLogs() const
-{
-    return logs;
-}
-
-void c_processesController::setLogs(w_logsWindow *newLogs)
-{
-    logs = newLogs;
-}
-
 void c_processesController::newModuleProcessConnection(c_moduleProcessConnection *moduleConnection)
 {
     this->openedModuleProcessConnections.append(moduleConnection);
-    QString log = QString("c_processesController::newModuleProcessConnection(c_moduleProcessConnection *moduleConnection)  \n"
-                          "dodano połączenie \n");
-    emit newLog(log);
 }
 
 void c_processesController::removeModuleProcessConnection(c_moduleProcessConnection *moduleConnection)
@@ -98,9 +83,6 @@ void c_processesController::removeModuleProcessConnection(quint32 index)
 void c_processesController::newModuleProcess(c_moduleProcess *moduleProcess)
 {
     this->openedModulesProcesses.append(moduleProcess);
-
-    emit newLog(QString("c_processesController::newModuleProcess(c_moduleProcess *moduleProcess)  \n"
-                        "dodano utworzony proces do listy \n"));
 }
 
 void c_processesController::removeModuleProcess(c_moduleProcess *moduleProcess)
@@ -134,7 +116,6 @@ void c_processesController::removeAllModuleProcesses()
 {
     while(openedModulesProcesses.size() != 0) {
         openedModulesProcesses.takeFirst()->close();
-
         //Wysłać request zamkniecia + QProcess::waitForFinish
     }
 }
@@ -175,19 +156,6 @@ void c_processesController::connectProcessWithConnection(QMap<QString, QVariant>
 
 void c_processesController::moduleClosed(c_moduleProcess *proces, int exitCode, QProcess::ExitStatus exitStatus)
 {
-    if(exitCode == 0) {
-        emit newLog(QString("c_processesController::moduleClosed(c_moduleProcess *proces, int exitCode, QProcess::ExitStatus exitStatus)  \n"
-                            "Proces zatrzymany. Usuwam z listy. ExitCode: %1 \t ExitStatus: %2\n").arg( QString("%1").arg(exitCode), (exitStatus == QProcess::NormalExit ? QString("NormalExit") : QString("CrashExit ") ) ));
-
-    } else {
-        switch(exitCode) {
-        case 0xff01: {emit newLog(QString("Argument error: ServerName \nModule close. \n")); break;}
-        case 0xff02: {emit newLog(QString("Argument error: ModuleName \nModule close. \n")); break;}
-        case 0xff03: {emit newLog(QString("Argument error: UserId or UserName \nModule close. \n")); break;}
-        default: {break;}
-        }
-    }
-
     removeModuleProcess(proces);
 }
 

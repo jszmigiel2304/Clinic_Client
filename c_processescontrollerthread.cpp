@@ -10,7 +10,6 @@ c_processesControllerThread::c_processesControllerThread(qint32 id, QString pare
 {
     connect(this, SIGNAL(started()), this, SLOT(threadStarted()));
 
-
     localServer = new c_myLocalServer(this);
 }
 
@@ -37,10 +36,6 @@ void c_processesControllerThread::processData(myStructures::threadData data, qin
             packet.packet_to_send = pair.second;
             packet.wait_for_reply = false;
 
-
-            QString errMsg = QString("Wysyłam do odpowiedniego procesu. \n");
-            emit _PARENT_PROC_CTRLR_->newLog(errMsg);
-
             emit process->getConnection()->sendDataToModuleProcessSignal( packet );
         }
 
@@ -50,8 +45,6 @@ void c_processesControllerThread::processData(myStructures::threadData data, qin
     if( this->getId() == data.thread_id && (data.thread_dest == myTypes::CLINIC_MODULE_PROCESS_CONTROLLER  || data.thread_dest == myTypes::CLINIC_ERROR_CONTROLLER) )
     {
         c_actionExecutive *executive = new c_actionExecutive();
-        //executive->moveToThread(mThread.get());
-        connect( executive, SIGNAL(newLog(QString)), _PARENT_PROC_CTRLR_->getLogs(), SLOT(addLog(QString)) );
         connect( executive, SIGNAL(connectionSettingsReceived(QMap<QString, QVariant>, qintptr)), _PARENT_PROC_CTRLR_, SLOT(connectProcessWithConnection(QMap<QString, QVariant>, qintptr)));
         executive->processData(data, socketDescriptor);
 
@@ -60,38 +53,27 @@ void c_processesControllerThread::processData(myStructures::threadData data, qin
     else
     {
         //błąd złegodopasownia wątku
-
-        QString errMsg = QString("Thread ERROR. \n Wrong THREAD DESTINATION or THREAD ID");
-        emit _PARENT_PROC_CTRLR_->newLog(errMsg);
     }
 }
 
 void c_processesControllerThread::parseReceivedPacket(quint64 size, QByteArray data, qintptr socketDescriptor)
 {
     emit passDataToClinicClient(size, data, socketDescriptor);
-//        c_Parser parser;
-//        QPair<QByteArray, QByteArray> receivedDataFromServer = parser.parseData(size, data);
-//        myStructures::threadData attchedData;
-//        parser.parseJson( &receivedDataFromServer.second, &attchedData );
-
-    //---------------------------------------------------------------------------------------------------------------------
-
 }
 
 void c_processesControllerThread::startServer()
 {    
     localServer->listen( localServer->hashServerName() );
-    if(localServer->isListening())
-        emit _PARENT_PROC_CTRLR_->newLog(QString("c_processesControllerThread::startServer()\nSerwer uruchomiony. %1\n").arg( localServer->serverName() ));
-    else
-        emit _PARENT_PROC_CTRLR_->newLog(QString("c_processesControllerThread::startServer()\nSerwer NIE uruchomiony. %1\n").arg( localServer->serverName() ));
+
+//    if(localServer->isListening())
+//        emit _PARENT_PROC_CTRLR_->newLog(QString("c_processesControllerThread::startServer()\nSerwer uruchomiony. %1\n").arg( localServer->serverName() ));
+//    else
+//        emit _PARENT_PROC_CTRLR_->newLog(QString("c_processesControllerThread::startServer()\nSerwer NIE uruchomiony. %1\n").arg( localServer->serverName() ));
 }
 
 void c_processesControllerThread::stopServer()
 {
     localServer->close();
-    emit _PARENT_PROC_CTRLR_->newLog(QString("c_processesControllerThread::stopServer()  \n"
-                                             "Serwer zatrzymany. \n"));
 }
 
 myTypes::ThreadDestination c_processesControllerThread::getNameThreadDestination() const
@@ -143,8 +125,6 @@ void c_myLocalServer::incomingConnection(quintptr  socketDescriptor)
         moduleProcessConnection->setConnectedToProcess(false);
         moduleProcessConnection->setSocketDescriptor(socketDescriptor);
 
-        connect(moduleProcessConnection, SIGNAL(newLog(QString)), w_logsWindow::Instance(), SLOT(addLog(QString)));
-
         connect(this, SIGNAL(needConnectionToProcessSettings()), moduleProcessConnection, SLOT(sendConnectionToProcessSettingsRequest()));
 
 
@@ -153,13 +133,7 @@ void c_myLocalServer::incomingConnection(quintptr  socketDescriptor)
         connect(moduleProcessConnection, SIGNAL(dataRead(quint64, QByteArray, qintptr)), _PARENT_PROC_CTRLR_T, SLOT(parseReceivedPacket(quint64, QByteArray, qintptr)));
 
 
-
-        QString log = QString("incomingConnection(qintptr socketDescriptor) \n"
-                              "connection->start(); \n");
-
-
         emit newModuleConnectedToServer(moduleProcessConnection);
-        emit moduleProcessConnection->newLog(log);
 
         c_Parser parser;
         QPair<QByteArray, QByteArray> pair = parser.prepareRequestConnectionToProcessPacket(_PARENT_PROC_CTRLR_T->getNameThreadDestination(),

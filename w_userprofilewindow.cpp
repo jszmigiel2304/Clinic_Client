@@ -165,7 +165,6 @@ void w_UserProfileWindow::refresh()
 
 void w_UserProfileWindow::refreshProperties()
 {
-    //emit getUserPanelProperties();
     emit getUserPanelProperties(&userProperties, &employeeProperties, &Logs);
 
     if(waitingLoop->getConditionsNumber() > 0)

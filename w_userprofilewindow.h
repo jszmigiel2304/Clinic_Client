@@ -61,7 +61,6 @@ private slots:
     void processingFault(QString text);
 
 signals:
-    //void getUserPanelProperties();
     void getUserPanelProperties(QMap<QString, QVariant> * userProperties, QMap<QString, QVariant> * employeeProperties, QList<myStructures::myLog> * Logs);
     void aboutToClose(QWidget * wnd);
 };

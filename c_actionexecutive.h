@@ -1,7 +1,6 @@
 #ifndef C_ACTIONEXECUTIVE_H
 #define C_ACTIONEXECUTIVE_H
 
-#include "w_logswindow.h"
 #include "c_mystructures.h"
 #include "c_sessioncontroller.h"
 #include "c_parser.h"
@@ -25,34 +24,26 @@ public:
     ~c_actionExecutive();
 
 
-    w_logsWindow *getLogs() const;
-    void setLogs(w_logsWindow *value);
-
-    void processData(myStructures::threadData data, qintptr socketDescriptor);
-
     c_LogsController *getLogsController() const;
     void setLogsController(c_LogsController *newLogsController);
 
 public slots:
+    void processData(myStructures::threadData data, qintptr socketDescriptor);
 
 protected:
 
 private:
    QMap<QString, QString> processedDataErrors;
 
-    w_logsWindow *logs;
-
     void processMessage(myStructures::threadData data, qintptr socketDescriptor, QMap<QString, QString> * processedDataErrors = nullptr);
     void processGet(myStructures::threadData data, qintptr socketDescriptor, QMap<QString, QString> * processedDataErrors = nullptr);
     void processReply(myStructures::threadData data, qintptr socketDescriptor, QMap<QString, QString> * processedDataErrors = nullptr);
-
 
 private slots:
     void processResults(myTypes::JsonContent jsonContent, QList<QMap<QString, QVariant>> results, qintptr socketDescriptor);
     void processErrors(QMap<QString, QString> * receivedErrors);
 
 signals:
-    void newLog(QString log);
     void newLogToFile(QString sender, QString notes, QByteArray data);
     void errors(QMap<QString, myStructures::threadData> errors);
     void resultReady(myTypes::JsonContent jsonContent, QList<QMap<QString, QVariant>> results, qintptr socketDescriptor);

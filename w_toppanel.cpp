@@ -67,7 +67,6 @@ void w_topPanel::setUserPanel(w_userPanel *newUserPanel)
 void w_topPanel::createUserPanel()
 {
     userPanel = new w_userPanel();
-    //userPanel->setGeometry(0,0,400,60);
     userPanel->setStyleSheet("background-color: #FFFFFF;");
 
     userPanel->setFont(QFont("Segoe", 8, QFont::Bold));
@@ -78,8 +77,5 @@ void w_topPanel::createUserPanel()
 void w_topPanel::createButtonListPanel()
 {
     buttonListPanel = new QWidget();
-    //buttonListPanel->setGeometry(0,0,600,60);
     buttonListPanel->setStyleSheet("background-color: #FFFFFF;");
-
-    //connect(buttonListPanel, SIGNAL(ButtonPressed(QString)), this, SLOT(moduleButtonPress(QString)));
 }

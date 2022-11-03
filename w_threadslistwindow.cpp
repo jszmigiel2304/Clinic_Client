@@ -43,8 +43,6 @@ void w_ThreadsListWindow::refresh()
         box->getLID()->setText( QString("%1").arg(dynamic_cast<MyThread *>(threadCtr->getThreadsList()[i])->getId()) );
         box->getLNote()->setText( QString("%1").arg(dynamic_cast<MyThread *>(threadCtr->getThreadsList()[i])->getNote()) );
         box->getLParentIdentifier()->setText( QString("%1").arg(dynamic_cast<MyThread *>(threadCtr->getThreadsList()[i])->getParentIdentifier()) );
-        //box->setParent(ui->scrollAreaWidgetContents);
-        //ui->scrollAreaWidgetContents->layout()->addWidget(box);
         layout->addWidget(box);
     }
     contentwidget->setLayout(layout);

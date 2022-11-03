@@ -63,12 +63,9 @@ void c_SessionControllerThread::processData(myStructures::threadData data, qintp
     if( this->getId() == data.thread_id && (data.thread_dest == myTypes::CLINIC_SESSION_CONTROLLER  || data.thread_dest == myTypes::CLINIC_ERROR_CONTROLLER) )
     {
         c_actionExecutive *executive = new c_actionExecutive();
-        //executive->moveToThread(mThread.get());
-        connect( executive, SIGNAL(newLog(QString)), dynamic_cast<c_SessionController *>(myParentConnector)->getLoggedUser()->getLogs(), SLOT(addLog(QString)) );
         connect( executive, SIGNAL(getSessionSettingsFromServerResultReady(QMap<QString, QVariant>)), this, SLOT(sessionSettingsReceivedFromServer(QMap<QString, QVariant>)) );
         connect( executive, SIGNAL(updateSessionStatusConfirmationReceived()), this, SLOT(sessionStateUpdateConfirmationReceivedFromServer()) );
         connect( executive, SIGNAL(updateSessionFileConfirmationReceived()), this, SLOT(sessionFileUpdateConfirmationReceivedFromServer()) );
-        //connect( executive, SIGNAL(sessionUnlockConfirmationReceived()), this, SLOT(sessionUnlockConfirmationReceived()) );
 
         executive->processData(data, socketDescriptor);
 
@@ -77,9 +74,6 @@ void c_SessionControllerThread::processData(myStructures::threadData data, qintp
     else
     {
         //błąd złegodopasownia wątku
-
-        QString errMsg = QString("Thread ERROR. \n Wrong THREAD DESTINATION or THREAD ID");
-        emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(errMsg);
     }
 }
 
@@ -90,7 +84,6 @@ void c_SessionControllerThread::sessionRun()
     dynamic_cast<c_SessionController *>(myParentConnector)->setState(myTypes::STARTED);
     dynamic_cast<c_SessionController *>(myParentConnector)->setOpened(true);
 
-    emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Zakończono konfigurowanie sesji.\n Sesja rozpoczęta.\n"));
     emit processingFinished();
 }
 
@@ -117,8 +110,6 @@ void c_SessionControllerThread::sendSessionFileToServer(QUuid id_session, QByteA
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
 
-    emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Wysyłanie pliku sesji do serwera.\n"));
-
     emit sendToServer(packet);
 }
 
@@ -138,8 +129,6 @@ void c_SessionControllerThread::sendSessionStateToServer(QUuid id_session, qint3
     packet.md5_hash = pair.first;
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
-
-    emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Wysyłanie stanu sesji do serwera.\n"));
 
     emit sendToServer(packet);
 }
@@ -181,14 +170,11 @@ void c_SessionControllerThread::sessionClose()
     packet.packet_to_send = pair.second;
     packet.wait_for_reply = true;
 
-    emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Wysyłanie czasu zamknięcia sesji do serwera.\n"));
-
     emit sendToServer(packet);
 
     dynamic_cast<c_SessionController *>(myParentConnector)->setState(myTypes::CLOSED_SAVED);
     dynamic_cast<c_SessionController *>(myParentConnector)->setOpened(false);
 
-    emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Sesja zamkniętaa.\n"));
     emit sessionClosedCorrectly();
 
 }
@@ -212,45 +198,32 @@ void c_SessionControllerThread::getsessionSettingsTimerTimeOut()
 
 void c_SessionControllerThread::threadStarted()
 {
-//    emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Rozpoczynam konfigurowanie sesji.\n"));
-//    emit processingStarted(QString("Konfigurowanie sesji..."));
-//    dynamic_cast<c_SessionController *>(myParentConnector)->setIdentifier();
-//    if(!dynamic_cast<c_SessionController *>(myParentConnector)->isValid()) getsessionSettingsTimer->start(10);
 }
 
 void c_SessionControllerThread::sessionSettingsReceivedFromServer(QMap<QString, QVariant> settings)
 {
-
     dynamic_cast<c_SessionController *>(myParentConnector)->setUpSession(settings);
-
-
 }
 
 void c_SessionControllerThread::sessionStateUpdateConfirmationReceivedFromServer()
 {
-    emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Session state wysłane do serwera.\n"));
 }
 
 void c_SessionControllerThread::sessionFileUpdateConfirmationReceivedFromServer()
 {
-    emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Session File wysłane do serwera.\n"));
 }
 
 void c_SessionControllerThread::sessionUnlockConfirmationReceived()
 {
     dynamic_cast<c_SessionController *>(myParentConnector)->setState(myTypes::RESTARTED);
     emit sessionTimeSet(sessionExpireSeconds);
-
-    //emit sessionUnlocked();
-    // komunikat połącz ponownie
-
 }
 
 void c_SessionControllerThread::configureSession(QString username, QString role)
 {
-        emit dynamic_cast<c_SessionController *>(myParentConnector)->newLog(QString("Rozpoczynam konfigurowanie sesji.\n"));
-        emit processingStarted(QString("Konfigurowanie sesji dla %1 [%2]...").arg(username, role));
-        dynamic_cast<c_SessionController *>(myParentConnector)->setIdentifier();
+    emit processingStarted(QString("Konfigurowanie sesji dla %1 [%2]...").arg(username, role));
+    dynamic_cast<c_SessionController *>(myParentConnector)->setIdentifier();
+
     if(!dynamic_cast<c_SessionController *>(myParentConnector)->isValid()) getsessionSettingsTimer->start(10);
 }
 

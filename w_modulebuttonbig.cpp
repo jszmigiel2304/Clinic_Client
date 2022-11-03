@@ -99,7 +99,6 @@ void w_moduleButtonBig::mouseReleaseEvent(QMouseEvent *)
 
 void w_moduleButtonBig::showNameLabel()
 {
-    //QString str = nameLabel->text();
     this->nameLabel->setVisible(true);
 }
 

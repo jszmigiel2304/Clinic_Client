@@ -17,7 +17,6 @@ c_SessionController::c_SessionController(QObject *parent) : QObject(parent)
     connect(this, SIGNAL(sessionFileCreated(QUuid, QByteArray)), thread(), SLOT(sendSessionFileToServer(QUuid, QByteArray)), Qt::QueuedConnection);
     connect(this, SIGNAL(sessionReady()), thread(), SLOT(sessionRun()), Qt::DirectConnection);
     connect(this, SIGNAL(sessionStateChanged(QUuid, qint32)), thread(), SLOT(sendSessionStateToServer(QUuid, qint32)), Qt::QueuedConnection);
-    //connect(this, SIGNAL(sessionClosed()), thread(), SLOT(sessionClose()), Qt::DirectConnection);
     connect(thread(), SIGNAL(sessionClosedCorrectly()), this, SLOT(resetSession()), Qt::DirectConnection);
 }
 
@@ -36,16 +35,6 @@ void c_SessionController::setState(myTypes::SessionState newState)
     state = newState;
 
     emit sessionStateChanged(getIdentifier(), static_cast<qint32>(getState()));
-}
-
-w_logsWindow *c_SessionController::getLogs() const
-{
-    return logs;
-}
-
-void c_SessionController::setLogs(w_logsWindow *newLogs)
-{
-    logs = newLogs;
 }
 
 c_SessionControllerThread*c_SessionController::thread() const
@@ -93,7 +82,6 @@ void c_SessionController::setUpSession(QMap<QString, QVariant> settings)
 {
     fileVersionNumber = settings["file_version_number"].toDouble();
     fileControlNumber = quint32( settings["file_control_number"].toUInt() );
-    //identifier = QUuid::fromString( settings["id"].toString() );
     filePath = settings["file_path"].toString();
     fileName = settings["file_name"].toString();
     hostAddress = QHostAddress( settings["ip_address"].toString() );
@@ -102,7 +90,6 @@ void c_SessionController::setUpSession(QMap<QString, QVariant> settings)
     sessionExpireTime = settings["session_expire_time"].toUInt();
 
     thread()->setSessionExpireSeconds(sessionExpireTime);
-
 
     switch(settings["state"].toInt()) {
     case 0x00: { state = myTypes::NOT_DEFINED; break;}
@@ -117,12 +104,11 @@ void c_SessionController::setUpSession(QMap<QString, QVariant> settings)
     default: { state = myTypes::ERROR; break;}
     }
 
-    if(createSessionStateFile())
-        emit newLog(QString("Błąd tworzenia pliku sesji. \n"));
+    if(createSessionStateFile()) {
+
+    }
     else {
-        emit newLog(QString("Utworzono plik sesji. \n"));
         emit sessionFileCreated(identifier, readEntireSessionFile());
-        emit newLog(QString("Sesja skonfigurowana. \n"));
         emit sessionReady();
     }
 }
@@ -171,8 +157,6 @@ void c_SessionController::resetSession()
 
     sessionFile.close();
     sessionFile.setFileName(QString(""));
-
-    emit newLog(QString("Sesja zresetowana. \n"));
 }
 
 void c_SessionController::closeSession()
@@ -239,8 +223,6 @@ int c_SessionController::addNotSendedNoteToFile(QString filePathName)
 {
     sessionFile.setFileName( filePathName.isEmpty() ? QString(fileName).prepend(filePath) : QString(filePathName) );
     if(sessionFile.open(QIODevice::WriteOnly)) {
-
-
         sessionFile.close();
         return 0;
     } else {

@@ -65,12 +65,6 @@ private slots:
     void threadStarted() override;
 
 signals:
-//    void sendToServer(QByteArray packet);
-
-//    void processingError(QString error);
-//    void processingStarted(QString text);
-//    void processingFinished();
-
     void logInError(QString error);
     void logInProcessing(QString text);
     void logInFinished();

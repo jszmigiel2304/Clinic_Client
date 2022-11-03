@@ -264,8 +264,6 @@ void w_MainWindow::IdleDetected(QString username)
     mask->show();
     mask->setEnabled(true);
     this->setEnabled(false);
-
-    //    emit userAuthorizationDataNeeded(username);
 }
 
 void w_MainWindow::unlockWindow()

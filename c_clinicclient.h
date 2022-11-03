@@ -8,7 +8,6 @@
 #include "c_settingscontroller.h"
 #include "c_modulescontroller.h"
 #include "c_loggeduser.h"
-#include "w_logswindow.h"
 #include "c_connectiontoservercontroller.h"
 #include "c_logscontroller.h"
 #include "c_sessioncontroller.h"
@@ -18,7 +17,6 @@
 #include "c_mystructures.h"
 #include "w_toppanel.h"
 #include "w_userpanel.h"
-#include "w_threadslistwindow.h"
 #include "w_authorizationdialog.h"
 #include "w_userprofilewindow.h"
 #include "c_waitingloop.h"
@@ -57,11 +55,7 @@ public:
     explicit c_ClinicClient(QObject *parent= nullptr );
     ~c_ClinicClient();
 
-
     void run();
-
-
-
     
     w_MainWindow *getMainWindow() const;
     void setMainWindow(w_MainWindow *value);
@@ -82,17 +76,8 @@ public:
     void setTrayIcon(c_AppTrayIcon *value);
 
 
-    w_logsWindow * logsWindow;
-    w_ThreadsListWindow * threadsListWindow;
-
     c_ThreadController *getThreadCtrlr() const;
     void setThreadCtrlr(c_ThreadController *newThreadCtrlr);
-
-    w_logsWindow *getLogsWindow() const;
-    void setLogsWindow(w_logsWindow *newLogsWindow);
-
-    w_ThreadsListWindow *getThreadsListWindow() const;
-    void setThreadsListWindow(w_ThreadsListWindow *newThreadsListWindow);
 
     c_SessionController *getSessionCtrlr() const;
     void setSessionCtrlr(c_SessionController *newSessionCtrlr);
@@ -116,9 +101,7 @@ private:
 
     c_loggedUser *user;    
 
-
 signals:
-    void newLog(QString log);
     void setUpConnection(QMap<QString, QVariant> settings);
     void runSession();
     void passDataToThread(myStructures::threadData data, qintptr socketDescriptor);

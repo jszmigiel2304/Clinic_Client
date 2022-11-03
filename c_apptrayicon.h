@@ -7,7 +7,6 @@
 #include "c_settingscontroller.h"
 #include "c_modulescontroller.h"
 #include "c_loggeduser.h"
-#include "w_logswindow.h"
 #include "c_connectiontoservercontroller.h"
 #include "c_logscontroller.h"
 #include "w_threadslistwindow.h"

@@ -47,17 +47,11 @@ public:
     bool isValid();
     int addNotSendedNoteToFile(QString filePathName = QString(""));
 
-
-
-
     c_loggedUser *getLoggedUser() const;
     void setLoggedUser(c_loggedUser *newLoggedUser);
 
     c_SessionControllerThread*thread() const;
     void setThread(std::unique_ptr<c_SessionControllerThread> newThread);
-
-    w_logsWindow *getLogs() const;
-    void setLogs(w_logsWindow *newLogs);
 
     myTypes::SessionState getState() const;
     void setState(myTypes::SessionState newState);
@@ -65,8 +59,6 @@ public:
     void setOpened(bool newOpened);
 
 public slots:
-    //void sessionRun();
-    //void resetIDLEtimer();
 
 private:
     bool opened;
@@ -90,24 +82,11 @@ private:
 
     std::unique_ptr<c_SessionControllerThread> mThread;    
 
-//    QTimer * idleTimer;
-//    QTimer * secsTimer;
-
-//    QTime currentSessionExpireTime;
-//    QTime sessionExpireTime;
-//    quint32 sessionExpireSeconds;
-
     c_loggedUser * loggedUser;
-
-
-    w_logsWindow *logs;
 
 private slots:
     void cleanUpThread();
     void resetSession();
-//    void appIDLEdetected();
-//    void timeOut();
-    //void replyTimerTimeOut();
 
 signals:
     void threadAssigned(MyThread * thread);

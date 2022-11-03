@@ -28,8 +28,6 @@ public slots:
     void authorizationFault(QString text);
     void setUsernameLabel(QString name);
 
-
-
 private:
     Ui::w_AuthorizationDialog *ui;    
 
